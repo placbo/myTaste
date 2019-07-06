@@ -1,39 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ItemList from "./ItemList";
+import data from "../data.json";
 
 function MainPage() {
-  let items = [
-    {
-      id: 1,
-      comment: "Toro kakemix. why!",
-      dice: 2
-    },
-    {
-      id: 1,
-      comment: "Toro kakemix. why!",
-      dice: 2
-    },
-    {
-      id: 1,
-      comment: "Toro kakemix. why!",
-      dice: 2
-    },
-    {
-      id: 1,
-      comment: "Toro kakemix. why!",
-      dice: 2
-    },
-    {
-      id: 1,
-      comment: "Toro kakemix. why!",
-      dice: 2
-    },
-    {
-      id: 2,
-      comment: "Idun Ketchup. Nei takk, men Funker til alt for barna",
-      dice: 3
-    }
-  ];
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    setItems(data);
+  }, []);
+
   return (
     <div className="container">
       <h1>Items</h1>
