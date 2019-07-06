@@ -1,0 +1,15 @@
+.card {
+  width: 200px;
+  height: 300px;
+  text-align: center;
+}
+
+.card img {
+  max-height: 100px;
+  max-width: 100px;
+}
+
+.itemWrapper {
+  display: flex;
+  flex-wrap: wrap;
+}

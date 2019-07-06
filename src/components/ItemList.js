@@ -1,14 +1,14 @@
 import React from "react";
+import "./ItemList.css";
 
 function ItemList(props) {
   return (
-    <div>
+    <div className="itemWrapper">
       {props.items.map(item => {
         return (
           <div className="card">
-            <img src="..." class="card-img-top" alt="..." />
+            <img src={item.id + ".jpg"} class="card-img-top" alt="..." />
             <div className="card-body">
-              <h5 className="card-title">Card title</h5>
               <p className="card-text">{item.comment}</p>
             </div>
           </div>

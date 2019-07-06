@@ -9,6 +9,26 @@ function MainPage() {
       dice: 2
     },
     {
+      id: 1,
+      comment: "Toro kakemix. why!",
+      dice: 2
+    },
+    {
+      id: 1,
+      comment: "Toro kakemix. why!",
+      dice: 2
+    },
+    {
+      id: 1,
+      comment: "Toro kakemix. why!",
+      dice: 2
+    },
+    {
+      id: 1,
+      comment: "Toro kakemix. why!",
+      dice: 2
+    },
+    {
       id: 2,
       comment: "Idun Ketchup. Nei takk, men Funker til alt for barna",
       dice: 3
