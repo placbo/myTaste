@@ -7,6 +7,15 @@
 .card img {
   max-height: 100px;
   max-width: 100px;
+  margin: auto;
+  padding:10px;
+}
+.card .header {
+font-weight: bold;
+}
+
+.diceValue {
+  color:red;
 }
 
 .itemWrapper {
