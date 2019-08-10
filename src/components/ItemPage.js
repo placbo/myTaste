@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import {getItem} from "../api/itemApi";
 import {Link} from "react-router-dom";
 
+//another way to declare a functional component
 const ItemListPage = props => {
 
     const [item, setItem] = useState([]);
