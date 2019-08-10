@@ -14,6 +14,30 @@ const items = [
     imageLink: "1.jpg",
     tags:null,
     diceValue:4
+  },
+  {
+    id: 3,
+    title: "TORO kakemix2",
+    comment: "grei",
+    imageLink: "1.jpg",
+    tags:null,
+    diceValue:4
+  },
+  {
+    id: 4,
+    title: "TORO kakemix3",
+    comment: "grei",
+    imageLink: "1.jpg",
+    tags:null,
+    diceValue:4
+  },
+  {
+    id: 5,
+    title: "TORO kakemix4",
+    comment: "grei",
+    imageLink: "1.jpg",
+    tags:null,
+    diceValue:4
   }
 ];
 

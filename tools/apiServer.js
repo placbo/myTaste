@@ -16,7 +16,7 @@ const server = jsonServer.create();
 const path = require("path");
 const router = jsonServer.router(path.join(__dirname, "db.json"));
 
-const DELAY = 1000; //simulated delay in ms
+const DELAY = 0; //simulated delay in ms
 
 // Can pass a limited number of options to this to override (some) defaults. See https://github.com/typicode/json-server#api
 const middlewares = jsonServer.defaults({

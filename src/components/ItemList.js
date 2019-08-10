@@ -1,34 +1,26 @@
-import React from "react";
 import "./ItemList.css";
-import {getItems} from "../api/itemApi";
+import {Link} from "react-router-dom";
+import React from "react";
 
-class ItemList extends React.Component {
-    state = {
-        items: []
-    };
 
-    componentDidMount() {
-        getItems().then(items => this.setState({items: items}));
-    }
-
-    render() {
-        return (
-            <div className="itemWrapper">
-                {this.state.items.map(item => {
-                    return (
-                        <div className="card">
+function ItemList(props) {
+    return (
+        <div className="itemListWrapper">
+            {props.items.map(item => {
+                return (
+                    <Link key={item.id} to={"/item/" + item.id}>
+                        <div  className="card">
                             <div className="header">{item.title}</div>
-                            <img src={item.id + ".jpg"} class="card-img-top" alt="..."/>
+                            <img src={"/img/" + item.id + ".jpg"} className="card-img-top" alt="..."/>
                             <div className="card-body">
-                                <p className="card-text">{item.comment}</p>
                                 <p className="diceValue">{item.diceValue}</p>
                             </div>
                         </div>
-                    );
-                })}
-            </div>
-        )
-    }
+                    </Link>
+                );
+            })}
+        </div>
+    )
 }
 
 export default ItemList;

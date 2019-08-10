@@ -1,5 +1,16 @@
-.card {
-  width: 200px;
+.itemListWrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.itemListWrapper .card {
+  width: 150px;
+  height: 200px;
+  text-align: center;
+}
+
+.itemWrapper .card {
+  width: 300px;
   height: 300px;
   text-align: center;
 }
@@ -18,7 +29,12 @@ font-weight: bold;
   color:red;
 }
 
-.itemWrapper {
-  display: flex;
-  flex-wrap: wrap;
+
+a {
+  color:#000000
+}
+
+a:hover{
+  text-decoration: none;
+  color:deeppink;
 }
