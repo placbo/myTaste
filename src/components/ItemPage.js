@@ -20,7 +20,7 @@ const ItemListPage = props => {
             <div className="itemWrapper">
                 <div className="card">
                     <div className="header">{item.title}</div>
-                    <img src={"/img/" + item.id + ".jpg"} className="card-img-top" alt="..."/>
+                    <img src={"/img/" + item.imageLink} className="card-img-top" alt="..."/>
                     <div className="card-body">
                         <p className="card-text">{item.comment}</p>
                         <p className="diceValue">{item.diceValue}</p>
