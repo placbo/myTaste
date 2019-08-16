@@ -12,6 +12,9 @@ function ManageItemPage(props) {
             title: ""
         }
     );
+    const [isUploading, setIsUploading] = useState(
+        false
+    );
 
     useEffect(() => {
         const id = props.match.params.id; // from the path `/:id`
@@ -25,6 +28,31 @@ function ManageItemPage(props) {
             ...item,
             [target.name]: target.value
         });
+    }
+
+    function handleFileUpload(e) {
+        const files = Array.from(e.target.files);
+        //debugger;
+        setIsUploading(true); //TODO: doesnt work. why ?
+        const formData = new FormData();
+        files.forEach((file, i) => {
+            formData.append(i, file);
+            console.log("ready to upload file : ");
+            console.log(file.name);
+            console.log("isUploading:  " + isUploading);
+        });
+
+        // fetch(`${API_URL}/image-upload`, {
+        //     method: 'POST',
+        //     body: formData
+        // })
+        //     .then(res => res.json())
+        //     .then(images => {
+        //         this.setState({
+        //             uploading: false,
+        //             images
+        //         })
+        //     })
     }
 
     function handleSubmit(event) {
@@ -42,6 +70,7 @@ function ManageItemPage(props) {
             <ItemForm
                 item={item}
                 onChange={handleChange}
+                onFileUpload={handleFileUpload}
                 onSubmit={handleSubmit}/>
         </div>
     );

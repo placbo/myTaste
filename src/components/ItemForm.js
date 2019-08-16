@@ -59,6 +59,20 @@ function ItemForm(props) {
                 </div>
             </div>
 
+            <div className="form-group">
+                <label htmlFor='fileUpload'>
+                    Last opp
+                </label>
+                <div className="field">
+                    <input
+                        type='file'
+                        id='fileUpload'
+                        onChange={props.onFileUpload}
+                        name="fileUpload"
+                    />
+                </div>
+            </div>
+
 
             <input type="submit" value="Save" className="btn btn-primary"/>
         </form>
