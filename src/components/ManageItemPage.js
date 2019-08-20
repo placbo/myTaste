@@ -4,6 +4,8 @@ import {getItem} from "../api/itemApi";
 import {saveItems} from "../api/itemApi";
 import {toast} from "react-toastify";
 
+const axios = require("axios");
+
 
 function ManageItemPage(props) {
 
@@ -58,11 +60,27 @@ function ManageItemPage(props) {
     function handleSubmit(event) {
         event.preventDefault();
         //if (!formIsValid()) return;
+
         saveItems(item).then(() => {
             props.history.push("/");
             //toast.success("Course saved.");
             toast.success("Course saved.");
         });
+
+        // const formData = new FormData();
+        // formData.append('myImage', image);
+        // const config = {
+        //     headers: {
+        //         'content-type': 'multipart/form-data'
+        //     }
+        // };
+        // axios.post("/upload",formData,config)
+        //     .then((response) => {
+        //         alert("The file is successfully uploaded");
+        //     }).catch((error) => {
+        // });
+
+
     }
 
     return (
