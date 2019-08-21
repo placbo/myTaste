@@ -1,0 +1,33 @@
+[debug] [2019-08-21T17:04:22.811Z] ----------------------------------------------------------------------
+[debug] [2019-08-21T17:04:22.813Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2019-08-21T17:04:22.813Z] CLI Version:   7.2.4
+[debug] [2019-08-21T17:04:22.813Z] Platform:      linux
+[debug] [2019-08-21T17:04:22.813Z] Node Version:  v12.4.0
+[debug] [2019-08-21T17:04:22.814Z] Time:          Wed Aug 21 2019 19:04:22 GMT+0200 (Central European Summer Time)
+[debug] [2019-08-21T17:04:22.814Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-08-21T17:04:22.818Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-08-21T17:04:22.818Z] > authorizing via signed-in user
+[debug] [2019-08-21T17:04:22.819Z] [iam] checking project mytaste-1f382 for permissions ["firebase.projects.get"]
+[debug] [2019-08-21T17:04:22.820Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/mytaste-1f382:testIamPermissions  
+
+[debug] [2019-08-21T17:04:23.935Z] <<< HTTP RESPONSE 200
+[debug] [2019-08-21T17:04:23.938Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/mytaste-1f382  
+ 
+[debug] [2019-08-21T17:04:24.310Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/home/pcb/workspace/myTaste'...
+[info] 
+[debug] [2019-08-21T17:04:24.316Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/mytaste-1f382/webApps/-/config  
+ 
+[warn] ⚠  Your requested "node" version "8" doesn't match your global version "12"
+[info] ✔  functions: Emulator started at http://localhost:5001
+[debug] [2019-08-21T17:04:24.722Z] <<< HTTP RESPONSE 200
+[info] i  functions: Watching "/home/pcb/workspace/myTaste/functions" for Cloud Functions...
+[info] i  hosting: Serving hosting files from: public
+[info] ✔  hosting: Local server: http://localhost:5000
+[debug] [2019-08-21T17:04:24.921Z] [runtime-status] Functions runtime initialized. {"cwd":"/home/pcb/workspace/myTaste/functions","node_version":"12.4.0"}
+[debug] [2019-08-21T17:04:24.922Z] [runtime-status] Disabled runtime features: {"functions_config_helper":true,"network_filtering":true,"timeout":true,"memory_limiting":true,"admin_stubs":true} {}
+[debug] [2019-08-21T17:04:24.923Z] [runtime-status] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.3.0","resolution":"/home/pcb/workspace/myTaste/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2019-08-21T17:04:24.924Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.2.0","resolution":"/home/pcb/workspace/myTaste/functions/node_modules/firebase-functions/lib/index.js"}
+[debug] [2019-08-21T17:04:24.924Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.2.0","resolution":"/home/pcb/workspace/myTaste/functions/node_modules/firebase-functions/lib/index.js"}

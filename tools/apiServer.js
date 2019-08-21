@@ -1,6 +1,5 @@
 const express = require('express');
 const multer = require('multer');
-
 const server = express();
 
 const multipartHandler = multer({
@@ -16,7 +15,7 @@ server.post('/upload', function (req, res, next) {
         }
         // console.log(req.body);
         // console.log(req.body.title);
-        // console.log(req.files);
+        //console.log(req.files);
         return res.sendStatus(200).end();
     })
 });
