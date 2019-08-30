@@ -32,6 +32,35 @@ const multer = Multer({
     }
 });
 
+function handleError(res, reason, message, code) {
+    console.log("ERROR: " + reason);
+    res.status(code || 500).json({"error": message});
+}
+
+router.get("/item/:id", (req, res) => {
+    console.log("get: "+req.params.id);
+    admin.database()
+        .ref('/data/' + req.params.id)
+        .once('value')
+        .then((snapshot) => {
+            console.log(snapshot.val());
+            debugger;
+            //var title = (snapshot.val() && snapshot.val().title) || '';
+            res.status(200).json(snapshot);
+        })
+        .catch((err) => {
+            handleError(res, err.message, "Failed to get set");
+        });
+});
+
+
+//             }
+//         });
+//     } else {
+//         handleError(res, "Invalid user input", "Must provide a set valid Id.", 400);
+//     }
+// });
+
 
 router.post("/upload", multer.single("file"), (req, res) => {
         const id = uuidv4();
@@ -60,7 +89,7 @@ router.post("/upload", multer.single("file"), (req, res) => {
                 res.json({error: error});
             }
         );
-        admin.database().ref('data/' + id).set({
+        admin.database().ref('/data/' + id).set({
             title: title,
             comment: comment,
             imageLink: generatedImageName,
