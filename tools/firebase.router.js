@@ -38,14 +38,10 @@ function handleError(res, reason, message, code) {
 }
 
 router.get("/item/:id", (req, res) => {
-    console.log("get: "+req.params.id);
     admin.database()
         .ref('/data/' + req.params.id)
         .once('value')
         .then((snapshot) => {
-            console.log(snapshot.val());
-            debugger;
-            //var title = (snapshot.val() && snapshot.val().title) || '';
             res.status(200).json(snapshot);
         })
         .catch((err) => {
@@ -53,13 +49,18 @@ router.get("/item/:id", (req, res) => {
         });
 });
 
-
-//             }
-//         });
-//     } else {
+router.get("/items/", (req, res) => {
+    admin.database()
+        .ref('/data/')
+        .once('value')
+        .then((snapshot) => {
+            res.status(200).json(snapshot);
+        })
+        .catch((err) => {
+            handleError(res, err.message, "Failed to get set");
+        });
+});
 //         handleError(res, "Invalid user input", "Must provide a set valid Id.", 400);
-//     }
-// });
 
 
 router.post("/upload", multer.single("file"), (req, res) => {

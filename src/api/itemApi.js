@@ -1,23 +1,23 @@
 import {handleResponse, handleError} from "./apiUtils";
 
-const baseUrl = process.env.REACT_APP_API_URL + "/items/";
+const baseUrl = process.env.REACT_APP_API_URL + "/firebase/";
 
 export function getItems() {
-    return fetch(baseUrl)
+    return fetch(baseUrl + "items/")
         .then(handleResponse)
         .catch(handleError);
 }
 
 export function getItem(id) {
-    return fetch(baseUrl + id)
+    return fetch(baseUrl + "item/" + id)
         .then(handleResponse)
         .catch(handleError);
 }
 
 
 export function saveItems(item) {
-    return fetch(baseUrl + (item.id || ""), {
-        method: item.id ? "PUT" : "POST", // POST for create, PUT to update when id already exists.
+    return fetch(baseUrl + "upload/", {
+        method: "POST", // POST for create, PUT to update when id already exists.
         headers: {"content-type": "application/json"},
         body: JSON.stringify(item)
     })

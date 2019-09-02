@@ -6,6 +6,7 @@
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.3.1",
+    "cors": "^2.8.5",
     "express": "latest",
     "firebase-admin": "^8.4.0",
     "multer": "^1.4.2",
@@ -19,8 +20,7 @@
   "scripts": {
     "start": "run-p start:dev start:api",
     "start:dev": "cross-env REACT_APP_API_URL=http://localhost:3001 react-scripts start",
-    "prestart:api": "node tools/createMockDb.js",
-    "start:api": "node tools/jsonServer.js",
+    "start:api": "node tools/server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -41,7 +41,7 @@
     ]
   },
   "devDependencies": {
-    "cross-env": "^5.2.0",
+    "cross-env": "^5.2.1",
     "json-server": "^0.15.0",
     "npm-run-all": "^4.1.5"
   }

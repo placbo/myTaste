@@ -4,7 +4,7 @@ import {getItem} from "../api/itemApi";
 import {saveItems} from "../api/itemApi";
 import {toast} from "react-toastify";
 
-const axios = require("axios");
+// const axios = require("axios");
 
 
 function ManageItemPage(props) {
