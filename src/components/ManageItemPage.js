@@ -20,7 +20,7 @@ function ManageItemPage(props) {
         if (id) {
             getItem(id).then(_item => setItem(_item));
         }
-    }, [props.match.params.id]);
+    }, [props.match.params.igd]);
 
     function handleChange({target}) {
         setItem({

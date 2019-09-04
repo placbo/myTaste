@@ -4,16 +4,19 @@ import {getItems} from "../api/itemApi";
 import {Link} from "react-router-dom";
 
 function ItemListPage() {
-    const [items, setItems] = useState([]);
+     const [items, setItems] = useState([]);
 
     useEffect(() => {
-        getItems().then(_items => setItems(_items));
+        getItems().then((items) => {
+                setItems(items)
+            }
+        );
     }, []);
 
     return (
         <div className="container ">
             <h1>Items</h1>
-            <Link  to={"/newitem/"}>new...</Link>
+            <Link to={"/newitem/"}>new...</Link>
             <ItemList items={items}/>
         </div>
     );
