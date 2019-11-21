@@ -8,13 +8,13 @@
     "bootstrap": "^4.3.1",
     "cors": "^2.8.5",
     "express": "latest",
-    "firebase-admin": "^8.4.0",
+    "firebase-admin": "^8.8.0",
     "multer": "^1.4.2",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-router-dom": "^5.0.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "3.1.1",
-    "react-toastify": "^5.3.2",
+    "react-toastify": "^5.4.1",
     "uuid": "^3.3.3"
   },
   "scripts": {
@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "cross-env": "^5.2.1",
-    "json-server": "^0.15.0",
+    "json-server": "^0.15.1",
     "npm-run-all": "^4.1.5"
   }
 }

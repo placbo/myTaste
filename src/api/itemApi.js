@@ -17,7 +17,7 @@ export function getItem(id) {
 
 export function saveItems(item) {
     return fetch(baseUrl + "upload/", {
-        method: "POST", // POST for create, PUT to update when id already exists.
+        method: "POST",
         headers: {"content-type": "application/json"},
         body: JSON.stringify(item)
     })
