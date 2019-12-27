@@ -4,6 +4,8 @@ import {getItem} from "../api/itemApi";
 import {saveItems} from "../api/itemApi";
 import {toast} from "react-toastify";
 
+const axios = require("axios");
+
 
 function ManageItemPage(props) {
 
@@ -11,6 +13,9 @@ function ManageItemPage(props) {
             id: null,
             title: ""
         }
+    );
+    const [isUploading, setIsUploading] = useState(
+        false
     );
 
     useEffect(() => {
@@ -27,14 +32,55 @@ function ManageItemPage(props) {
         });
     }
 
+    function handleFileUpload(e) {
+        const files = Array.from(e.target.files);
+        //debugger;
+        setIsUploading(true); //TODO: doesnt work. why ?
+        const formData = new FormData();
+        files.forEach((file, i) => {
+            formData.append(i, file);
+            console.log("ready to upload file : ");
+            console.log(file.name);
+            console.log("isUploading:  " + isUploading);
+        });
+
+        // fetch(`${API_URL}/image-upload`, {
+        //     method: 'POST',
+        //     body: formData
+        // })
+        //     .then(res => res.json())
+        //     .then(images => {
+        //         this.setState({
+        //             uploading: false,
+        //             images
+        //         })
+        //     })
+    }
+
     function handleSubmit(event) {
         event.preventDefault();
         //if (!formIsValid()) return;
+
         saveItems(item).then(() => {
             props.history.push("/");
             //toast.success("Course saved.");
             toast.success("Course saved.");
         });
+
+        // const formData = new FormData();
+        // formData.append('myImage', image);
+        // const config = {
+        //     headers: {
+        //         'content-type': 'multipart/form-data'
+        //     }
+        // };
+        // axios.post("/upload",formData,config)
+        //     .then((response) => {
+        //         alert("The file is successfully uploaded");
+        //     }).catch((error) => {
+        // });
+
+
     }
 
     return (
@@ -42,6 +88,7 @@ function ManageItemPage(props) {
             <ItemForm
                 item={item}
                 onChange={handleChange}
+                onFileUpload={handleFileUpload}
                 onSubmit={handleSubmit}/>
         </div>
     );
