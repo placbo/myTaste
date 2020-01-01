@@ -10,6 +10,7 @@ let app = express();
 let urlencodedParser = bodyParser.urlencoded({extended: false});
 let hash = require('hash.js');
 let mongoose = require('mongoose');
+const multer = require('multer');
 
 const DB_URL = 'mongodb://localhost:27017/';
 const DB_NAME = 'mytaste';
@@ -19,6 +20,7 @@ const COLLECTION_NAME = 'items';
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+
 
 mongodb.MongoClient.connect(process.env.MONGODB_URI || DB_URL + DB_NAME, {
     useNewUrlParser: true,
@@ -47,16 +49,32 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI || DB_URL + DB_NAME, {
     });
 });
 
-
-app.get('/mytaste/', function (req, res) {
-    res.send('Pers mytaste-api');
-});
-
-// Generic error handler used by all endpoints.
 function handleError(res, reason, message, code) {
     console.log("ERROR: " + reason);
     res.status(code || 500).json({"error": message});
 }
+
+app.get('/mytaste/', function (req, res) {
+    res.send('Pers mytaste-api. v1.0.1');
+});
+
+const multipartHandler = multer({
+    dest: '/tmp/uploads/',
+    limits: {fileSize: 10000000}, //10 MB
+}).single("image");
+
+app.post('/mytaste/upload', function (req, res) {
+    multipartHandler(req, res, function (err) {
+        if (err) {
+            return handleError(res, "FAIL!", err.message, 413);
+        } else {
+            // console.log(req.body);
+            // console.log(req.body.title);
+            // console.log(req.files);
+            return res.sendStatus(200).end();
+        }
+    })
+});
 
 app.get("/mytaste/items", verifyToken, function (req, res) {
     db.collection(COLLECTION_NAME).find({}).toArray(function (err, docs) {
@@ -68,7 +86,7 @@ app.get("/mytaste/items", verifyToken, function (req, res) {
     });
 });
 
-app.post("/mytaste/items", verifyToken,function (req, res) {
+app.post("/mytaste/items", verifyToken, function (req, res) {
     let newSet = req.body;
     newSet.createDate = new Date();
     if (!req.body.setid) {
@@ -84,7 +102,7 @@ app.post("/mytaste/items", verifyToken,function (req, res) {
     }
 });
 
-app.get("/mytaste/items/:id", verifyToken,function (req, res) {
+app.get("/mytaste/items/:id", verifyToken, function (req, res) {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
         db.collection(COLLECTION_NAME).findOne({
             _id: new ObjectID(req.params.id)
@@ -100,7 +118,7 @@ app.get("/mytaste/items/:id", verifyToken,function (req, res) {
     }
 });
 
-app.put("/mytaste/items/:id", verifyToken,function (req, res) {
+app.put("/mytaste/items/:id", verifyToken, function (req, res) {
     let updateDoc = req.body;
     delete updateDoc._id;
     db.collection(COLLECTION_NAME).updateOne({_id: new ObjectID(req.params.id)}, updateDoc, function (err, doc) {
@@ -113,7 +131,7 @@ app.put("/mytaste/items/:id", verifyToken,function (req, res) {
     });
 });
 
-app.delete("/mytaste/items/:id",verifyToken, function (req, res) {
+app.delete("/mytaste/items/:id", verifyToken, function (req, res) {
     db.collection(COLLECTION_NAME).deleteOne({_id: new ObjectID(req.params.id)}, function (err, result) {
         if (err) {
             handleError(res, err.message, "Failed to delete set");
