@@ -2,44 +2,44 @@ const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const mockData = [
     {
-        id: 1,
         title: "Idun ketchupPCB",
         comment: "kjedelig",
         imageLink: "2.jpg",
         tags: null,
-        diceValue: 3
+        diceValue: 3,
+        createDate: "2020-01-02T18:23:02.612Z"
     },
     {
-        id: 2,
         title: "TORO kakemix",
         comment: "grei",
         imageLink: "1.jpg",
         tags: null,
-        diceValue: 4
+        diceValue: 4,
+        createDate: "2020-01-02T18:23:02.612Z"
     },
     {
-        id: 3,
         title: "TORO kakemix2",
         comment: "grei",
         imageLink: "1.jpg",
         tags: null,
-        diceValue: 4
+        diceValue: 4,
+        createDate: "2020-01-02T18:23:02.612Z"
     },
     {
-        id: 4,
         title: "TORO kakemix3",
         comment: "grei",
         imageLink: "1.jpg",
         tags: null,
-        diceValue: 4
+        diceValue: 4,
+        createDate: "2020-01-02T18:23:02.612Z"
     },
     {
-        id: 5,
         title: "TORO kakemix4",
         comment: "grei",
         imageLink: "1.jpg",
         tags: null,
-        diceValue: 4
+        diceValue: 4,
+        createDate: "2020-01-02T18:23:02.612Z"
     }
 ];
 
@@ -49,6 +49,8 @@ const COLLECTION_NAME = 'items';
 
 const insertDocuments = (db, callback) => {
     const collection = db.collection(COLLECTION_NAME);
+
+
     collection.insertMany(mockData, (err, result) => {
         if (err) throw err;
         console.log(`Inserted ${result.insertedCount} documents into the collection`);

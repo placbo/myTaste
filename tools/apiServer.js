@@ -89,17 +89,13 @@ app.get("/mytaste/items", verifyToken, function (req, res) {
 app.post("/mytaste/items", verifyToken, function (req, res) {
     let newSet = req.body;
     newSet.createDate = new Date();
-    if (!req.body.setid) {
-        handleError(res, "Invalid user input", "Must provide a set Id ('setid').", 400);
-    } else {
-        db.collection(COLLECTION_NAME).insertOne(newSet, function (err, doc) {
-            if (err) {
-                handleError(res, err.message, "Failed to create new set.");
-            } else {
-                res.status(201).json(doc.ops[0]);
-            }
-        });
-    }
+    db.collection(COLLECTION_NAME).insertOne(newSet, function (err, doc) {
+        if (err) {
+            handleError(res, err.message, "Failed to create new set.");
+        } else {
+            res.status(201).json(doc.ops[0]);
+        }
+    });
 });
 
 app.get("/mytaste/items/:id", verifyToken, function (req, res) {
@@ -119,16 +115,17 @@ app.get("/mytaste/items/:id", verifyToken, function (req, res) {
 });
 
 app.put("/mytaste/items/:id", verifyToken, function (req, res) {
-    let updateDoc = req.body;
-    delete updateDoc._id;
-    db.collection(COLLECTION_NAME).updateOne({_id: new ObjectID(req.params.id)}, updateDoc, function (err, doc) {
-        if (err) {
-            handleError(res, err.message, "Failed to update set");
-        } else {
-            updateDoc._id = req.params.id;
-            res.status(200).json(updateDoc);
-        }
-    });
+    db.collection(COLLECTION_NAME).findOneAndUpdate(
+        {_id: new ObjectID(req.params.id)},
+        { $set: req.body },
+        { returnOriginal: false },
+        (err, documents)  => {
+            if (err) {
+                handleError(res, err.message, "Failed to update item");
+            } else {
+                res.status(200).json(documents.value);
+            }
+        });
 });
 
 app.delete("/mytaste/items/:id", verifyToken, function (req, res) {
@@ -146,11 +143,9 @@ function verifyToken(req, res, next) {
     // jwt.verify(token, process.env.TOKEN_SECRET, function (err, decoded) {
     //     if (!token) {
     //         res.status(403).send({auth: false, message: 'No token provided.'});
-    //         console.log("No token sent");
     //     } else {
     //         if (err) {
     //             res.status(500).send({auth: false, message: 'Failed to authenticate token.'});
-    //             console.log("Wrong token sent");
     //         }
     //         req.userId = decoded.id;
     //         next();
