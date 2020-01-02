@@ -21,10 +21,7 @@
     "react-toastify": "^5.3.2"
   },
   "scripts": {
-    "start": "run-p start:dev start:api",
-    "start:dev": "cross-env REACT_APP_API_URL=http://localhost:3001 react-scripts start",
-    "prestart:api": "node tools/createMockDb.js",
-    "start:api": "node tools/jsonServer.js",
+    "start": "cross-env REACT_APP_API_URL=http://localhost:3001/ react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
