@@ -1,6 +1,6 @@
 import {handleResponse, handleError} from "./apiUtils";
 
-const baseUrl = process.env.REACT_APP_API_URL + "/items/";
+const baseUrl = process.env.REACT_APP_API_URL + "mytaste/items/";
 
 export function getItems() {
     return fetch(baseUrl)
@@ -16,8 +16,8 @@ export function getItem(id) {
 
 
 export function saveItems(item) {
-    return fetch(baseUrl + (item.id || ""), {
-        method: item.id ? "PUT" : "POST", // POST for create, PUT to update when id already exists.
+    return fetch(baseUrl + (item._id || ""), {
+        method: item._id ? "PUT" : "POST", // POST for create, PUT to update when id already exists.
         headers: {"content-type": "application/json"},
         body: JSON.stringify(item)
     })

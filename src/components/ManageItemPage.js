@@ -1,16 +1,14 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import ItemForm from "./ItemForm";
-import {getItem} from "../api/itemApi";
-import {saveItems} from "../api/itemApi";
+import {getItem, saveItems} from "../api/itemApi";
 import {toast} from "react-toastify";
 
-const axios = require("axios");
-
+// const axios = require("axios");
 
 function ManageItemPage(props) {
 
     const [item, setItem] = useState({
-            id: null,
+            _id: null,
             title: ""
         }
     );

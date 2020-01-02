@@ -3,7 +3,7 @@ const assert = require('assert');
 const mockData = [
     {
         id: 1,
-        title: "Idun ketchup",
+        title: "Idun ketchupPCB",
         comment: "kjedelig",
         imageLink: "2.jpg",
         tags: null,

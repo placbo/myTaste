@@ -25,7 +25,7 @@ const ItemListPage = props => {
                         <p className="card-text">{item.comment}</p>
                         <p className="diceValue">{item.diceValue}</p>
                     </div>
-                    <Link to={"/item/" + item.id + "/edit/"}>
+                    <Link to={"/item/" + item._id + "/edit/"}>
                         <div>edit...</div>
                     </Link>
                 </div>

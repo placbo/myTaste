@@ -43,7 +43,7 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI || DB_URL + DB_NAME, {
 
 
     // Initialize the app.
-    let server = app.listen(process.env.PORT || 3000, function () {
+    let server = app.listen(process.env.PORT || 3001, function () {
         let port = server.address().port;
         console.log("App now running on port", port);
     });
@@ -55,7 +55,7 @@ function handleError(res, reason, message, code) {
 }
 
 app.get('/mytaste/', function (req, res) {
-    res.send('Pers mytaste-api. v1.0.1');
+    res.send('Pers mytaste-api. v1.0.2   token verification turned off');
 });
 
 const multipartHandler = multer({
@@ -142,20 +142,21 @@ app.delete("/mytaste/items/:id", verifyToken, function (req, res) {
 });
 
 function verifyToken(req, res, next) {
-    let token = req.headers['x-access-token'];
-    jwt.verify(token, process.env.TOKEN_SECRET, function (err, decoded) {
-        if (!token) {
-            res.status(403).send({auth: false, message: 'No token provided.'});
-            console.log("No token sent");
-        } else {
-            if (err) {
-                res.status(500).send({auth: false, message: 'Failed to authenticate token.'});
-                console.log("Wrong token sent");
-            }
-            req.userId = decoded.id;
-            next();
-        }
-    });
+    // let token = req.headers['x-access-token'];
+    // jwt.verify(token, process.env.TOKEN_SECRET, function (err, decoded) {
+    //     if (!token) {
+    //         res.status(403).send({auth: false, message: 'No token provided.'});
+    //         console.log("No token sent");
+    //     } else {
+    //         if (err) {
+    //             res.status(500).send({auth: false, message: 'Failed to authenticate token.'});
+    //             console.log("Wrong token sent");
+    //         }
+    //         req.userId = decoded.id;
+    //         next();
+    //     }
+    // });
+    next();
 }
 
 app.post('/mytaste/login', urlencodedParser, function (req, res) {
