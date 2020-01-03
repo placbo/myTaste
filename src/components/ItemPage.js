@@ -20,10 +20,10 @@ const ItemListPage = props => {
             <div className="itemWrapper">
                 <div className="card">
                     <div className="header">{item.title}</div>
-                    <img src={"/img/" + item.imageLink} className="card-img-top" alt="..."/>
+                    <img src={"/imgPCB/" + item.imageLink} className="card-img-top" alt="..."/>
                     <div className="card-body">
                         <p className="card-text">{item.comment}</p>
-                        <p className="diceValue">{item.diceValue}</p>
+                        <img className="diceValue" src={`/img/${item.diceValue}.png`} alt={item.diceValue}/>
                     </div>
                     <Link to={"/item/" + item._id + "/edit/"}>
                         <div>edit...</div>

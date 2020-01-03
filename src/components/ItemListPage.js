@@ -12,7 +12,7 @@ function ItemListPage() {
 
     return (
         <div className="container ">
-            <h1>Items</h1>
+            <div>Items</div>
             <Link  to={"/newitem/"}>new...</Link>
             <ItemList items={items}/>
         </div>

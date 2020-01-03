@@ -16,8 +16,10 @@ export function getItem(id) {
 
 
 export function saveItems(item) {
-    return fetch(baseUrl + (item._id || ""), {
-        method: item._id ? "PUT" : "POST", // POST for create, PUT to update when id already exists.
+    const id = item._id;
+    delete item._id;
+    return fetch(baseUrl + (id || ""), {
+        method: id ? "PUT" : "POST",
         headers: {"content-type": "application/json"},
         body: JSON.stringify(item)
     })

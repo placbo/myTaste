@@ -62,7 +62,7 @@ function ManageItemPage(props) {
         saveItems(item).then(() => {
             props.history.push("/");
             //toast.success("Course saved.");
-            toast.success("Course saved.");
+            toast.success("Saved.");
         });
 
         // const formData = new FormData();

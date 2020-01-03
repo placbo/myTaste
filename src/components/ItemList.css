@@ -26,15 +26,15 @@ font-weight: bold;
 }
 
 .diceValue {
-  color:red;
+  color:darkred;
 }
 
 
 a {
-  color:#000000
+  color:darkblue;
 }
 
 a:hover{
   text-decoration: none;
-  color:deeppink;
+  color:blueviolet;
 }
