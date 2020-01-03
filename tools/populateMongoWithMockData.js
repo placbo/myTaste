@@ -1,6 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
-const mockData = require('./mockData')
+const mockData = require('./mockData');
 
 const URL = 'mongodb://localhost:27017/mytaste';
 const COLLECTION_NAME = 'items';
@@ -27,7 +27,7 @@ const findDocuments = (db, callback) => {
 
 const dropCollection = (db, callback) => {
     const collection = db.collection(COLLECTION_NAME);
-    collection.drop((err, delOK) => {
+    collection.drop((err) => {
         (err && err.codeName === "NamespaceNotFound") ?
             console.log(`Collection ${COLLECTION_NAME} does not exist - nothing to delete`):
             console.log(`Collection ${COLLECTION_NAME} deleted`) ;

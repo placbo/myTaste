@@ -129,7 +129,7 @@ app.put("/mytaste/items/:id", verifyToken, function (req, res) {
 });
 
 app.delete("/mytaste/items/:id", verifyToken, function (req, res) {
-    db.collection(COLLECTION_NAME).deleteOne({_id: new ObjectID(req.params.id)}, function (err, result) {
+    db.collection(COLLECTION_NAME).deleteOne({_id: new ObjectID(req.params.id)}, function (err) {
         if (err) {
             handleError(res, err.message, "Failed to delete set");
         } else {
