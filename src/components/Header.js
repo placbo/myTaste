@@ -2,7 +2,7 @@ import React from "react";
 import {NavLink} from "react-router-dom";
 
 function Header() {
-    const activeStyle = {"font-weight": "bold"};
+    const activeStyle = {"fontWeight": "bold"};
     return (
         <nav>
             <NavLink activeStyle={activeStyle} exact to="/">

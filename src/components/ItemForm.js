@@ -67,7 +67,7 @@ function ItemForm(props) {
                     <input
                         type='file'
                         id='fileUpload'
-                        onChange={props.onFileUpload}
+                        onChange={props.onFileChange}
                         name="fileUpload"
                     />
                 </div>

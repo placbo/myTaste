@@ -68,9 +68,9 @@ app.post('/mytaste/upload', function (req, res) {
         if (err) {
             return handleError(res, "FAIL!", err.message, 413);
         } else {
-            // console.log(req.body);
-            // console.log(req.body.title);
-            // console.log(req.files);
+             console.log("body:", req.body);
+             console.log("body.image:", req.body.image);
+             console.log("image:", req.image);
             return res.sendStatus(200).end();
         }
     })

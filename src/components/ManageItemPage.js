@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from "react";
 import ItemForm from "./ItemForm";
 import {getItem, saveItems} from "../api/itemApi";
-import {toast} from "react-toastify";
-
-// const axios = require("axios");
+//import {toast} from "react-toastify";
+const axios = require("axios");
 
 function ManageItemPage(props) {
 
@@ -12,9 +11,7 @@ function ManageItemPage(props) {
             title: ""
         }
     );
-    const [isUploading, setIsUploading] = useState(
-        false
-    );
+    const [isUploading, setIsUploading] = useState(false);
 
     useEffect(() => {
         const id = props.match.params.id; // from the path `/:id`
@@ -30,49 +27,52 @@ function ManageItemPage(props) {
         });
     }
 
-    function handleFileUpload(e) {
+    let formData = new FormData();
+
+
+    function handleFileChange(e) {
         const files = Array.from(e.target.files);
-        //debugger;
         setIsUploading(true); //TODO: doesnt work. why ?
-        const formData = new FormData();
         files.forEach((file, i) => {
-            formData.append(i, file);
-            console.log("ready to upload file : ");
-            console.log(file.name);
+            formData.append("image", file);
+            console.log("ready to upload file: " + file.name);
             console.log("isUploading:  " + isUploading);
         });
+        const url = process.env.REACT_APP_API_URL + "mytaste/upload/";
 
-        // fetch(`${API_URL}/image-upload`, {
-        //     method: 'POST',
-        //     body: formData
-        // })
-        //     .then(res => res.json())
-        //     .then(images => {
-        //         this.setState({
-        //             uploading: false,
-        //             images
-        //         })
-        //     })
+        formData.append("testkey", "test");
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json())
+            .then(images => {
+                console.log(images);
+            })
     }
 
     function handleSubmit(event) {
         event.preventDefault();
+        // console.log(event.target);
+        // console.log(event.target.title);
+        // console.log(event.target.files);
+
         //if (!formIsValid()) return;
 
-        saveItems(item).then(() => {
-            props.history.push("/");
-            //toast.success("Course saved.");
-            toast.success("Saved.");
-        });
+    // saveItems(item).then(() => {
+        //     props.history.push("/");
+        //     toast.success("Saved.");
+        // });
 
-        // const formData = new FormData();
-        // formData.append('myImage', image);
+        // formData.append('testkey', "test");
+        //
+        // const url = process.env.REACT_APP_API_URL + "mytaste/upload/";
         // const config = {
         //     headers: {
         //         'content-type': 'multipart/form-data'
         //     }
         // };
-        // axios.post("/upload",formData,config)
+        // axios.post(url,formData,config)
         //     .then((response) => {
         //         alert("The file is successfully uploaded");
         //     }).catch((error) => {
@@ -86,7 +86,7 @@ function ManageItemPage(props) {
             <ItemForm
                 item={item}
                 onChange={handleChange}
-                onFileUpload={handleFileUpload}
+                onFileChange={handleFileChange}
                 onSubmit={handleSubmit}/>
         </div>
     );
