@@ -26,3 +26,4 @@ yarn-error.log*
 
 /tools/db.json
 /tools/.env
+.env
