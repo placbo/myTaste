@@ -13,8 +13,8 @@ function ItemListPage() {
     return (
         <div className="container ">
             <div>Items</div>
-            <Link  to={"/newitem/"}>new...</Link>
             <ItemList items={items}/>
+            <Link  to={"/newitem/"}>New item...</Link>
         </div>
     );
 }

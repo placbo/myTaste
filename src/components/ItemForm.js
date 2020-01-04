@@ -32,15 +32,15 @@ function ItemForm(props) {
             </div>
 
             <div className="form-group">
-                <label htmlFor="imageLink">Image</label>
+                <label htmlFor="tags">Tags (comma separated)</label>
                 <div className="field">
                     <input
-                        id="imageLink"
+                        id="tags"
                         onChange={props.onChange}
                         type="text"
-                        name="imageLink"
+                        name="tags"
                         className="form-control"
-                        value={props.item.imageLink || ""}
+                        value={props.item.tags || ""}
                     />
                 </div>
             </div>
@@ -69,6 +69,7 @@ function ItemForm(props) {
                         id='fileUpload'
                         onChange={props.onFileChange}
                         name="fileUpload"
+                        capture
                     />
                 </div>
             </div>

@@ -11,10 +11,16 @@ let urlencodedParser = bodyParser.urlencoded({extended: false});
 let hash = require('hash.js');
 let mongoose = require('mongoose');
 const multer = require('multer');
+const uuidv4 = require('uuid/v4');
+const path = require('path');
 
 const DB_URL = 'mongodb://localhost:27017/';
 const DB_NAME = 'mytaste';
 const COLLECTION_NAME = 'items';
+// const IMAGE_LOCATION = '/mytasteapi/images/'; TODO
+const IMAGE_LOCATION = '/home/pcb/workspace/mytasteapi/public/img/content/';
+
+
 
 
 app.use(cors());
@@ -54,29 +60,50 @@ function handleError(res, reason, message, code) {
     res.status(code || 500).json({"error": message});
 }
 
-app.get('/mytaste/', function (req, res) {
-    res.send('Pers mytaste-api. v1.0.2   token verification turned off');
+app.get('/mytasteapi/', function (req, res) {
+    res.send('Pers mytaste-api. v1.0.3   uploading files work');
 });
 
-const multipartHandler = multer({
-    dest: '/tmp/uploads/',
-    limits: {fileSize: 10000000}, //10 MB
-}).single("image");
+const storage = multer.diskStorage({
+    limits: {
+        fileSize: 10000000 //10 MB
+    },
+    destination: function (req, file, cb) {
+        cb(null, IMAGE_LOCATION);
+    },
+    filename: function (req, file, cb) {
+        const id = uuidv4() + path.extname(file.originalname);
+        cb(null, id);
+    }
+});
 
-app.post('/mytaste/upload', function (req, res) {
+const multipartHandler = multer({storage: storage}).single('image');
+
+app.post('/mytasteapi/upload', function (req, res) {
+    console.log("upload called");
     multipartHandler(req, res, function (err) {
         if (err) {
+            console.error(err);
             return handleError(res, "FAIL!", err.message, 413);
         } else {
-             console.log("body:", req.body);
-             console.log("body.image:", req.body.image);
-             console.log("image:", req.image);
-            return res.sendStatus(200).end();
+            let item = req.body;
+            item.createDate = new Date();
+            if (req.file) {
+                item.imageName = req.file.filename;
+            }
+            console.log("Saving: ", item);
+            db.collection(COLLECTION_NAME).insertOne(item, function (err, doc) {
+                if (err) {
+                    handleError(res, err.message, "Failed to create new set.");
+                } else {
+                    res.status(201).json(doc.ops[0]);
+                }
+            });
         }
     })
 });
 
-app.get("/mytaste/items", verifyToken, function (req, res) {
+app.get("/mytasteapi/items", verifyToken, function (req, res) {
     db.collection(COLLECTION_NAME).find({}).toArray(function (err, docs) {
         if (err) {
             handleError(res, err.message, "Failed to get sets.");
@@ -86,19 +113,19 @@ app.get("/mytaste/items", verifyToken, function (req, res) {
     });
 });
 
-app.post("/mytaste/items", verifyToken, function (req, res) {
-    let newSet = req.body;
-    newSet.createDate = new Date();
-    db.collection(COLLECTION_NAME).insertOne(newSet, function (err, doc) {
-        if (err) {
-            handleError(res, err.message, "Failed to create new set.");
-        } else {
-            res.status(201).json(doc.ops[0]);
-        }
-    });
-});
+// app.post("/mytasteapi/items", verifyToken, function (req, res) {
+//     let newSet = req.body;
+//     newSet.createDate = new Date();
+//     db.collection(COLLECTION_NAME).insertOne(newSet, function (err, doc) {
+//         if (err) {
+//             handleError(res, err.message, "Failed to create new set.");
+//         } else {
+//             res.status(201).json(doc.ops[0]);
+//         }
+//     });
+// });
 
-app.get("/mytaste/items/:id", verifyToken, function (req, res) {
+app.get("/mytasteapi/items/:id", verifyToken, function (req, res) {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
         db.collection(COLLECTION_NAME).findOne({
             _id: new ObjectID(req.params.id)
@@ -114,12 +141,12 @@ app.get("/mytaste/items/:id", verifyToken, function (req, res) {
     }
 });
 
-app.put("/mytaste/items/:id", verifyToken, function (req, res) {
+app.put("/mytasteapi/items/:id", verifyToken, function (req, res) {
     db.collection(COLLECTION_NAME).findOneAndUpdate(
         {_id: new ObjectID(req.params.id)},
-        { $set: req.body },
-        { returnOriginal: false },
-        (err, documents)  => {
+        {$set: req.body},
+        {returnOriginal: false},
+        (err, documents) => {
             if (err) {
                 handleError(res, err.message, "Failed to update item");
             } else {
@@ -128,7 +155,7 @@ app.put("/mytaste/items/:id", verifyToken, function (req, res) {
         });
 });
 
-app.delete("/mytaste/items/:id", verifyToken, function (req, res) {
+app.delete("/mytasteapi/items/:id", verifyToken, function (req, res) {
     db.collection(COLLECTION_NAME).deleteOne({_id: new ObjectID(req.params.id)}, function (err) {
         if (err) {
             handleError(res, err.message, "Failed to delete set");
@@ -154,7 +181,7 @@ function verifyToken(req, res, next) {
     next();
 }
 
-app.post('/mytaste/login', urlencodedParser, function (req, res) {
+app.post('/mytasteapi/login', urlencodedParser, function (req, res) {
     let secret = hash.sha256().update(req.body.secret).digest('hex');
     if (secret === process.env.LOGIN_SECRET) {
         let token = jwt.sign({

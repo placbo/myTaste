@@ -9,11 +9,11 @@ function ItemList(props) {
             {props.items.map(item => {
                 return (
                     <Link key={item._id} to={"/item/" + item._id}>
-                        <div  className="card">
+                        <div className="card">
                             <div className="header">{item.title}</div>
-                            <img src={`/imgPCB/${item.imageLink}`} className="card-img-top" alt="..."/>
+                            {item.imageName &&<img src={`/img/content/${item.imageName}`} className="card-img-top" alt="..."/>}
                             <div className="card-body">
-                                <img className="diceValue" src={`/img/${item.diceValue}.png`} alt={item.diceValue}/>
+                                {item.diceValue && <img className="diceValue" src={`/img/dice_${item.diceValue}.png`} alt={item.diceValue}/>}
                             </div>
                         </div>
                     </Link>

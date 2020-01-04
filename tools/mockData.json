@@ -2,7 +2,7 @@
   {
     "title": "Item1",
     "comment": "Comment1",
-    "imageLink": "1.jpg",
+    "imageName": "1.jpg",
     "tags": null,
     "diceValue": 1,
     "createDate": "2020-01-02T18:23:02.612Z"
@@ -10,7 +10,7 @@
   {
     "title": "Item2",
     "comment": "Commment2",
-    "imageLink": "2.jpg",
+    "imageName": "2.jpg",
     "tags": null,
     "diceValue": 6,
     "createDate": "2020-01-02T18:24:02.612Z"

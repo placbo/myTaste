@@ -1,6 +1,6 @@
 import {handleResponse, handleError} from "./apiUtils";
 
-const baseUrl = process.env.REACT_APP_API_URL + "mytaste/items/";
+const baseUrl = "/mytasteapi/items/";
 
 export function getItems() {
     return fetch(baseUrl)

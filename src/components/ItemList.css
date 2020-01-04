@@ -25,8 +25,13 @@
 font-weight: bold;
 }
 
+.card:hover {
+  background-color: lightgray;
+}
+
 .diceValue {
   color:darkred;
+  width:50px;
 }
 
 
