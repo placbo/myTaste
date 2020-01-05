@@ -2,8 +2,9 @@ import React, {useState, useEffect} from "react";
 import {getItem} from "../api/itemApi";
 import {Link} from "react-router-dom";
 
-//another way to declare a functional component
 const ItemListPage = props => {
+
+    const CONTENT_BASE_URL = process.env.REACT_APP_MYTASTE_CONTENT_HOST;
 
     const [item, setItem] = useState([]);
 
@@ -20,7 +21,7 @@ const ItemListPage = props => {
             <div className="itemWrapper">
                 <div className="card">
                     <div className="header">{item.title}</div>
-                    <img src={"/img/content/" + item.imageName} className="card-img-top" alt="..."/>
+                    <img src={`${CONTENT_BASE_URL}mytastecontent/${item.imageName}`} className="card-img-top" alt="..."/>
                     <div className="card-body">
                         <p className="card-text">{item.comment}</p>
                         <img className="diceValue" src={`/img/dice_${item.diceValue}.png`} alt={item.diceValue}/>

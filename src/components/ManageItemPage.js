@@ -42,7 +42,9 @@ function ManageItemPage(props) {
         Object.keys(item).forEach(function (key) {
             (key !== "_id") && formData.append(key, item[key]);
         });
-        const url = "/mytasteapi/upload/";
+        const url = process.env.REACT_APP_MYTASTE_API_HOST + "mytasteapi/upload/";
+        //TODO: if _id PUT instead of POST
+
         fetch(url, {
             method: 'POST',
             body: formData

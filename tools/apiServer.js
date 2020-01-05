@@ -17,11 +17,7 @@ const path = require('path');
 const DB_URL = 'mongodb://localhost:27017/';
 const DB_NAME = 'mytaste';
 const COLLECTION_NAME = 'items';
-// const IMAGE_LOCATION = '/mytasteapi/images/'; TODO
-const IMAGE_LOCATION = '/home/pcb/workspace/mytasteapi/public/img/content/';
-
-
-
+const IMAGE_LOCATION = '/var/www/html/mytastecontent/';
 
 app.use(cors());
 app.use(bodyParser.json());

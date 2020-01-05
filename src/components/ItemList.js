@@ -4,6 +4,7 @@ import React from "react";
 
 
 function ItemList(props) {
+    const CONTENT_BASE_URL = process.env.REACT_APP_MYTASTE_CONTENT_HOST;
     return (
         <div className="itemListWrapper">
             {props.items.map(item => {
@@ -11,7 +12,7 @@ function ItemList(props) {
                     <Link key={item._id} to={"/item/" + item._id}>
                         <div className="card">
                             <div className="header">{item.title}</div>
-                            {item.imageName &&<img src={`/img/content/${item.imageName}`} className="card-img-top" alt="..."/>}
+                            {item.imageName &&<img src={`${CONTENT_BASE_URL}mytastecontent/${item.imageName}`} className="card-img-top" alt="..."/>}
                             <div className="card-body">
                                 {item.diceValue && <img className="diceValue" src={`/img/dice_${item.diceValue}.png`} alt={item.diceValue}/>}
                             </div>

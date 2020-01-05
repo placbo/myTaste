@@ -1,4 +1,51 @@
-.
+.env :
+REACT_APP_MYTASTE_API_HOST=http://localhost:3001/
+REACT_APP_MYTASTE_CONTENT_HOST=http://localhost/
+
+
+.env.production
+REACT_APP_MYTASTE_API_HOST=http://www.kasselars.com/
+REACT_APP_MYTASTE_CONTENT_HOST=http://www.kasselars.com/
+
+under tools:
+ .env
+LOGIN_SECRET=<lang kode>
+TOKEN_SECRET=<passord>
+PORT=3001
+MONGODB_URI=mongodb://localhost:27017/mytaste
+  
+
+OPPRETT KATALOG: 
+
+/var/www/html/mytastecontent/
+
+
+NGINX:
+
+server {
+  listen 80;
+  server_name kasselars.com;
+
+  location /mytastecontent/ {
+    alias /var/www/html/mytastecontent/;
+  } 
+
+  location /mytasteapi/ {
+    proxy_pass http://127.0.0.1:3001/mytasteapi/;
+  }
+
+}
+
+
+serve gui with surge:
+
+sudo npm i -g surge
+surge
+project path: /path/to/project/build
+mytaste.surge.sh
+
+---------------------------------
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
