@@ -13,6 +13,7 @@ function ItemListPage() {
     return (
         <div className="container ">
             <div>Items</div>
+            <Link  to={"/newitem/"}>New item...</Link>
             <ItemList items={items}/>
             <Link  to={"/newitem/"}>New item...</Link>
         </div>

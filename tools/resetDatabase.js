@@ -41,12 +41,12 @@ MongoClient.connect(URL, {useNewUrlParser: true, useUnifiedTopology: true}, (err
     console.log("Connected successfully to server");
     const db = client.db();
     dropCollection(db, () => {
-        insertDocuments(db, () => {
-            findDocuments(db, () => {
+//        insertDocuments(db, () => {
+//            findDocuments(db, () => {
                 client.close();
             });
-        });
-    })
+//        });
+//    })
 });
 
 

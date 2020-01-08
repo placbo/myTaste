@@ -12,6 +12,7 @@ const ItemListPage = props => {
         const id = props.match.params.id; // from the path `/:id`
         if (id) {
             getItem(id).then(_item => setItem(_item));
+
         }
     }, [props.match.params.id]);
 
@@ -21,10 +22,10 @@ const ItemListPage = props => {
             <div className="itemWrapper">
                 <div className="card">
                     <div className="header">{item.title}</div>
-                    <img src={`${CONTENT_BASE_URL}mytastecontent/${item.imageName}`} className="card-img-top" alt="..."/>
+                    {item.image && <img src={`${CONTENT_BASE_URL}/mytastecontent/${item.image}`} className="card-img-top" alt="..."/>}
                     <div className="card-body">
                         <p className="card-text">{item.comment}</p>
-                        <img className="diceValue" src={`/img/dice_${item.diceValue}.png`} alt={item.diceValue}/>
+                        {item.diceValue && <img className="diceValue" src={`/img/dice_${item.diceValue}.png`} alt={item.diceValue}/>}
                     </div>
                     <Link to={"/item/" + item._id + "/edit/"}>
                         <div>edit...</div>

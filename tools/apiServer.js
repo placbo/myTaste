@@ -57,6 +57,7 @@ function handleError(res, reason, message, code) {
 }
 
 app.get('/mytasteapi/', function (req, res) {
+    console.log("Ping called");
     res.send('Pers mytaste-api. v1.0.3   uploading files work');
 });
 
@@ -76,25 +77,14 @@ const storage = multer.diskStorage({
 const multipartHandler = multer({storage: storage}).single('image');
 
 app.post('/mytasteapi/upload', function (req, res) {
-    console.log("upload called");
+    console.log("Upload called (POST)");
     multipartHandler(req, res, function (err) {
         if (err) {
             console.error(err);
             return handleError(res, "FAIL!", err.message, 413);
         } else {
-            let item = req.body;
-            item.createDate = new Date();
-            if (req.file) {
-                item.imageName = req.file.filename;
-            }
-            console.log("Saving: ", item);
-            db.collection(COLLECTION_NAME).insertOne(item, function (err, doc) {
-                if (err) {
-                    handleError(res, err.message, "Failed to create new set.");
-                } else {
-                    res.status(201).json(doc.ops[0]);
-                }
-            });
+            console.log("---File saved as_" + req.file.filename);
+            res.status(201).json(req.file.filename);
         }
     })
 });
@@ -109,17 +99,18 @@ app.get("/mytasteapi/items", verifyToken, function (req, res) {
     });
 });
 
-// app.post("/mytasteapi/items", verifyToken, function (req, res) {
-//     let newSet = req.body;
-//     newSet.createDate = new Date();
-//     db.collection(COLLECTION_NAME).insertOne(newSet, function (err, doc) {
-//         if (err) {
-//             handleError(res, err.message, "Failed to create new set.");
-//         } else {
-//             res.status(201).json(doc.ops[0]);
-//         }
-//     });
-// });
+app.post("/mytasteapi/items", verifyToken, function (req, res) {
+    let newSet = req.body;
+    console.log("Saving: (POST) ", newSet);
+    newSet.createDate = new Date();
+    db.collection(COLLECTION_NAME).insertOne(newSet, function (err, doc) {
+        if (err) {
+            handleError(res, err.message, "Failed to create new set.");
+        } else {
+            res.status(201).json(doc.ops[0]);
+        }
+    });
+});
 
 app.get("/mytasteapi/items/:id", verifyToken, function (req, res) {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {

@@ -69,7 +69,7 @@ function ItemForm(props) {
                         id='fileUpload'
                         onChange={props.onFileChange}
                         name="fileUpload"
-                        capture
+                        // capture
                     />
                 </div>
             </div>
