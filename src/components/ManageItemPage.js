@@ -81,7 +81,7 @@ function ManageItemPage(props) {
 
         perLogging("submitting!!!");
         event.preventDefault();
-
+//TODO: sjekk at image er med. henger ? print save-item til logg. noen gang uten bilde...
         saveItem(item).then(() => {
             props.history.push("/");
             toast.success(`${item.title} Saved.`);
