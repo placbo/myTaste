@@ -19,6 +19,7 @@ const DB_NAME = 'mytaste';
 const COLLECTION_NAME = 'items';
 const IMAGE_LOCATION = '/var/www/html/mytastecontent/';
 
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));

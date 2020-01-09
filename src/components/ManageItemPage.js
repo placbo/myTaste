@@ -49,8 +49,14 @@ function ManageItemPage(props) {
             perLogging(file.name);
         });
 
+        //TODO: sjekk for 1mb-grense på filer (status 413)
+
         fetch(UPLOAD_IMAGE_URL, {
             method: 'POST',
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "mode" : "no-cors",
+            },
             body: formData
         })
             .then(res => res.json())
@@ -63,6 +69,7 @@ function ManageItemPage(props) {
                 });
             })
             .catch(function(err) {
+                perLogging(err.status);
                 perLogging(err);
                 console.log(err);
             });
@@ -71,6 +78,8 @@ function ManageItemPage(props) {
 
     function handleSubmit(event) {
         //if (!formIsValid()) return;
+
+        perLogging("submitting!!!");
         event.preventDefault();
 
         saveItem(item).then(() => {
