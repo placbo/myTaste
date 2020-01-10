@@ -1,0 +1,75 @@
+.itemListWrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.itemListWrapper .card {
+    width: 100px;
+    height: 200px;
+    text-align: center;
+    margin:3px;
+}
+
+.itemWrapper .card {
+    width: 300px;
+    height: 400px;
+    text-align: center;
+}
+
+.itemListWrapper .card img {
+    width:auto;
+    height:auto;
+    max-height: 100px;
+    max-width: 100px;
+    margin: auto;
+    padding: 10px;
+}
+
+.itemWrapper .card img {
+    width:auto;
+    height:auto;
+    max-height: 250px;
+    max-width: 250px;
+    margin: auto;
+    padding: 10px;
+}
+
+.card .header {
+    font-weight: bold;
+}
+
+.card:hover {
+    background-color: lightgray;
+}
+
+.itemListWrapper .card .diceValue, .itemWrapper .card .diceValue{
+    color: darkred;
+    width: 50px;
+}
+
+
+a {
+    color: darkblue;
+}
+
+a:hover {
+    text-decoration: none;
+    color: blueviolet;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+.onScreenLogger {
+    background-color: lightcoral;
+    border: 1px solid red;
+    padding: 0.5rem;
+    margin: 1rem;
+}
+
+.pageheading {
+    font-weight: bold;
+    font-size: 1.2rem;
+}

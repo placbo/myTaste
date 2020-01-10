@@ -3,15 +3,21 @@ import ItemForm from "./ItemForm";
 import {getItem, saveItem} from "../api/itemApi";
 import {toast} from "react-toastify";
 
+const UPLOAD_IMAGE_URL = process.env.REACT_APP_MYTASTE_API_HOST + "/mytasteapi/upload/";
+
 function ManageItemPage(props) {
 
     const [item, setItem] = useState({
             _id: null,
-            title: "test"
+            title: "test",
+            image: null
         }
     );
 
-    const [per, setPer] = useState([]);
+    const [onScreenLog, setOnScreenLog] = useState([]);
+    const [errorMsg, setErrorMsg] = useState("");
+    const [saving, setSaving] = useState(false);
+    const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
         const id = props.match.params.id; // from the path `/:id`
@@ -20,83 +26,101 @@ function ManageItemPage(props) {
         }
     }, [props.match.params.id]);
 
-    function handleChange({target}) {
+
+    useEffect(() => {
+        addToOnScreenLog(JSON.stringify(item));
+    }, [item]);
+
+
+    function handleFormChange({target}) {
         setItem({
             ...item,
             [target.name]: target.value
         });
     }
 
-    function perLogging(msg) {
-        setPer(oldArray => [...oldArray, msg + " | "]);
+    function addToOnScreenLog(msg) {
+        //setOnScreenLog(oldArray => [...oldArray, msg]);
     }
 
+    const _1MB = 1024 * 1024;
 
     function handleFileChange(e) {
-
-        perLogging("filechange triggered");
-
-        console.log("handles filechange");
+        addToOnScreenLog("filechange triggered");
         const files = Array.from(e.target.files);
-        const UPLOAD_IMAGE_URL = process.env.REACT_APP_MYTASTE_API_HOST + "/mytasteapi/upload/";
+        if (files && files[0]) {
+            const file = files[0];
+            if (file.size < _1MB) {
+                const formData = new FormData();
+                formData.append("image", file);
+                addToOnScreenLog("Uploading file: " + file.name + " with size: " + file.size);
 
-        perLogging("url : " + UPLOAD_IMAGE_URL);
-
-        const formData = new FormData();
-        files.forEach((file, i) => {
-            formData.append("image", file);
-            perLogging("ready to upload file : ");
-            perLogging(file.name);
-        });
-
-        //TODO: sjekk for 1mb-grense på filer (status 413)
-
-        fetch(UPLOAD_IMAGE_URL, {
-            method: 'POST',
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "mode" : "no-cors",
-            },
-            body: formData
-        })
-            .then(res => res.json())
-            .then(result => {
-                perLogging(result);
-                console.log(result);
-                setItem({
-                    ...item,
-                    'image': result
-                });
-            })
-            .catch(function(err) {
-                perLogging(err.status);
-                perLogging(err);
-                console.log(err);
-            });
-
+                addToOnScreenLog("Uploading url : " + UPLOAD_IMAGE_URL);
+                setUploading(true);
+                fetch(UPLOAD_IMAGE_URL, {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(res => {
+                        console.log("Response status: ", res.status);
+                        addToOnScreenLog("Response status: " + res.status);
+                        return res.json()
+                    })
+                    .then(result => {
+                        addToOnScreenLog("Result:" + (JSON.stringify(result)));
+                        console.log("Result: ", result);
+                        setItem({
+                            ...item,
+                            'image': result
+                        });
+                    })
+                    .catch((error) => {
+                        console.log("ERROR", error.message);
+                        addToOnScreenLog(error.message);
+                        setErrorMsg("Could not upload file to server.")
+                    }).finally(() => setUploading(false));;
+            } else {
+                setErrorMsg("Selected file is to large ( > 1MB )" + file.size/1024/1024 )
+            }
+        } else {
+            console.log("no file to send ?")
+        }
     }
 
     function handleSubmit(event) {
         //if (!formIsValid()) return;
 
-        perLogging("submitting!!!");
+        addToOnScreenLog("Submitting form with item:");
         event.preventDefault();
-//TODO: sjekk at image er med. henger ? print save-item til logg. noen gang uten bilde...
+        addToOnScreenLog(JSON.stringify(item));
+        setSaving(true);
         saveItem(item).then(() => {
             props.history.push("/");
             toast.success(`${item.title} Saved.`);
-        });
+            setSaving(true);
+        }).catch((error) => {
+            console.log("ERROR", error.message);
+            addToOnScreenLog(error.message);
+            setErrorMsg("Could not save form to server.")
+        }).finally(() => setSaving(false));
+
     }
 
 
     return (
         <div className="container">
-            <div >{per}</div>
+            {/*<div className="onScreenLogger">*/}
+            {/*    <h5>onScreenLogger (tm):</h5>*/}
+            {/*    {onScreenLog.map((value, index) => (<p key={index}>{value}</p>))}</div>*/}
             <ItemForm
+                disabled={uploading|| saving}
                 item={item}
-                onChange={handleChange}
+                onChange={handleFormChange}
                 onFileChange={handleFileChange}
                 onSubmit={handleSubmit}/>
+            {saving && <div className="saving"> 'Saving!'</div>}
+            {uploading && <div className="uploading"> 'Uploading!'</div>}
+            <div className="error">{errorMsg}</div>
         </div>
     );
 }

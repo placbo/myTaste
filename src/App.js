@@ -1,3 +1,5 @@
+import "./styles/styles.css";
+
 import React from "react";
 import ItemListPage from "./components/ItemListPage";
 import {Route, Switch} from "react-router-dom";

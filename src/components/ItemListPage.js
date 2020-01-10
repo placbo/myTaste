@@ -11,12 +11,15 @@ function ItemListPage() {
     }, []);
 
     return (
-        <div className="container ">
-            <div>Items</div>
+        <>
+            <div className="pageheading">Items</div>
             <Link  to={"/newitem/"}>New item...</Link>
+            <br/>
             <ItemList items={items}/>
+            <br/>
             <Link  to={"/newitem/"}>New item...</Link>
-        </div>
+            <pre>App version: {process.env.REACT_APP_VERSION}</pre>
+        </>
     );
 }
 

@@ -85,7 +85,7 @@ app.post('/mytasteapi/upload', function (req, res) {
             return handleError(res, "FAIL!", err.message, 413);
         } else {
             console.log("---File saved as_" + req.file.filename);
-            res.status(201).json(req.file.filename);
+            res.status(200).json(req.file.filename);
         }
     })
 });

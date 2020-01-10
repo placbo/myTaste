@@ -1,3 +1,0 @@
-npm run build
-sudo rm -rf /var/www/html/mytaste/
-sudo mv build /var/www/html/mytaste/
