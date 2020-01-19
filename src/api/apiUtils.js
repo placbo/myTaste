@@ -1,5 +1,4 @@
 export async function handleResponse(response) {
-  console.log("Response code: ", response.code);
   if (response.ok) return response.json();
   throw new Error("Network response was not ok.");
 }

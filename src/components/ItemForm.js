@@ -1,7 +1,6 @@
 import React from "react";
 
-function ItemForm(props) {
-  return (
+const ItemForm = props => (
     <form className="itemform" onSubmit={props.onSubmit}>
       <fieldset disabled={props.disabled}>
 
@@ -9,12 +8,12 @@ function ItemForm(props) {
           <label htmlFor="title">Title</label>
           <div className="field">
             <input
-              id="title"
-              onChange={props.onChange}
-              type="text"
-              name="title"
-              className="form-control"
-              value={props.item.title || ""}
+                id="title"
+                onChange={props.onChange}
+                type="text"
+                name="title"
+                className="form-control"
+                value={props.item.title || ""}
             />
           </div>
         </div>
@@ -23,12 +22,12 @@ function ItemForm(props) {
           <label htmlFor="comment">Comment</label>
           <div className="field">
             <input
-              id="comment"
-              onChange={props.onChange}
-              type="text"
-              name="comment"
-              className="form-control"
-              value={props.item.comment || ""}
+                id="comment"
+                onChange={props.onChange}
+                type="text"
+                name="comment"
+                className="form-control"
+                value={props.item.comment || ""}
             />
           </div>
         </div>
@@ -37,12 +36,12 @@ function ItemForm(props) {
           <label htmlFor="tags">Tags (comma separated)</label>
           <div className="field">
             <input
-              id="tags"
-              onChange={props.onChange}
-              type="text"
-              name="tags"
-              className="form-control"
-              value={props.item.tags || ""}
+                id="tags"
+                onChange={props.onChange}
+                type="text"
+                name="tags"
+                className="form-control"
+                value={props.item.tags || ""}
             />
           </div>
         </div>
@@ -51,34 +50,20 @@ function ItemForm(props) {
           <label htmlFor="diceValue">DiceValue</label>
           <div className="field">
             <input
-              id="diceValue"
-              onChange={props.onChange}
-              type="text"
-              name="diceValue"
-              className="form-control"
-              value={props.item.diceValue || ""}
+                id="diceValue"
+                onChange={props.onChange}
+                type="text"
+                name="diceValue"
+                className="form-control"
+                value={props.item.diceValue || ""}
             />
           </div>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="fileUpload">Last opp</label>
-          <div className="field">
-            <input
-              type="file"
-              id="fileUpload"
-              onChange={props.onFileChange}
-              name="fileUpload"
-              accept="image/*"
-              // capture
-            />
-          </div>
-        </div>
 
-        <input type="submit" value="Save" className="btn btn-primary" />
+        <input type="submit" value="Save" className="btn btn-primary"/>
       </fieldset>
     </form>
-  );
-}
+);
 
 export default ItemForm;

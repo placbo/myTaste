@@ -11,7 +11,7 @@ function ItemList(props) {
                     <Link key={item._id} to={"/item/" + item._id}>
                         <div className="card">
                             <div className="header">{item.title}</div>
-                            {item.image &&<img src={`${CONTENT_BASE_URL}/mytastecontent/${item.image}`} className="card-img-top" alt="..."/>}
+                            {item.image &&<img src={`${CONTENT_BASE_URL}/mytastecontent/thumb/${item.image}`} className="card-img-top" alt="..."/>}
                             <div className="card-body">
                                 {item.diceValue && <img className="diceValue" src={`/img/dice_${item.diceValue}.png`} alt={item.diceValue}/>}
                             </div>
