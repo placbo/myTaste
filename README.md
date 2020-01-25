@@ -62,6 +62,23 @@ surge
 project path: /path/to/project/build
 mytaste.surge.sh
 
+-------------------------------------
+
+
+backup
+
+ mongodump
+ (med mongorestore dump/)
+ 
+ssh-copy-id USER@SERVER
+cd tools
+sh backup.sh
+
+todo: cron
+mongoexport --collection=items --db=mytaste --out=items.json kan også brukes
+
+
+
 ---------------------------------
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

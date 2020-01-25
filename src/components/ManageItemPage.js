@@ -132,7 +132,6 @@ function ManageItemPage(props) {
             onChange={handleFileChange}
             name="fileUpload"
             accept="image/*"
-            capture
           />
         </div>
       </div>
@@ -141,7 +140,7 @@ function ManageItemPage(props) {
           <div>
             <img src={image} alt="preview" />
           </div>
-          {getFormatedFileSize(file)}
+          Filesize: {getFormatedFileSize(file)} MB
           <button onClick={uploadfile}>Upload image</button>
         </>
       )}
