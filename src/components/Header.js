@@ -1,20 +1,24 @@
 import React from "react";
-import {NavLink} from "react-router-dom";
+import styled from "styled-components";
 
-function Header() {
-    const activeStyle = {"fontWeight": "bold"};
-    return (
-        <nav>
-            <NavLink activeStyle={activeStyle} exact to="/">
-                Home
-            </NavLink>
-            {" | "}
-            <NavLink activeStyle={activeStyle} to="/about">
-                About
-            </NavLink>
-            {" "}
-        </nav>
-    );
+const Wrapper = styled.div`
+  height: 60px;
+  background-color:${props => props.theme.box}; ;
+  width: 100%;
+  border-bottom: 1px solid ${props => props.theme.separator}; ;
+`;
+
+// const PageTitle = styled.div`
+//   font-weight: bold;
+//   font-size: 2rem;
+// `;
+
+function Header(props) {
+  return (
+    <Wrapper>
+      {/*<PageTitle>{props.title}</PageTitle>*/}
+    </Wrapper>
+  );
 }
 
 export default Header;

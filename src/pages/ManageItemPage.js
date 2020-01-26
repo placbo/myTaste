@@ -1,8 +1,26 @@
 import React, { useEffect, useState } from "react";
-import ItemForm from "./ItemForm";
+import ItemForm from "../components/ItemForm";
 import { getItem, saveItem } from "../api/itemApi";
 import { toast } from "react-toastify";
 import Resizer from "react-image-file-resizer";
+import styled from "styled-components";
+
+
+const BlockScreen = styled.div`
+    z-index: 2;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255,255,255, 0.8);
+    font-size: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 1s ease-in;
+`;
+
 
 const MB = 1024 * 1024;
 const UPLOAD_IMAGE_URL =
@@ -11,7 +29,7 @@ const UPLOAD_IMAGE_URL =
 function ManageItemPage(props) {
   const [item, setItem] = useState({
     _id: null,
-    title: "test",
+    title: "",
     image: null
   });
 
@@ -94,8 +112,8 @@ function ManageItemPage(props) {
             image: result
           });
         })
-        .catch((e) => {
-          toast.error("Could not upload file to server",e);
+        .catch(e => {
+          toast.error("Could not upload file to server", e);
         })
         .finally(() => setUploading(false));
     } else {
@@ -129,6 +147,7 @@ function ManageItemPage(props) {
           <input
             type="file"
             id="fileUpload"
+            placeholder="title"
             onChange={handleFileChange}
             name="fileUpload"
             accept="image/*"
@@ -144,7 +163,7 @@ function ManageItemPage(props) {
           <button onClick={uploadfile}>Upload image</button>
         </>
       )}
-      {uploading && <div className="blockScreen">Uploading...</div>}
+      {uploading && <BlockScreen>Uploading...</BlockScreen>}
 
       <ItemForm
         disabled={uploading || saving}
@@ -152,7 +171,7 @@ function ManageItemPage(props) {
         onChange={handleFormChange}
         onSubmit={handleSubmit}
       />
-      {saving && <div className="blockScreen">Saving...</div>}
+      {saving && <BlockScreen>Saving...</BlockScreen>}
     </div>
   );
 }
