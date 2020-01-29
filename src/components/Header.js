@@ -1,23 +1,45 @@
 import React from "react";
 import styled from "styled-components";
+import { AiFillHome } from "react-icons/ai";
+import { Link } from "react-router-dom";
+import { AiOutlineMenu } from "react-icons/ai";
 
-const Wrapper = styled.div`
+const StyledHeader = styled.div`
   height: 60px;
-  background-color:${props => props.theme.box}; ;
+  background-color: ${props => props.theme.box};
   width: 100%;
-  border-bottom: 1px solid ${props => props.theme.separator}; ;
+  border-bottom: 1px solid ${props => props.theme.separator};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: "Jura", sans-serif;
 `;
 
-// const PageTitle = styled.div`
-//   font-weight: bold;
-//   font-size: 2rem;
-// `;
+const IconWrapper = styled.div`
+  font-size: 40px;
+  margin-left: 1rem;
+  margin-right: 1rem;
+`;
+const Logo = styled.span`
+  font-size: 40px;
+  font-weight: bold;
+  margin-left: 1rem;
+  margin-right: 1rem;
+`;
 
-function Header(props) {
+function Header() {
   return (
-    <Wrapper>
-      {/*<PageTitle>{props.title}</PageTitle>*/}
-    </Wrapper>
+    <StyledHeader>
+      <Link to="/">
+        <IconWrapper>
+          <AiFillHome />
+        </IconWrapper>
+      </Link>
+      <Logo>MyTaste</Logo>
+      <IconWrapper>
+        <AiOutlineMenu />
+      </IconWrapper>
+    </StyledHeader>
   );
 }
 
