@@ -1,7 +1,26 @@
-import { handleResponse, handleError } from "./apiUtils";
+import {
+  handleResponse,
+  handleError,
+  handleAjaxResponse,
+  handleAjaxError
+} from "./apiUtils";
+import Axios from "axios";
 
 export const ITEMS_URL =
   process.env.REACT_APP_MYTASTE_API_HOST + "/mytasteapi/items/";
+
+const encodedString = new Buffer("test").toString("base64");
+
+const headers = {
+  "Content-Type": "application/json",
+  Authorization: `Basic ${encodedString}`
+};
+
+export function getAllItems() {
+  return Axios.get(ITEMS_URL, { headers: headers })
+    .then(handleAjaxResponse)
+    .catch(handleAjaxError);
+}
 
 export function getItem(id) {
   return fetch(ITEMS_URL + id)

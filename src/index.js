@@ -3,9 +3,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ReactDOM from "react-dom";
 import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
-import { interceptRequestsOnMock } from "./api/mockInterceptors";
+import {interceptRequestsOnMock, shouldMock} from "./api/mockInterceptors";
 
-if (process.env.REACT_APP_USE_MOCK) {
+if (shouldMock) {
   interceptRequestsOnMock();
 }
 
