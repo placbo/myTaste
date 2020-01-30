@@ -1,22 +1,27 @@
 import React, { useState, useEffect } from "react";
 import ItemList from "../components/ItemList";
-import { getItems } from "../api/itemApi";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Header from "../components/Header";
 import styled from "styled-components";
+import Axios from 'axios';
 
 const PageContent = styled.div`
   margin: 1rem;
 `;
 
+const ITEMS_URL = process.env.REACT_APP_MYTASTE_API_HOST + "/mytasteapi/items/";
+
 function ItemListPage() {
   const [items, setItems] = useState([]);
-
+  
   useEffect(() => {
-    getItems()
-      .then(_items => setItems(_items))
-      .catch(() => toast.error("Could retrieve get items from server"));
+    Axios.get(ITEMS_URL)
+      .then(res => {
+        console.log(res);
+        setItems(res.data);
+      })
+      .catch(error => toast.error());
   }, []);
 
   return (

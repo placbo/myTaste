@@ -2,7 +2,7 @@
 REACT_APP_MYTASTE_API_HOST=http://localhost:3001/
 REACT_APP_MYTASTE_CONTENT_HOST=http://localhost/
 REACT_APP_VERSION=xxx
-
+REACT_APP_MOCK_API=true
 
 .env.production
 REACT_APP_MYTASTE_API_HOST=http://www.kasselars.com/

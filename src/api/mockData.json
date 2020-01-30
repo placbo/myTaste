@@ -1,0 +1,64 @@
+[
+  {
+    "_id": "5e256d73d6b2784b229a66c1",
+    "title": "SHB med trøffelsaus",
+    "image": "453362ec-81e8-4909-bab2-abe272182a7c.jpg",
+    "diceValue": "6",
+    "createDate": "2020-01-20T09:05:55.639Z",
+    "comment": "God grillsmak. God saus men litt mye. Trenger ikke bacon. ",
+    "tags": "SHB, burger "
+  },
+  {
+    "_id": "5e2ad8a930dd8f0ce1368842",
+    "title": "Cheetos spirals",
+    "image": "2f78c738-9c7e-4c6b-8bb4-a14d69321145.jpg",
+    "comment": "Lite crunch. Fin form. Lite smak",
+    "tags": "Ostepop",
+    "diceValue": "2",
+    "createDate": "2020-01-24T11:44:41.671Z"
+  },
+  {
+    "_id": "5e2b451530dd8f0ce1368843",
+    "title": "Meny leverpostei",
+    "image": "2fac047d-5d0c-4dd0-b7dd-69da5baee19b.jpg",
+    "comment": "God, men vel tørr. Ikke så mye smak. ",
+    "diceValue": "4",
+    "tags": "Leverpostei",
+    "createDate": "2020-01-24T19:27:17.678Z"
+  },
+  {
+    "_id": "5e2b4b7430dd8f0ce1368844",
+    "title": "Tesco Cheese balls",
+    "image": "1beb3d9d-e369-4841-8b11-de4c230b7a44.jpg",
+    "comment": "Veldig sprø. God ostesmak. Ikke for sure. God maissmak",
+    "tags": "Ostepop",
+    "createDate": "2020-01-24T19:54:28.153Z",
+    "diceValue": "6"
+  },
+  {
+    "_id": "5e2c337230dd8f0ce1368845",
+    "title": "Captain Chrup",
+    "image": "ad88e026-f29d-47ad-bac4-cc5b8020d9e7.jpg",
+    "tags": "Ostepop, Mais",
+    "comment": "Tørt, smakløs. Kanskje fin til dip. Kun mais. Ikke veldig sprø. Som Tempur. Ikke ost (selvsagt)",
+    "diceValue": "1",
+    "createDate": "2020-01-25T12:24:18.190Z"
+  },
+  {
+    "_id": "5e318d4530dd8f0ce1368846",
+    "title": "Kiddylicious bringebær Crispy fruktfisk",
+    "image": "5adc4cd2-06fa-4f35-a19c-1cff7bfeda90.jpg",
+    "comment": "Ganske god. Litt emmen ettersmak. Godt med knas. Smaker litt tykningsmiddel",
+    "diceValue": "4",
+    "createDate": "2020-01-29T13:48:53.380Z"
+  },
+  {
+    "_id": "5e32b5f830dd8f0ce1368847",
+    "title": "Nesquik sjokolade",
+    "image": "0c8c7c50-7014-4293-b1d8-9ac01e811c32.jpg",
+    "diceValue": "4",
+    "comment": "Vel søt melkesjokolade med ekstra søtt hvit sjokoladefyll. Veldig lik kinder-sjokolade. ",
+    "tags": "Sjokolade ",
+    "createDate": "2020-01-30T10:54:48.691Z"
+  }
+]
