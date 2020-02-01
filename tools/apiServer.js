@@ -8,8 +8,10 @@ const path = require("path");
 const imageThumbnail = require("image-thumbnail");
 const hash = require("hash.js");
 const mongoose = require("mongoose");
+
+const passport = require("passport");
 const fs = require("fs");
-require('log-timestamp');
+require("log-timestamp");
 require("dotenv").config();
 
 const ObjectID = mongodb.ObjectID;
@@ -27,9 +29,39 @@ const _10MB = 10 * 1024 * 1024;
 
 let db;
 
+let GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
+
+passport.serializeUser(function(user, done) {
+  console.log("Serialize User", user);
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  console.log("Deserialize User", user);
+  done(null, user);
+});
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "/auth/google/callback"
+    },
+    (accessToken, refreshToken, profile, done) => {
+      console.log(profile);
+      const user = { id: profile.id, name: profile.displayName };
+      console.log("setting user", user);
+      return done(null, user);
+    }
+  )
+);
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 mongodb.MongoClient.connect(
   process.env.MONGODB_URI || DB_URL + DB_NAME,
@@ -48,7 +80,7 @@ mongodb.MongoClient.connect(
     console.log("Database connection ready");
 
     // Initialize the app.
-    let server = app.listen(process.env.PORT || 3001, function() {
+    let server = app.listen(process.env.PORT || 3001, () => {
       let port = server.address().port;
       console.log("App now running on port", port);
     });
@@ -64,6 +96,32 @@ app.get("/mytasteapi/", function(req, res) {
   console.log("Ping called");
   res.send("Pers mytaste-api. v1.0.3   uploading files work");
 });
+
+app.get("/", (req, res) => {
+  console.log("User", req.user);
+  res.send("<html><h1>Main page</h1><a href='/login'>login page</a></html>");
+});
+
+app.get("/login", (req, res) => {
+  res.send(
+    "<html><h1>Loginpage</h1><a href='/auth/google'>google login</a></html>"
+  );
+});
+
+app.get(
+  "/auth/google",
+  passport.authenticate("google", {
+    scope: ["https://www.googleapis.com/auth/plus.login"]
+  })
+);
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  function(req, res) {
+    res.redirect("/");
+  }
+);
 
 const storage = multer.diskStorage({
   limits: {
@@ -90,7 +148,7 @@ app.post("/mytasteapi/upload", function(req, res) {
       console.log("---File saved as_" + req.file.filename);
       let options = { width: 200, height: 200 };
       const sourcePathForThumbnail = IMAGE_LOCATION + req.file.filename;
-      const destPathForThumbnail = IMAGE_THUMB_LOCATION +  req.file.filename;
+      const destPathForThumbnail = IMAGE_THUMB_LOCATION + req.file.filename;
       console.log("trying to thumbnail: ", sourcePathForThumbnail);
       imageThumbnail(sourcePathForThumbnail, options)
         .then(data => {
