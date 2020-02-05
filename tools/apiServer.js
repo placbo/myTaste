@@ -8,6 +8,8 @@ const path = require("path");
 const imageThumbnail = require("image-thumbnail");
 const hash = require("hash.js");
 const mongoose = require("mongoose");
+const ensureLoggedIn = require("connect-ensure-login").ensureLoggedIn;
+const session = require("express-session");
 
 const passport = require("passport");
 const fs = require("fs");
@@ -16,7 +18,6 @@ require("dotenv").config();
 
 const ObjectID = mongodb.ObjectID;
 const cors = require("cors");
-const app = express();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 const DB_URL = "mongodb://localhost:27017/";
@@ -31,16 +32,6 @@ let db;
 
 let GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 
-passport.serializeUser(function(user, done) {
-  console.log("Serialize User", user);
-  done(null, user);
-});
-
-passport.deserializeUser(function(user, done) {
-  console.log("Deserialize User", user);
-  done(null, user);
-});
-
 passport.use(
   new GoogleStrategy(
     {
@@ -48,18 +39,37 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "/auth/google/callback"
     },
-    (accessToken, refreshToken, profile, done) => {
-      console.log(profile);
-      const user = { id: profile.id, name: profile.displayName };
-      console.log("setting user", user);
-      return done(null, user);
+    (accessToken, refreshToken, profile, cb) => {
+      if (profile.id === process.env.PCB_GOOGLE_ID) {
+        return cb(null, profile);
+      } else {
+        return cb("Unauthorized", undefined);
+      }
     }
   )
 );
 
+passport.serializeUser(function(user, cb) {
+  cb(null, user);
+});
+
+passport.deserializeUser(function(user, cb) {
+  cb(null, user);
+});
+
+const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { maxAge: 3600000 } //60 min
+  })
+);
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -92,19 +102,20 @@ function handleError(res, reason, message, code) {
   res.status(code || 500).json({ error: message });
 }
 
-app.get("/mytasteapi/", function(req, res) {
+app.get("/mytasteapi/", (req, res) => {
   console.log("Ping called");
   res.send("Pers mytaste-api. v1.0.3   uploading files work");
 });
 
-app.get("/", (req, res) => {
-  console.log("User", req.user);
-  res.send("<html><h1>Main page</h1><a href='/login'>login page</a></html>");
+app.get("/", ensureLoggedIn("/login"), (req, res) => {
+  res.send(
+    "<html><h1>Main page</h1><HR∕><a href='/login'>Go to Login page</a></html>"
+  );
 });
 
 app.get("/login", (req, res) => {
   res.send(
-    "<html><h1>Loginpage</h1><a href='/auth/google'>google login</a></html>"
+    "<html><h1>Loginpage</h1><a href='/auth/google'>[Google login]</a></html>"
   );
 });
 
@@ -118,7 +129,7 @@ app.get(
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
-  function(req, res) {
+  (req, res) => {
     res.redirect("/");
   }
 );
