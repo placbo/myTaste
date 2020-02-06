@@ -8,6 +8,7 @@ import ManageItemPage from "./pages/ManageItemPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
+import LoginPage from "./pages/LoginPage";
 
 const theme = {
   primary: "#e4e6eb",
@@ -56,6 +57,7 @@ function App() {
       <Switch>
         <Route path="/" exact component={ItemListPage} />
         <Route path="/about" component={AboutPage} />
+        <Route path="/login" component={LoginPage} />
         <Route path="/item/:id" exact component={ItemPage} />
         <Route path="/item/:id/edit" exact component={ManageItemPage} />
         <Route path="/newitem" exact component={ManageItemPage} />

@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { AiFillHome } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { AiOutlineMenu } from "react-icons/ai";
+import { AiOutlineLogin } from "react-icons/ai";
 
 const StyledHeader = styled.div`
   height: 60px;
@@ -36,9 +36,12 @@ function Header() {
         </IconWrapper>
       </Link>
       <Logo>MyTaste</Logo>
-      <IconWrapper>
-        <AiOutlineMenu />
-      </IconWrapper>
+      <Link to="/login">
+        <IconWrapper>
+          {/*<AiOutlineMenu />*/}
+            <AiOutlineLogin />
+        </IconWrapper>
+      </Link>
     </StyledHeader>
   );
 }

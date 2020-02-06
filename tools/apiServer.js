@@ -22,7 +22,8 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 const DB_URL = "mongodb://localhost:27017/";
 const DB_NAME = "mytaste";
-const COLLECTION_NAME = "items";
+const ITEM_COLLECTION_NAME = "items";
+const USERS_COLLECTION_NAME = "users";
 const IMAGE_LOCATION = "/var/www/html/mytastecontent/";
 const IMAGE_THUMB_LOCATION = "/var/www/html/mytastecontent/thumb/";
 
@@ -39,12 +40,26 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "/auth/google/callback"
     },
-    (accessToken, refreshToken, profile, cb) => {
-      if (profile.id === process.env.PCB_GOOGLE_ID) {
-        return cb(null, profile);
-      } else {
-        return cb("Unauthorized", undefined);
-      }
+    (accessToken, refreshToken, profile, callback) => {
+      // db.collection(USERS_COLLECTION_NAME).findOneAndUpdate(
+      //   { googleId: profile.id },
+      //   {
+      //     $setOnInsert: { name: profile.displayName, googleId: profile.id , picture: profile._json.picture}
+      //   },
+      //   {
+      //     returnOriginal: false,
+      //     upsert: true
+      //   },
+      //   (err, doc) => {
+      //     return cb(err, doc.value);
+      //   }
+      // );
+      callback(null, {
+        name: profile.displayName,
+        googleId: profile.id,
+        picture: profile._json.picture,
+        accessToken: accessToken
+      });
     }
   )
 );
@@ -109,7 +124,7 @@ app.get("/mytasteapi/", (req, res) => {
 
 app.get("/", ensureLoggedIn("/login"), (req, res) => {
   res.send(
-    "<html><h1>Main page</h1><HR∕><a href='/login'>Go to Login page</a></html>"
+    `<html><h1>Main page</h1><HR∕>Logged in as ${req.user.name}<a href='/login'>Go to Login page</a></html>`
   );
 });
 
@@ -128,9 +143,9 @@ app.get(
 
 app.get(
   "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
+  passport.authenticate("google", { failureRedirect: "http://localhost/login" }),
   (req, res) => {
-    res.redirect("/");
+    res.redirect("http://localhost/?token=" + req.user.token);
   }
 );
 
@@ -179,7 +194,7 @@ app.post("/mytasteapi/upload", function(req, res) {
 
 app.get("/mytasteapi/items", verifyToken, function(req, res) {
   console.log("Fetch all: (GET) ");
-  db.collection(COLLECTION_NAME)
+  db.collection(ITEM_COLLECTION_NAME)
     .find({})
     .toArray(function(err, docs) {
       if (err) {
@@ -194,7 +209,7 @@ app.post("/mytasteapi/items", verifyToken, function(req, res) {
   let newSet = req.body;
   console.log("Saving: (POST) ", newSet);
   newSet.createDate = new Date();
-  db.collection(COLLECTION_NAME).insertOne(newSet, function(err, doc) {
+  db.collection(ITEM_COLLECTION_NAME).insertOne(newSet, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to create new set.");
     } else {
@@ -206,7 +221,7 @@ app.post("/mytasteapi/items", verifyToken, function(req, res) {
 app.get("/mytasteapi/items/:id", verifyToken, function(req, res) {
   console.log("Fetch: (GET) ", req.params.id);
   if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-    db.collection(COLLECTION_NAME).findOne(
+    db.collection(ITEM_COLLECTION_NAME).findOne(
       {
         _id: new ObjectID(req.params.id)
       },
@@ -226,7 +241,7 @@ app.get("/mytasteapi/items/:id", verifyToken, function(req, res) {
 app.put("/mytasteapi/items/:id", verifyToken, function(req, res) {
   let updatedSet = req.body;
   console.log("Updating: (PUT) ", updatedSet);
-  db.collection(COLLECTION_NAME).findOneAndUpdate(
+  db.collection(ITEM_COLLECTION_NAME).findOneAndUpdate(
     { _id: new ObjectID(req.params.id) },
     { $set: updatedSet },
     { returnOriginal: false },
@@ -242,7 +257,7 @@ app.put("/mytasteapi/items/:id", verifyToken, function(req, res) {
 
 app.delete("/mytasteapi/items/:id", verifyToken, function(req, res) {
   console.log("Delete: (DELETE) ", req.params.id);
-  db.collection(COLLECTION_NAME).deleteOne(
+  db.collection(ITEM_COLLECTION_NAME).deleteOne(
     { _id: new ObjectID(req.params.id) },
     function(err) {
       if (err) {
