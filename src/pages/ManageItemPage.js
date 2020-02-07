@@ -24,7 +24,7 @@ const BlockScreen = styled.div`
 
 const MB = 1024 * 1024;
 const UPLOAD_IMAGE_URL =
-  process.env.REACT_APP_MYTASTE_API_HOST + "/mytasteapi/upload/";
+  process.env.REACT_APP_MYTASTE_API_HOST + "/upload/";
 
 function ManageItemPage(props) {
   const [item, setItem] = useState({

@@ -38,7 +38,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/auth/google/callback"
+      callbackURL: "/mytasteapi/auth/google/callback"
     },
     (accessToken, refreshToken, profile, callback) => {
       // db.collection(USERS_COLLECTION_NAME).findOneAndUpdate(
@@ -122,30 +122,30 @@ app.get("/mytasteapi/", (req, res) => {
   res.send("Pers mytaste-api. v1.0.3   uploading files work");
 });
 
-app.get("/", ensureLoggedIn("/login"), (req, res) => {
-  res.send(
-    `<html><h1>Main page</h1><HR∕>Logged in as ${req.user.name}<a href='/login'>Go to Login page</a></html>`
-  );
-});
-
-app.get("/login", (req, res) => {
-  res.send(
-    "<html><h1>Loginpage</h1><a href='/auth/google'>[Google login]</a></html>"
-  );
-});
+// app.get("/", ensureLoggedIn("/login"), (req, res) => {
+//   res.send(
+//     `<html><h1>Main page</h1><HR∕>Logged in as ${req.user.name}<a href='/login'>Go to Login page</a></html>`
+//   );
+// });
+//
+// app.get("/login", (req, res) => {
+//   res.send(
+//     "<html><h1>Loginpage</h1><a href='/auth/google'>[Google login]</a></html>"
+//   );
+// });
 
 app.get(
-  "/auth/google",
+  "/mytasteapi/auth/google",
   passport.authenticate("google", {
     scope: ["https://www.googleapis.com/auth/plus.login"]
   })
 );
 
 app.get(
-  "/auth/google/callback",
+  "/mytasteapi/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "http://localhost/login" }),
   (req, res) => {
-    res.redirect("http://localhost/?token=" + req.user.token);
+    res.redirect("http://localhost/?token=" + req.user.accessToken);
   }
 );
 

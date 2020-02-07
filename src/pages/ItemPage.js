@@ -64,7 +64,7 @@ const ItemListPage = props => {
         <CardHeading>{item.title}</CardHeading>
         {item.image && (
           <ContentImage
-            src={`${CONTENT_BASE_URL}/mytastecontent/thumb/${item.image}`}
+            src={`${CONTENT_BASE_URL}/thumb/${item.image}`}
             alt="..."
           />
         )}

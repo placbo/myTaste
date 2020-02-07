@@ -8,6 +8,7 @@ import ManageItemPage from "./pages/ManageItemPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
+//import queryString from "query-string";
 import LoginPage from "./pages/LoginPage";
 
 const theme = {
@@ -50,6 +51,13 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
+
+  // const query = queryString.parse(this.props.location.search);
+  // if (query.token) {
+  //   window.localStorage.setItem("jwt", query.token);
+  //   this.props.history.push("/");
+  // }
+
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />

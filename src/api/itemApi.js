@@ -7,7 +7,7 @@ import {
 import Axios from "axios";
 
 export const ITEMS_URL =
-  process.env.REACT_APP_MYTASTE_API_HOST + "/mytasteapi/items/";
+  process.env.REACT_APP_MYTASTE_API_HOST + "/items/";
 
 const encodedString = new Buffer("test").toString("base64");
 

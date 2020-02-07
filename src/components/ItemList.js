@@ -57,7 +57,7 @@ function ItemList(props) {
               <ImageCol>
                 {item.image && (
                   <ContentImage
-                    src={`${CONTENT_BASE_URL}/mytastecontent/thumb/${item.image}`}
+                    src={`${CONTENT_BASE_URL}/thumb/${item.image}`}
                     className="card-img-top"
                     alt="..."
                   />
