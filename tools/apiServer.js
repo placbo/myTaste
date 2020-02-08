@@ -38,7 +38,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/mytasteapi/auth/google/callback"
+      callbackURL: "http://www.kasselars.com/mytasteapi/auth/google/callback"
     },
     (accessToken, refreshToken, profile, callback) => {
       // db.collection(USERS_COLLECTION_NAME).findOneAndUpdate(
@@ -143,9 +143,9 @@ app.get(
 
 app.get(
   "/mytasteapi/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "http://localhost/login" }),
+  passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
-    res.redirect("http://localhost/?token=" + req.user.accessToken);
+    res.redirect("/?token=" + req.user.accessToken);
   }
 );
 

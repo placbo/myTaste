@@ -6,7 +6,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import {interceptRequestsOnMock, shouldMock} from "./api/mockInterceptors";
 
 if (shouldMock) {
-  interceptRequestsOnMock();
+  //interceptRequestsOnMock();
 }
 
 ReactDOM.render(
