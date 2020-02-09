@@ -6,15 +6,15 @@ import {
 } from "./apiUtils";
 import Axios from "axios";
 
-export const ITEMS_URL =
-  process.env.REACT_APP_MYTASTE_API_HOST + "/items/";
-
-const encodedString = new Buffer("test").toString("base64");
+export const ITEMS_URL = process.env.REACT_APP_MYTASTE_API_HOST + "/items/";
 
 const headers = {
+  "Accept": "application/json",
   "Content-Type": "application/json",
-  Authorization: `Basic ${encodedString}`
+  "Authorization": `Bearer ${window.localStorage.getItem('jwt')}`,
+  "Access-Control-Allow-Credentials": true,
 };
+
 
 export function getAllItems() {
   return Axios.get(ITEMS_URL, { headers: headers })
@@ -23,14 +23,15 @@ export function getAllItems() {
 }
 
 export function getItem(id) {
-  return fetch(ITEMS_URL + id)
-    .then(handleResponse)
-    .catch(handleError);
+  return Axios.get(ITEMS_URL + id, { headers: headers })
+    .then(handleAjaxResponse)
+    .catch(handleAjaxError);
 }
 
 export function saveItem(item) {
   const id = item._id;
   delete item._id;
+  //TODO: Axios
   return fetch(ITEMS_URL + (id || ""), {
     method: id ? "PUT" : "POST",
     headers: { "content-type": "application/json" },
@@ -41,6 +42,7 @@ export function saveItem(item) {
 }
 
 export function deleteItem(itemId) {
+  //TODO: Axios
   return fetch(ITEMS_URL + itemId, { method: "DELETE" })
     .then(handleResponse)
     .catch(handleError);

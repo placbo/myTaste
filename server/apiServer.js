@@ -1,35 +1,26 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const jwt = require("jsonwebtoken");
 const mongodb = require("mongodb");
 const multer = require("multer");
 const uuidv4 = require("uuid/v4");
 const path = require("path");
 const imageThumbnail = require("image-thumbnail");
-const hash = require("hash.js");
 const mongoose = require("mongoose");
 const ensureLoggedIn = require("connect-ensure-login").ensureLoggedIn;
 const session = require("express-session");
-
 const passport = require("passport");
 const fs = require("fs");
 require("log-timestamp");
 require("dotenv").config();
-
-const ObjectID = mongodb.ObjectID;
 const cors = require("cors");
-const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-const DB_URL = "mongodb://localhost:27017/";
-const DB_NAME = "mytaste";
-const ITEM_COLLECTION_NAME = "items";
-const USERS_COLLECTION_NAME = "users";
-const IMAGE_LOCATION = "/var/www/html/mytastecontent/";
-const IMAGE_THUMB_LOCATION = "/var/www/html/mytastecontent/thumb/";
-
+const ITEMS_COLLECTION_NAME = process.env.ITEMS_COLLECTION_NAME;
+const USERS_COLLECTION_NAME = process.env.USERS_COLLECTION_NAME;
+const IMAGE_LOCATION = process.env.IMAGE_LOCATION;
+const IMAGE_THUMB_LOCATION = process.env.IMAGE_THUMB_LOCATION;
 const _10MB = 10 * 1024 * 1024;
-
 let db;
+const ObjectID = mongodb.ObjectID;
 
 let GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 
@@ -74,6 +65,14 @@ passport.deserializeUser(function(user, cb) {
 
 const app = express();
 app.use(cors());
+// app.use(
+//     cors({
+//       origin: "http://localhost:3000", // allow to server to accept request from different origin
+//       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//       credentials: true // allow session cookie from browser to pass through
+//     })
+// );
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
@@ -89,7 +88,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 mongodb.MongoClient.connect(
-  process.env.MONGODB_URI || DB_URL + DB_NAME,
+  process.env.MONGODB_URI,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -105,7 +104,7 @@ mongodb.MongoClient.connect(
     console.log("Database connection ready");
 
     // Initialize the app.
-    let server = app.listen(process.env.PORT || 3001, () => {
+    let server = app.listen(process.env.PORT, () => {
       let port = server.address().port;
       console.log("App now running on port", port);
     });
@@ -119,20 +118,8 @@ function handleError(res, reason, message, code) {
 
 app.get("/mytasteapi/", (req, res) => {
   console.log("Ping called");
-  res.send("Pers mytaste-api. v1.0.3   uploading files work");
+  res.send("Pers mytaste-api. version?");
 });
-
-// app.get("/", ensureLoggedIn("/login"), (req, res) => {
-//   res.send(
-//     `<html><h1>Main page</h1><HR∕>Logged in as ${req.user.name}<a href='/login'>Go to Login page</a></html>`
-//   );
-// });
-//
-// app.get("/login", (req, res) => {
-//   res.send(
-//     "<html><h1>Loginpage</h1><a href='/auth/google'>[Google login]</a></html>"
-//   );
-// });
 
 app.get(
   "/mytasteapi/auth/google",
@@ -143,9 +130,12 @@ app.get(
 
 app.get(
   "/mytasteapi/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
+  passport.authenticate("google", {
+    failureRedirect: `${process.env.CLIENT_HOST}/login`,
+    session: false
+  }),
   (req, res) => {
-    res.redirect("/?token=" + req.user.accessToken);
+    res.redirect(`${process.env.CLIENT_HOST}/?token=${req.user.accessToken}`);
   }
 );
 
@@ -164,7 +154,7 @@ const storage = multer.diskStorage({
 
 const multipartHandler = multer({ storage: storage }).single("image");
 
-app.post("/mytasteapi/upload", function(req, res) {
+app.post("/mytasteapi/upload", ensureLoggedIn(), function(req, res) {
   console.log("Upload called (POST)");
   multipartHandler(req, res, function(err) {
     if (err) {
@@ -192,9 +182,10 @@ app.post("/mytasteapi/upload", function(req, res) {
   });
 });
 
-app.get("/mytasteapi/items", verifyToken, function(req, res) {
+app.get("/mytasteapi/items", function(req, res) {
   console.log("Fetch all: (GET) ");
-  db.collection(ITEM_COLLECTION_NAME)
+  console.log(ITEMS_COLLECTION_NAME);
+  db.collection(ITEMS_COLLECTION_NAME)
     .find({})
     .toArray(function(err, docs) {
       if (err) {
@@ -205,11 +196,27 @@ app.get("/mytasteapi/items", verifyToken, function(req, res) {
     });
 });
 
-app.post("/mytasteapi/items", verifyToken, function(req, res) {
+app.get("/mytasteapi/userprofile", ensureLoggedIn(), (req, res) => {
+  console.log("Fetch user profile: (GET) ");
+  db.collection(USERS_COLLECTION_NAME).findOne(
+    {
+      googleId: req.user.googleId
+    },
+    function(err, doc) {
+      if (err) {
+        handleError(res, err.message, "Failed to get user");
+      } else {
+        res.status(200).json(doc);
+      }
+    }
+  );
+});
+
+app.post("/mytasteapi/items", ensureLoggedIn(), function(req, res) {
   let newSet = req.body;
   console.log("Saving: (POST) ", newSet);
   newSet.createDate = new Date();
-  db.collection(ITEM_COLLECTION_NAME).insertOne(newSet, function(err, doc) {
+  db.collection(ITEMS_COLLECTION_NAME).insertOne(newSet, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to create new set.");
     } else {
@@ -218,10 +225,10 @@ app.post("/mytasteapi/items", verifyToken, function(req, res) {
   });
 });
 
-app.get("/mytasteapi/items/:id", verifyToken, function(req, res) {
+app.get("/mytasteapi/items/:id", ensureLoggedIn("/bjarne"), function(req, res) {
   console.log("Fetch: (GET) ", req.params.id);
   if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-    db.collection(ITEM_COLLECTION_NAME).findOne(
+    db.collection(ITEMS_COLLECTION_NAME).findOne(
       {
         _id: new ObjectID(req.params.id)
       },
@@ -238,10 +245,10 @@ app.get("/mytasteapi/items/:id", verifyToken, function(req, res) {
   }
 });
 
-app.put("/mytasteapi/items/:id", verifyToken, function(req, res) {
+app.put("/mytasteapi/items/:id", ensureLoggedIn(), function(req, res) {
   let updatedSet = req.body;
   console.log("Updating: (PUT) ", updatedSet);
-  db.collection(ITEM_COLLECTION_NAME).findOneAndUpdate(
+  db.collection(ITEMS_COLLECTION_NAME).findOneAndUpdate(
     { _id: new ObjectID(req.params.id) },
     { $set: updatedSet },
     { returnOriginal: false },
@@ -255,9 +262,9 @@ app.put("/mytasteapi/items/:id", verifyToken, function(req, res) {
   );
 });
 
-app.delete("/mytasteapi/items/:id", verifyToken, function(req, res) {
+app.delete("/mytasteapi/items/:id", ensureLoggedIn(), function(req, res) {
   console.log("Delete: (DELETE) ", req.params.id);
-  db.collection(ITEM_COLLECTION_NAME).deleteOne(
+  db.collection(ITEMS_COLLECTION_NAME).deleteOne(
     { _id: new ObjectID(req.params.id) },
     function(err) {
       if (err) {
@@ -267,44 +274,4 @@ app.delete("/mytasteapi/items/:id", verifyToken, function(req, res) {
       }
     }
   );
-});
-
-function verifyToken(req, res, next) {
-  // let token = req.headers['x-access-token'];
-  // jwt.verify(token, process.env.TOKEN_SECRET, function (err, decoded) {
-  //     if (!token) {
-  //         res.status(403).send({auth: false, message: 'No token provided.'});
-  //     } else {
-  //         if (err) {
-  //             res.status(500).send({auth: false, message: 'Failed to authenticate token.'});
-  //         }
-  //         req.userId = decoded.id;
-  //         next();
-  //     }
-  // });
-  next();
-}
-
-app.post("/mytasteapi/login", urlencodedParser, function(req, res) {
-  let secret = hash
-    .sha256()
-    .update(req.body.secret)
-    .digest("hex");
-  if (secret === process.env.LOGIN_SECRET) {
-    let token = jwt.sign(
-      {
-        iss: "www.kasselars.com",
-        sub: "mytaste",
-        name: "PCB",
-        admin: true
-      },
-      process.env.TOKEN_SECRET,
-      {
-        expiresIn: 86400 // expires in 24 hours
-      }
-    );
-    res.status(200).send({ auth: true, token: token });
-  } else {
-    res.status(401).send({ auth: false, message: "Failed to log in" });
-  }
 });

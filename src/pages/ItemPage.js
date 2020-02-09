@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getItem, deleteItem } from "../api/itemApi";
+import {getItem, deleteItem} from "../api/itemApi";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
@@ -44,7 +44,12 @@ const ItemListPage = props => {
   useEffect(() => {
     const id = props.match.params.id; // from the path `/:id`
     if (id) {
-      getItem(id).then(_item => setItem(_item));
+      getItem(id)
+          .then(_item => {
+            console.log("item",_item);
+            setItem(_item)
+          })
+          .catch(error => toast.error(error.message))
     }
   }, [props.match.params.id]);
 

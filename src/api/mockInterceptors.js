@@ -4,15 +4,16 @@ import { ITEMS_URL } from "./itemApi";
 import mockData from "./mockData";
 
 export const shouldMock = () => {
-  return process.env.REACT_APP_USE_MOCK === true;
+  return process.env.REACT_APP_USE_MOCK === "true";
 };
 
 export const interceptRequestsOnMock = () => {
-  console.log(mockData);
-
   const mock = new MockAdapter(Axios);
 
-  mock.onGet(new RegExp(`${ITEMS_URL}/*`)).reply(200, mockData);
+  console.log("data: ", mock);
+
+  mock.onGet(`${ITEMS_URL}`).reply(200, mockData);
+  mock.onGet(new RegExp(`${ITEMS_URL}*`)).reply(200, mockData[0]);
   //mock.onGet(new RegExp(`${ITEMS_URL}/*`)).reply(401, "errormessage");
 
   mock.onAny().reply(config => {

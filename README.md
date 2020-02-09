@@ -71,7 +71,7 @@ backup
  (med mongorestore dump/)
  
 ssh-copy-id USER@SERVER
-cd tools
+cd server
 sh backup.sh
 
 todo: cron
