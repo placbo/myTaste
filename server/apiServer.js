@@ -6,7 +6,6 @@ const uuidv4 = require("uuid/v4");
 const path = require("path");
 const imageThumbnail = require("image-thumbnail");
 const mongoose = require("mongoose");
-const ensureLoggedIn = require("connect-ensure-login").ensureLoggedIn;
 const session = require("express-session");
 const passport = require("passport");
 const fs = require("fs");
@@ -24,65 +23,69 @@ const ObjectID = mongodb.ObjectID;
 
 let GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://www.kasselars.com/mytasteapi/auth/google/callback"
-    },
-    (accessToken, refreshToken, profile, callback) => {
-      // db.collection(USERS_COLLECTION_NAME).findOneAndUpdate(
-      //   { googleId: profile.id },
-      //   {
-      //     $setOnInsert: { name: profile.displayName, googleId: profile.id , picture: profile._json.picture}
-      //   },
-      //   {
-      //     returnOriginal: false,
-      //     upsert: true
-      //   },
-      //   (err, doc) => {
-      //     return cb(err, doc.value);
-      //   }
-      // );
-      callback(null, {
-        name: profile.displayName,
-        googleId: profile.id,
-        picture: profile._json.picture,
-        accessToken: accessToken
-      });
-    }
-  )
-);
 
-passport.serializeUser(function(user, cb) {
-  cb(null, user);
-});
-
-passport.deserializeUser(function(user, cb) {
-  cb(null, user);
-});
 
 const app = express();
-app.use(cors());
-// app.use(
-//     cors({
-//       origin: "http://localhost:3000", // allow to server to accept request from different origin
-//       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//       credentials: true // allow session cookie from browser to pass through
-//     })
-// );
+// app.use(cors());
+
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true,
-    cookie: { maxAge: 3600000 } //60 min
-  })
+app.use(bodyParser.urlencoded({extended: false}));
+
+app.use(session({
+  secret: 'secretpassword',
+  resave: true,
+  saveUninitialized: true,
+//     cookie: { maxAge: 3600000 } //60 min
+}));
+
+
+passport.use(
+    new GoogleStrategy(
+        {
+          clientID: process.env.GOOGLE_CLIENT_ID,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+          callbackURL: `${process.env.SERVER_HOST}/mytasteapi/auth/google/callback`
+        },
+        (accessToken, refreshToken, profile, callback) => {
+          console.log("logged in ",profile.displayName );
+          // db.collection(USERS_COLLECTION_NAME).findOneAndUpdate(
+          //   { googleId: profile.id },
+          //   {
+          //     $setOnInsert: { name: profile.displayName, googleId: profile.id , picture: profile._json.picture}
+          //   },
+          //   {
+          //     returnOriginal: false,
+          //     upsert: true
+          //   },
+          //   (err, doc) => {
+          //     return cb(err, doc.value);
+          //   }
+          // );
+          callback(null, {
+            name: profile.displayName,
+            googleId: profile.id,
+            picture: profile._json.picture,
+            accessToken: accessToken
+          });
+        }
+    )
 );
+
+passport.serializeUser(function (user, cb) {
+  console.log("Serialize", user);
+  cb(null, user);
+});
+
+passport.deserializeUser(function (user, cb) {
+  console.log("Deserialize", user);
+  // User.findById(id, function(err, user) {
+  cb(null, user);
+  // });
+});
+
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -124,15 +127,19 @@ app.get("/mytasteapi/", (req, res) => {
 app.get(
   "/mytasteapi/auth/google",
   passport.authenticate("google", {
-    scope: ["https://www.googleapis.com/auth/plus.login"]
+    scope: ["https://www.googleapis.com/auth/plus.login", "profile"]
   })
 );
+
+app.get("/mytasteapi/logout", (req, res) => {
+  req.logout();
+  res.redirect("/");
+});
 
 app.get(
   "/mytasteapi/auth/google/callback",
   passport.authenticate("google", {
-    failureRedirect: `${process.env.CLIENT_HOST}/login`,
-    session: false
+    failureRedirect: `${process.env.CLIENT_HOST}/login`
   }),
   (req, res) => {
     res.redirect(`${process.env.CLIENT_HOST}/?token=${req.user.accessToken}`);
@@ -152,9 +159,15 @@ const storage = multer.diskStorage({
   }
 });
 
+const ensureAuthenticated = (req, res, next) => {
+  console.log("(ensureAuthenticated - show user:",req.user);
+  if (req.isAuthenticated()) return next();
+  else res.redirect(`${process.env.CLIENT_HOST}/login`);
+};
+
 const multipartHandler = multer({ storage: storage }).single("image");
 
-app.post("/mytasteapi/upload", ensureLoggedIn(), function(req, res) {
+app.post("/mytasteapi/upload", ensureAuthenticated, function(req, res) {
   console.log("Upload called (POST)");
   multipartHandler(req, res, function(err) {
     if (err) {
@@ -196,23 +209,27 @@ app.get("/mytasteapi/items", function(req, res) {
     });
 });
 
-app.get("/mytasteapi/userprofile", ensureLoggedIn(), (req, res) => {
+app.get("/mytasteapi/userprofile", (req, res) => {
   console.log("Fetch user profile: (GET) ");
-  db.collection(USERS_COLLECTION_NAME).findOne(
-    {
-      googleId: req.user.googleId
-    },
-    function(err, doc) {
-      if (err) {
-        handleError(res, err.message, "Failed to get user");
-      } else {
-        res.status(200).json(doc);
+  if (req.user && req.user.googleId) {
+    console.log("User", req.user.googleId);
+    db.collection(USERS_COLLECTION_NAME).findOne(
+      {
+        googleId: req.user.googleId
+      },
+      function(err, doc) {
+        if (err) {
+          handleError(res, err.message, "Failed to get user");
+        } else {
+          res.status(200).json(doc);
+        }
       }
-    }
-  );
+    );
+  } else res.status(204).json({});
+
 });
 
-app.post("/mytasteapi/items", ensureLoggedIn(), function(req, res) {
+app.post("/mytasteapi/items", ensureAuthenticated, function(req, res) {
   let newSet = req.body;
   console.log("Saving: (POST) ", newSet);
   newSet.createDate = new Date();
@@ -225,7 +242,7 @@ app.post("/mytasteapi/items", ensureLoggedIn(), function(req, res) {
   });
 });
 
-app.get("/mytasteapi/items/:id", ensureLoggedIn("/bjarne"), function(req, res) {
+app.get("/mytasteapi/items/:id", ensureAuthenticated, function(req, res) {
   console.log("Fetch: (GET) ", req.params.id);
   if (mongoose.Types.ObjectId.isValid(req.params.id)) {
     db.collection(ITEMS_COLLECTION_NAME).findOne(
@@ -245,7 +262,7 @@ app.get("/mytasteapi/items/:id", ensureLoggedIn("/bjarne"), function(req, res) {
   }
 });
 
-app.put("/mytasteapi/items/:id", ensureLoggedIn(), function(req, res) {
+app.put("/mytasteapi/items/:id", ensureAuthenticated, function(req, res) {
   let updatedSet = req.body;
   console.log("Updating: (PUT) ", updatedSet);
   db.collection(ITEMS_COLLECTION_NAME).findOneAndUpdate(
@@ -262,7 +279,7 @@ app.put("/mytasteapi/items/:id", ensureLoggedIn(), function(req, res) {
   );
 });
 
-app.delete("/mytasteapi/items/:id", ensureLoggedIn(), function(req, res) {
+app.delete("/mytasteapi/items/:id", ensureAuthenticated, function(req, res) {
   console.log("Delete: (DELETE) ", req.params.id);
   db.collection(ITEMS_COLLECTION_NAME).deleteOne(
     { _id: new ObjectID(req.params.id) },

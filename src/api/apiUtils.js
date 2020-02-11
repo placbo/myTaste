@@ -7,8 +7,10 @@ export async function handleResponse(response) {
 export async function handleAjaxResponse(response) {
   if (response.status === 200) {
     return response.data;
+  } else if (response.status === 204) {
+    return null;
   } else {
-    throw new Error(`Network response was not OK. (${response.statusText})${response.statusText}`);
+      throw new Error(`Network response was not OK. (${response.statusText})${response.statusText}`);
   }
 }
 

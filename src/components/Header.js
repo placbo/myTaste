@@ -26,8 +26,15 @@ const Logo = styled.span`
   margin-left: 1rem;
   margin-right: 1rem;
 `;
+const UserAvatar = styled.img`
+  height: 40px;
+  max-width: 40px;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  border-radius: 50%;
+`;
 
-function Header() {
+function Header({ user }) {
   return (
     <StyledHeader>
       <Link to="/">
@@ -36,12 +43,19 @@ function Header() {
         </IconWrapper>
       </Link>
       <Logo>MyTaste</Logo>
+      {user ? (
+        <>
+          <a href="/mytasteapi/logout">
+              <UserAvatar src={user.picture} />
+          </a>
+        </>
+      ):(
       <Link to="/login">
         <IconWrapper>
-          {/*<AiOutlineMenu />*/}
-            <AiOutlineLogin />
+          <AiOutlineLogin />
         </IconWrapper>
       </Link>
+      )}
     </StyledHeader>
   );
 }
