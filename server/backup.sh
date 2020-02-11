@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# mongoexport --collection=items --db=mytaste --out=test.json
 rm -rf dump/
 mongodump
 
