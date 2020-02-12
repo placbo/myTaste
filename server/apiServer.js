@@ -12,6 +12,7 @@ const fs = require("fs");
 require("log-timestamp");
 require("dotenv").config();
 const cors = require("cors");
+const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 
 const ITEMS_COLLECTION_NAME = process.env.ITEMS_COLLECTION_NAME;
 const USERS_COLLECTION_NAME = process.env.USERS_COLLECTION_NAME;
@@ -21,7 +22,6 @@ const _10MB = 10 * 1024 * 1024;
 let db;
 const ObjectID = mongodb.ObjectID;
 
-let GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 
 
 
