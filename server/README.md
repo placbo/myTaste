@@ -1,10 +1,18 @@
 # Server for mytaste
 
-Bruker mongodb
+To run:
 
-kjør 
-    
-    mongo
+    node apiServer.js
+
+or
+
+    pm2 start apiServer.js
+
+
+PREREQUISITES
+-
+
+Mongodb, Node
 
 ENVIRONMENTS
 -
