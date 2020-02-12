@@ -2,7 +2,7 @@ import React from "react";
 import ItemListPage from "./pages/ItemListPage";
 import { Route, Switch } from "react-router-dom";
 import NotFoundPage from "./pages/NotFoundPage";
-import AboutPage from "./pages/AboutPage";
+import ProfilePage from "./pages/AboutPage";
 import ItemPage from "./pages/ItemPage";
 import ManageItemPage from "./pages/ManageItemPage";
 import { ToastContainer } from "react-toastify";
@@ -64,7 +64,7 @@ function App() {
       <ToastContainer autoClose={3000} hideProgressBar />
       <Switch>
         <Route path="/" exact component={ItemListPage} />
-        <Route path="/about" component={AboutPage} />
+        <Route path="/profile" component={ProfilePage} />
         <Route path="/login" component={LoginPage} />
         <Route path="/item/:id" exact component={ItemPage} />
         <Route path="/item/:id/edit" exact component={ManageItemPage} />
