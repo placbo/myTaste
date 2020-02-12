@@ -21,11 +21,15 @@ function ProfilePage() {
 
   return (
     <>
-      <UserAvatar src={user.picture} />
-      <p>{user.name}</p>
-      <p>
-        <a href="/mytasteapi/logout">Log out</a>
-      </p>
+      {user && (
+        <>
+          <UserAvatar src={user.picture} />
+          <p>{user.name}</p>
+          <p>
+            <a href="/mytasteapi/logout">Log out</a>
+          </p>
+        </>
+      )}
       <p>App version: {process.env.REACT_APP_VERSION}</p>
     </>
   );

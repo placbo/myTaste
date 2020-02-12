@@ -1,13 +1,13 @@
 import React from "react";
 import ItemListPage from "./pages/ItemListPage";
-import { Route, Switch } from "react-router-dom";
+import {Route, Switch} from "react-router-dom";
 import NotFoundPage from "./pages/NotFoundPage";
-import ProfilePage from "./pages/AboutPage";
+import ProfilePage from "./pages/ProfilePage";
 import ItemPage from "./pages/ItemPage";
 import ManageItemPage from "./pages/ManageItemPage";
-import { ToastContainer } from "react-toastify";
+import {ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { createGlobalStyle, ThemeProvider } from "styled-components";
+import {createGlobalStyle, ThemeProvider} from "styled-components";
 //import queryString from "query-string";
 import LoginPage from "./pages/LoginPage";
 
