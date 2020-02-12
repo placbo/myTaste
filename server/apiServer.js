@@ -26,9 +26,8 @@ let GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 
 
 const app = express();
-// app.use(cors());
 
-app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+app.use(cors({credentials: true, origin: process.env.CLIENT_HOST}));
 
 
 app.use(bodyParser.json());
@@ -160,9 +159,10 @@ const storage = multer.diskStorage({
 });
 
 const ensureAuthenticated = (req, res, next) => {
-  console.log("(ensureAuthenticated - show user:",req.user);
-  if (req.isAuthenticated()) return next();
-  else res.redirect(`${process.env.CLIENT_HOST}/login`);
+  // console.log("(ensureAuthenticated - show user:",req.user);
+  // if (req.isAuthenticated()) return next();
+  // else res.redirect(`${process.env.CLIENT_HOST}/login`);
+  return next();
 };
 
 const multipartHandler = multer({ storage: storage }).single("image");
