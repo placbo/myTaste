@@ -5,9 +5,17 @@ import styled from "styled-components";
 
 const UserAvatar = styled.img`
   height: 100px;
-  max-width: 1000px;
-  margin: 1rem 0;
+  max-width: 100px;
+  margin: 2rem 0;
   border-radius: 50%;
+`;
+
+const StyledPage = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 `;
 
 function ProfilePage() {
@@ -20,18 +28,19 @@ function ProfilePage() {
   }, []);
 
   return (
-    <>
+    <StyledPage>
       {user && (
         <>
           <UserAvatar src={user.picture} />
-          <p>{user.name}</p>
+          <h3>{user.name}</h3>
+          <hr />
           <p>
             <a href="/mytasteapi/logout">Log out</a>
           </p>
         </>
       )}
       <p>App version: {process.env.REACT_APP_VERSION}</p>
-    </>
+    </StyledPage>
   );
 }
 
