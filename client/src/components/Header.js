@@ -20,12 +20,14 @@ const IconWrapper = styled.div`
   margin-left: 1rem;
   margin-right: 1rem;
 `;
+
 const Logo = styled.span`
   font-size: 40px;
   font-weight: bold;
   margin-left: 1rem;
   margin-right: 1rem;
 `;
+
 const UserAvatar = styled.img`
   height: 40px;
   max-width: 40px;
@@ -45,16 +47,16 @@ function Header({ user }) {
       <Logo>MyTaste</Logo>
       {user ? (
         <>
-          <a href="/mytasteapi/logout">
-              <UserAvatar src={user.picture} />
-          </a>
+          <Link to="/profile">
+            <UserAvatar src={user.picture} />
+          </Link>
         </>
-      ):(
-      <Link to="/login">
-        <IconWrapper>
-          <AiOutlineLogin />
-        </IconWrapper>
-      </Link>
+      ) : (
+        <Link to="/login">
+          <IconWrapper>
+            <AiOutlineLogin />
+          </IconWrapper>
+        </Link>
       )}
     </StyledHeader>
   );
