@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 
 const UserAvatar = styled.img`
-  height: 100px;
-  max-width: 100px;
+  height: 200px;
+  max-width: 200px;
   margin: 2rem 0;
   border-radius: 50%;
 `;
@@ -15,7 +15,7 @@ const StyledPage = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 400px;
 `;
 
 function ProfilePage() {

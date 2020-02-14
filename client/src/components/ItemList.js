@@ -17,6 +17,7 @@ const Card = styled.div`
   :hover {
     background-color: ${props => props.theme.boxHover};
   }
+  overflow: hidden;
 `;
 
 const CardContent = styled.div`

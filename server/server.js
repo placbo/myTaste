@@ -47,36 +47,40 @@ passport.use(
     },
     (accessToken, refreshToken, profile, callback) => {
       console.log("logged in ", profile.displayName);
-      // db.collection(USERS_COLLECTION_NAME).findOneAndUpdate(
-      //   { googleId: profile.id },
-      //   {
-      //     $setOnInsert: { name: profile.displayName, googleId: profile.id , picture: profile._json.picture}
-      //   },
-      //   {
-      //     returnOriginal: false,
-      //     upsert: true
-      //   },
-      //   (err, doc) => {
-      //     return cb(err, doc.value);
-      //   }
-      // );
-      callback(null, {
-        name: profile.displayName,
-        googleId: profile.id,
-        picture: profile._json.picture,
-        accessToken: accessToken
-      });
+      db.collection(USERS_COLLECTION_NAME).findOneAndUpdate(
+        { googleId: profile.id },
+        {
+          $setOnInsert: {
+            name: profile.displayName,
+            googleId: profile.id,
+            picture: profile._json.picture
+          }
+        },
+        {
+          returnOriginal: false,
+          upsert: true
+        },
+        (err, doc) => {
+          return callback(err, doc.value);
+        }
+      );
+      // callback(null, {
+      //   name: profile.displayName,
+      //   googleId: profile.id,
+      //   picture: profile._json.picture,
+      //   accessToken: accessToken
+      // });
     }
   )
 );
 
 passport.serializeUser(function(user, cb) {
-  console.log("Serialize: ", user.name);
+  //console.log("Serialize: ", user.name);
   cb(null, user);
 });
 
 passport.deserializeUser(function(user, cb) {
-  console.log("Deserialize: ", user.name);
+  //console.log("Deserialize: ", user.name);
   // User.findById(id, function(err, user) {
   cb(null, user);
   // });

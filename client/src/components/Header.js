@@ -1,14 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import { AiFillHome } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { AiOutlineLogin } from "react-icons/ai";
 
 const StyledHeader = styled.div`
+  position: fixed;
+  top: 0;
   height: 60px;
-  background-color: ${props => props.theme.box};
+  background-color: ${props => props.theme.background};
   width: 100%;
-  border-bottom: 1px solid ${props => props.theme.separator};
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -16,21 +16,33 @@ const StyledHeader = styled.div`
 `;
 
 const IconWrapper = styled.div`
-  font-size: 40px;
+  font-size: 32px;
   margin-left: 1rem;
   margin-right: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  justify-items: center;
+    height: 100%;
+`;
+
+const IconLabel = styled.div`
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  margin-top:6px;
 `;
 
 const Logo = styled.span`
-  font-size: 40px;
+  font-size: 32px;
   font-weight: bold;
   margin-left: 1rem;
   margin-right: 1rem;
 `;
 
 const UserAvatar = styled.img`
-  height: 40px;
-  max-width: 40px;
+  height: 32px;
+  max-width: 32px;
   margin-left: 1rem;
   margin-right: 1rem;
   border-radius: 50%;
@@ -39,11 +51,6 @@ const UserAvatar = styled.img`
 function Header({ user }) {
   return (
     <StyledHeader>
-      <Link to="/">
-        <IconWrapper>
-          <AiFillHome />
-        </IconWrapper>
-      </Link>
       <Logo>MyTaste</Logo>
       {user ? (
         <>
@@ -55,6 +62,7 @@ function Header({ user }) {
         <Link to="/login">
           <IconWrapper>
             <AiOutlineLogin />
+            <IconLabel>Log in</IconLabel>
           </IconWrapper>
         </Link>
       )}

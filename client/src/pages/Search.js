@@ -1,19 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-
 const StyledPage = styled.div`
   display:flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: 400px;
 `;
-
-function NotFoundPage() {
+function SearchPage() {
   return (
     <StyledPage>
-      <h2>Page Not Found, sjø</h2>
+      <h2>Not implemented :-(</h2>
       <p>
         <Link to="/">Back to Home</Link>
       </p>
@@ -21,4 +19,4 @@ function NotFoundPage() {
   );
 }
 
-export default NotFoundPage;
+export default SearchPage;

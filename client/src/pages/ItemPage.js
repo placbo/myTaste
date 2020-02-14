@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {getItem, deleteItem} from "../api/itemApi";
+import { getItem, deleteItem } from "../api/itemApi";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
-import Header from "../components/Header";
 
 const Card = styled.div`
   background-color: ${props => props.theme.box};
@@ -12,7 +11,7 @@ const Card = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align:center;
+  text-align: center;
   :hover {
     background-color: ${props => props.theme.boxHover};
   }
@@ -45,11 +44,11 @@ const ItemListPage = props => {
     const id = props.match.params.id; // from the path `/:id`
     if (id) {
       getItem(id)
-          .then(_item => {
-            console.log("item",_item);
-            setItem(_item)
-          })
-          .catch(error => toast.error(error.message))
+        .then(_item => {
+          console.log("item", _item);
+          setItem(_item);
+        })
+        .catch(error => toast.error(error.message));
     }
   }, [props.match.params.id]);
 
@@ -64,7 +63,6 @@ const ItemListPage = props => {
 
   return (
     <>
-      <Header title="Items" />
       <Card>
         <CardHeading>{item.title}</CardHeading>
         {item.image && (
