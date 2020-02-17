@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
+import Rating from "@material-ui/lab/Rating";
 
 const ItemListWrapper = styled.div`
   flex-direction: column;
@@ -25,9 +26,6 @@ const CardContent = styled.div`
   min-width: 20rem;
 `;
 
-const DiceValue = styled.img`
-  width: 20px;
-`;
 const ImageCol = styled.div`
   width: 150px;
 `;
@@ -67,10 +65,10 @@ function ItemList(props) {
               <CardContent>
                 <CardHeading>{item.title}</CardHeading>
                 {item.diceValue && (
-                  <DiceValue
-                    className="diceValue"
-                    src={`/img/dice_${item.diceValue}.png`}
-                    alt={item.diceValue}
+                  <Rating
+                    name="simple-controlled"
+                    readOnly
+                    value={item.diceValue - 1}
                   />
                 )}
               </CardContent>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { getItem, deleteItem } from "../api/itemApi";
+import { getItem, deleteItem } from "../api/api";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
+import Rating from "@material-ui/lab/Rating";
 
 const Card = styled.div`
   background-color: ${props => props.theme.box};
@@ -15,10 +16,6 @@ const Card = styled.div`
   :hover {
     background-color: ${props => props.theme.boxHover};
   }
-`;
-
-const DiceValue = styled.img`
-  width: 50px;
 `;
 
 const ContentImage = styled.img`
@@ -74,9 +71,10 @@ const ItemListPage = props => {
         <div className="card-body">
           <p className="card-text">{item.comment}</p>
           {item.diceValue && (
-            <DiceValue
-              src={`/img/dice_${item.diceValue}.png`}
-              alt={item.diceValue}
+            <Rating
+              name="simple-controlled"
+              readOnly
+              value={item.diceValue - 1}
             />
           )}
         </div>

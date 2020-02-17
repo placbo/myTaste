@@ -11,7 +11,7 @@ import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 //import queryString from "query-string";
 import LoginPage from "./pages/LoginPage";
 import Header from "./components/Header";
-import { getUserProfile } from "./api/itemApi";
+import { getUserProfile } from "./api/api";
 import Footer from "./components/Footer";
 import SearchPage from "./pages/Search";
 

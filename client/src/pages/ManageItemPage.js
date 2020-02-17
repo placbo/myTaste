@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ItemForm from "../components/ItemForm";
-import { getItem, saveItem } from "../api/itemApi";
+import { getItem, saveItem } from "../api/api";
 import { toast } from "react-toastify";
 import Resizer from "react-image-file-resizer";
 import styled from "styled-components";
@@ -30,7 +30,8 @@ function ManageItemPage(props) {
   const [item, setItem] = useState({
     _id: null,
     title: "",
-    image: null
+    image: null,
+    diceValue:null
   });
 
   const [saving, setSaving] = useState(false);

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import ItemList from "../components/ItemList";
 import styled from "styled-components";
-import { getAllItems } from "../api/itemApi";
+import { getAllItems } from "../api/api";
 import { toast } from "react-toastify";
 
 const PageContent = styled.div`

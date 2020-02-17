@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getUserProfile } from "../api/itemApi";
+import { getUserProfile } from "../api/api";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 
