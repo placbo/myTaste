@@ -2,16 +2,16 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { BrowserRouter as Router } from "react-router-dom";
+import {BrowserRouter} from "react-router-dom";
 import {interceptRequestsOnMock, shouldMock} from "./api/mockInterceptors";
 
 if (shouldMock()) {
-    interceptRequestsOnMock();
+  interceptRequestsOnMock();
 }
 
 ReactDOM.render(
-  <Router>
+  <BrowserRouter basename="/mytaste">
     <App />
-  </Router>,
+  </BrowserRouter>,
   document.getElementById("root")
 );
