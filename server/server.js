@@ -81,9 +81,12 @@ passport.serializeUser((user, cb) => {
 
 passport.deserializeUser((user, cb) => {
   console.log("Deserialize: ", user.googleId);
-  db.collection(USERS_COLLECTION_NAME).findOne({ googleId: user.googleId}, (err, user) => {
-    cb(err, user);
-  });
+  //db.collection(USERS_COLLECTION_NAME).findOne({ googleId: user.googleId}, (err, user) => {
+    cb(err, {
+      name: "TEST",
+      googleId: "1234"
+    });
+  //});
 });
 
 app.use(passport.initialize());
@@ -159,7 +162,7 @@ const storage = multer.diskStorage({
 });
 
 const ensureAuthenticated = (req, res, next) => {
-  // console.log("(ensureAuthenticated - show user:",req.user);
+   console.log("(ensureAuthenticated - show user:", req.user);
   // if (req.isAuthenticated()) return next();
   // else res.redirect(`${process.env.CLIENT_HOST}/login`);
   return next();
