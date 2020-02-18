@@ -82,7 +82,7 @@ passport.serializeUser((user, cb) => {
 passport.deserializeUser((user, cb) => {
   console.log("Deserialize: ", user.googleId);
   //db.collection(USERS_COLLECTION_NAME).findOne({ googleId: user.googleId}, (err, user) => {
-    cb(err, {
+    cb(null, {
       name: "TEST",
       googleId: "1234"
     });
