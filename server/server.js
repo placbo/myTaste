@@ -167,12 +167,11 @@ const ensureAuthenticated = (req, res, next) => {
     return next();
   }
   else res.redirect(`${process.env.CLIENT_HOST}/login`);
-  return next();
 };
 
 const multipartHandler = multer({ storage: storage }).single("image");
 
-app.post("/mytasteapi/upload", ensureAuthenticated, function(req, res) {
+app.post("/mytasteapi/upload", ensureAuthenticated, (req, res) => {
   console.log("Upload called (POST)");
   multipartHandler(req, res, function(err) {
     if (err) {
@@ -200,12 +199,12 @@ app.post("/mytasteapi/upload", ensureAuthenticated, function(req, res) {
   });
 });
 
-app.get("/mytasteapi/items", function(req, res) {
+app.get("/mytasteapi/items", (req, res) => {
   console.log("Fetch all: (GET) ");
   console.log(ITEMS_COLLECTION_NAME);
   db.collection(ITEMS_COLLECTION_NAME)
     .find({})
-    .toArray(function(err, docs) {
+    .toArray((err, docs) =>{
       if (err) {
         handleError(res, err.message, "Failed to get sets.");
       } else {
@@ -222,7 +221,7 @@ app.get("/mytasteapi/userprofile", (req, res) => {
       {
         googleId: req.user.googleId
       },
-      function(err, doc) {
+      (err, doc) => {
         if (err) {
           handleError(res, err.message, "Failed to get user");
         } else {
@@ -233,11 +232,11 @@ app.get("/mytasteapi/userprofile", (req, res) => {
   } else res.status(204).json({});
 });
 
-app.post("/mytasteapi/items", ensureAuthenticated, function(req, res) {
+app.post("/mytasteapi/items", ensureAuthenticated, (req, res) => {
   let newSet = req.body;
   console.log("Saving: (POST) ", newSet);
   newSet.createDate = new Date();
-  db.collection(ITEMS_COLLECTION_NAME).insertOne(newSet, function(err, doc) {
+  db.collection(ITEMS_COLLECTION_NAME).insertOne(newSet, (err, doc) => {
     if (err) {
       handleError(res, err.message, "Failed to create new set.");
     } else {
@@ -246,14 +245,14 @@ app.post("/mytasteapi/items", ensureAuthenticated, function(req, res) {
   });
 });
 
-app.get("/mytasteapi/items/:id", ensureAuthenticated, function(req, res) {
+app.get("/mytasteapi/items/:id", (req, res) => {
   console.log("Fetch: (GET) ", req.params.id);
   if (mongoose.Types.ObjectId.isValid(req.params.id)) {
     db.collection(ITEMS_COLLECTION_NAME).findOne(
       {
         _id: new ObjectID(req.params.id)
       },
-      function(err, doc) {
+      (err, doc) => {
         if (err) {
           handleError(res, err.message, "Failed to get set");
         } else {
@@ -266,7 +265,7 @@ app.get("/mytasteapi/items/:id", ensureAuthenticated, function(req, res) {
   }
 });
 
-app.put("/mytasteapi/items/:id", ensureAuthenticated, function(req, res) {
+app.put("/mytasteapi/items/:id", ensureAuthenticated, (req, res) =>{
   let updatedSet = req.body;
   console.log("Updating: (PUT) ", updatedSet);
   db.collection(ITEMS_COLLECTION_NAME).findOneAndUpdate(
@@ -283,7 +282,7 @@ app.put("/mytasteapi/items/:id", ensureAuthenticated, function(req, res) {
   );
 });
 
-app.delete("/mytasteapi/items/:id", ensureAuthenticated, function(req, res) {
+app.delete("/mytasteapi/items/:id", ensureAuthenticated, (req, res) => {
   console.log("Delete: (DELETE) ", req.params.id);
   db.collection(ITEMS_COLLECTION_NAME).deleteOne(
     { _id: new ObjectID(req.params.id) },
