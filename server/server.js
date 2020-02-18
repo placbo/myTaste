@@ -74,14 +74,14 @@ passport.use(
   )
 );
 
-passport.serializeUser(function(user, cb) {
-  console.log("Serialize: ", user.name);
-  cb(null, user.googleId);
+passport.serializeUser((user, cb) => {
+  console.log("Serialize: ", user.googleId);
+  cb(null, user);
 });
 
-passport.deserializeUser(function(user, cb) {
+passport.deserializeUser((user, cb) => {
   console.log("Deserialize: ", user.googleId);
-  db.collection(USERS_COLLECTION_NAME).findOne({}, (err, user) => {
+  db.collection(USERS_COLLECTION_NAME).findOne({ googleId: user.googleId}, (err, user) => {
     cb(err, user);
   });
 });
