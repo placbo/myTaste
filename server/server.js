@@ -81,12 +81,12 @@ passport.serializeUser((user, cb) => {
 
 passport.deserializeUser((user, cb) => {
   console.log("Deserialize: ", user.googleId);
-  //db.collection(USERS_COLLECTION_NAME).findOne({ googleId: user.googleId}, (err, user) => {
-    cb(null, {
-      name: "TEST",
-      googleId: "1234"
-    });
-  //});
+  db.collection(USERS_COLLECTION_NAME).findOne({ googleId: user.googleId}, (err, user) => {
+    if (user.googleId ===  process.env.ADMIN_ID) {
+      user = {...user, role:"admin" }
+    }
+    cb(null, user);
+  });
 });
 
 app.use(passport.initialize());
