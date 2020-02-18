@@ -163,8 +163,10 @@ const storage = multer.diskStorage({
 
 const ensureAuthenticated = (req, res, next) => {
    console.log("(ensureAuthenticated - show user:", req.user);
-  // if (req.isAuthenticated()) return next();
-  // else res.redirect(`${process.env.CLIENT_HOST}/login`);
+  if (req.isAuthenticated() && req.user.googleId ===  process.env.ADMIN_ID) {
+    return next();
+  }
+  else res.redirect(`${process.env.CLIENT_HOST}/login`);
   return next();
 };
 
