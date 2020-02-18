@@ -75,15 +75,15 @@ passport.use(
 );
 
 passport.serializeUser(function(user, cb) {
-  //console.log("Serialize: ", user.name);
-  cb(null, user);
+  console.log("Serialize: ", user.name);
+  cb(null, user.googleId);
 });
 
 passport.deserializeUser(function(user, cb) {
-  //console.log("Deserialize: ", user.name);
-  // User.findById(id, function(err, user) {
-  cb(null, user);
-  // });
+  console.log("Deserialize: ", user.googleId);
+  db.collection(USERS_COLLECTION_NAME).findOne({}, (err, user) => {
+    cb(err, user);
+  });
 });
 
 app.use(passport.initialize());
