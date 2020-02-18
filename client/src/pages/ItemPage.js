@@ -71,11 +71,7 @@ const ItemListPage = props => {
         <div className="card-body">
           <p className="card-text">{item.comment}</p>
           {item.diceValue && (
-            <Rating
-              name="simple-controlled"
-              readOnly
-              value={item.diceValue - 1}
-            />
+            <Rating name="simple-controlled" readOnly value={item.diceValue} />
           )}
         </div>
         <Link to={"/item/" + item._id + "/edit/"}>

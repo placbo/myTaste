@@ -1,6 +1,7 @@
 import React from "react";
 import Rating from "@material-ui/lab/Rating";
 import Button from "@material-ui/core/Button";
+import { GiDeathSkull } from "react-icons/gi";
 
 const ItemForm = props => (
   <form className="itemform" onSubmit={props.onSubmit}>
@@ -64,18 +65,19 @@ const ItemForm = props => (
             }}
           />
           <Button
-              aria-label="delete"
-              variant="contained" color="secondary"
-              onClick={(event, newValue) => {
-                props.onChange({
-                  target: {
-                    name: "diceValue",
-                    value: null
-                  }
-                });
-              }}
+            aria-label="delete"
+            variant="contained"
+            color="secondary"
+            onClick={(event, newValue) => {
+              props.onChange({
+                target: {
+                  name: "diceValue",
+                  value: null
+                }
+              });
+            }}
           >
-            Zero stars!
+            <GiDeathSkull />
           </Button>
         </div>
       </div>

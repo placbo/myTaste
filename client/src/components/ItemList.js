@@ -68,7 +68,7 @@ function ItemList(props) {
                   <Rating
                     name="simple-controlled"
                     readOnly
-                    value={item.diceValue - 1}
+                    value={item.diceValue}
                   />
                 )}
               </CardContent>
