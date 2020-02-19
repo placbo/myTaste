@@ -81,12 +81,12 @@ passport.serializeUser((user, cb) => {
 
 passport.deserializeUser((user, cb) => {
   console.log("Deserialize: ", user.googleId);
-  db.collection(USERS_COLLECTION_NAME).findOne({ googleId: user.googleId}, (err, user) => {
-    if (user.googleId ===  process.env.ADMIN_ID) {
-      user = {...user, role:"admin" }
+  db.collection(USERS_COLLECTION_NAME).findOne(
+    { googleId: user.googleId },
+    (err, user) => {
+      cb(null, user);
     }
-    cb(null, user);
-  });
+  );
 });
 
 app.use(passport.initialize());
@@ -162,11 +162,10 @@ const storage = multer.diskStorage({
 });
 
 const ensureAuthenticated = (req, res, next) => {
-   console.log("(ensureAuthenticated - show user:", req.user);
-  if (req.isAuthenticated() && req.user.googleId ===  process.env.ADMIN_ID) {
+  console.log("(ensureAuthenticated - show user:", req.user);
+  if (req.isAuthenticated() && req.user.googleId === process.env.ADMIN_ID) {
     return next();
-  }
-  else res.redirect(`${process.env.CLIENT_HOST}/login`);
+  } else res.redirect(`${process.env.CLIENT_HOST}/login`);
 };
 
 const multipartHandler = multer({ storage: storage }).single("image");
@@ -204,7 +203,7 @@ app.get("/mytasteapi/items", (req, res) => {
   console.log(ITEMS_COLLECTION_NAME);
   db.collection(ITEMS_COLLECTION_NAME)
     .find({})
-    .toArray((err, docs) =>{
+    .toArray((err, docs) => {
       if (err) {
         handleError(res, err.message, "Failed to get sets.");
       } else {
@@ -212,6 +211,10 @@ app.get("/mytasteapi/items", (req, res) => {
       }
     });
 });
+
+const isAdmin = user => {
+  return user.googleId === process.env.ADMIN_ID;
+};
 
 app.get("/mytasteapi/userprofile", (req, res) => {
   console.log("Fetch user profile: (GET) ");
@@ -221,11 +224,12 @@ app.get("/mytasteapi/userprofile", (req, res) => {
       {
         googleId: req.user.googleId
       },
-      (err, doc) => {
+      (err, user) => {
         if (err) {
           handleError(res, err.message, "Failed to get user");
         } else {
-          res.status(200).json(doc);
+          if (isAdmin(user)) user = { ...user, role: "admin" };
+          res.status(200).json(user);
         }
       }
     );
@@ -265,7 +269,7 @@ app.get("/mytasteapi/items/:id", (req, res) => {
   }
 });
 
-app.put("/mytasteapi/items/:id", ensureAuthenticated, (req, res) =>{
+app.put("/mytasteapi/items/:id", ensureAuthenticated, (req, res) => {
   let updatedSet = req.body;
   console.log("Updating: (PUT) ", updatedSet);
   db.collection(ITEMS_COLLECTION_NAME).findOneAndUpdate(
