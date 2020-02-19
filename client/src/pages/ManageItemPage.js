@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ItemForm from "../components/ItemForm";
+import ItemForm from "./ItemForm";
 import { getItem, saveItem } from "../api/api";
 import { toast } from "react-toastify";
 import Resizer from "react-image-file-resizer";

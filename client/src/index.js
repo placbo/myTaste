@@ -10,7 +10,7 @@ if (shouldMock()) {
 }
 
 ReactDOM.render(
-  <BrowserRouter basename="/mytaste">
+  <BrowserRouter>
     <App />
   </BrowserRouter>,
   document.getElementById("root")

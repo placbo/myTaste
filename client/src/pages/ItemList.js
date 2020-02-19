@@ -3,27 +3,23 @@ import React from "react";
 import styled from "styled-components";
 import Rating from "@material-ui/lab/Rating";
 
-const ItemListWrapper = styled.div`
-  flex-direction: column;
-  display: flex;
-`;
-
 const Card = styled.div`
   background-color: ${props => props.theme.box};
   width: 100%;
+  max-width: 50rem;
   height: 100px;
-  margin-bottom: 0.5rem;
+  margin: 0 auto 0.5rem;
   border-radius: 8px;
   display: flex;
   :hover {
     background-color: ${props => props.theme.boxHover};
   }
-  overflow: hidden;
+  //overflow: hidden;
 `;
 
 const CardContent = styled.div`
   flex: 1;
-  min-width: 20rem;
+  //min-width: 20rem;
 `;
 
 const ImageCol = styled.div`
@@ -48,7 +44,7 @@ const CardHeading = styled.div`
 function ItemList(props) {
   const CONTENT_BASE_URL = process.env.REACT_APP_MYTASTE_CONTENT_HOST;
   return (
-    <ItemListWrapper>
+    <>
       {props.items.map(item => {
         return (
           <Link key={item._id} to={"/item/" + item._id}>
@@ -76,7 +72,7 @@ function ItemList(props) {
           </Link>
         );
       })}
-    </ItemListWrapper>
+    </>
   );
 }
 

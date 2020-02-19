@@ -7,15 +7,14 @@ import Rating from "@material-ui/lab/Rating";
 
 const Card = styled.div`
   background-color: ${props => props.theme.box};
-  margin: 1rem;
   border-radius: 8px;
   display: flex;
+  max-width: 50rem;
+  margin: 1rem auto;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  :hover {
-    background-color: ${props => props.theme.boxHover};
-  }
+  padding: 1rem;
 `;
 
 const ContentImage = styled.img`
@@ -30,6 +29,23 @@ const ContentImage = styled.img`
 const CardHeading = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
+`;
+
+const TagList = styled.div`
+  font-size: 1.1rem;
+  font-weight: bold;
+`;
+
+const CardFooter = styled.div`
+  height: 3rem;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    margin-left: 1rem;
+    height: 2.5rem;
+  }
 `;
 
 const ItemListPage = props => {
@@ -68,17 +84,20 @@ const ItemListPage = props => {
             alt="..."
           />
         )}
-        <div className="card-body">
-          <p className="card-text">{item.comment}</p>
-          {item.diceValue && (
-            <Rating name="simple-controlled" readOnly value={item.diceValue} />
-          )}
-        </div>
-        <Link to={"/item/" + item._id + "/edit/"}>
-          <div>edit...</div>
-        </Link>
+        <p className="card-text">{item.comment}</p>
+        <TagList>{item.tags}</TagList>
+        {item.diceValue && (
+          <Rating name="simple-controlled" readOnly value={item.diceValue} />
+        )}
+        <CardFooter>
+          <Link to={"/item/" + item._id + "/edit/"}>
+            <button className="btn btn-primary">Edit...</button>
+          </Link>
+          <button className="btn btn-dark" onClick={handleDeleteItem}>
+            Delete
+          </button>
+        </CardFooter>
       </Card>
-      <button onClick={handleDeleteItem}>Delete!</button>
     </>
   );
 };

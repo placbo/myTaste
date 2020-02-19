@@ -6,8 +6,8 @@ import { AiOutlineLogin } from "react-icons/ai";
 const StyledHeader = styled.div`
   position: fixed;
   top: 0;
-  height: 60px;
-  background-color: ${props => props.theme.background};
+  height: 70px;
+  background-color: ${props => props.theme.boxHover};
   width: 100%;
   display: flex;
   align-items: center;
@@ -23,14 +23,14 @@ const IconWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   justify-items: center;
-    height: 100%;
+  height: 100%;
 `;
 
 const IconLabel = styled.div`
   font-size: 12px;
   font-weight: 600;
   text-align: center;
-  margin-top:6px;
+  margin-top: 6px;
 `;
 
 const Logo = styled.span`
@@ -51,7 +51,9 @@ const UserAvatar = styled.img`
 function Header({ user }) {
   return (
     <StyledHeader>
-      <Logo>MyTaste</Logo>
+      <Link to="/">
+        <Logo>MyTaste</Logo>
+      </Link>
       {user ? (
         <>
           <Link to="/profile">

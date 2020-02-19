@@ -9,8 +9,8 @@ const StyledFooter = styled.div`
   position: fixed;
   left: 0;
   bottom: 0;
-  height: 60px;
-  background-color: ${props => props.theme.background};
+  height: 70px;
+  background-color: ${props => props.theme.separator};
   width: 100%;
   display: flex;
   align-items: center;

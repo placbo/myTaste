@@ -17,7 +17,7 @@ import SearchPage from "./pages/Search";
 
 const theme = {
   primary: "#e4e6eb",
-  Secondary: "#44475a",
+  secondary: "#44475a",
   background: "#1c1e21",
   box: "#242526",
   boxHover: "#3b3c3c",
@@ -58,10 +58,8 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const StyledContentWrapper = styled.div`
-  display: flex;
-  margin-top: 60px;
-  margin-bottom: 60px;
-  flex-direction: column;
+  margin-top: 80px;
+  margin-bottom: 70px;
 `;
 
 function App() {
