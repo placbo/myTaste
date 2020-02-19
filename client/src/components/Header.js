@@ -7,9 +7,10 @@ const StyledHeader = styled.div`
   position: fixed;
   top: 0;
   height: 70px;
-  background-color: ${props => props.theme.boxHover};
+  background-color: ${props => props.theme.separator};
   width: 100%;
   display: flex;
+  z-index: 1;
   align-items: center;
   justify-content: space-between;
   font-family: "Jura", sans-serif;
