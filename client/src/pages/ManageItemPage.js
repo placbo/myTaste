@@ -5,6 +5,20 @@ import { toast } from "react-toastify";
 import Resizer from "react-image-file-resizer";
 import styled from "styled-components";
 
+const PageContent = styled.div`
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+`;
+
+const Card = styled.div`
+  background-color: ${props => props.theme.box};
+  border-radius: 8px;
+  width: 100%;
+  max-width: 50rem;
+  margin: 1rem auto;
+  padding: 1rem;
+`;
 
 const BlockScreen = styled.div`
     z-index: 2;
@@ -141,7 +155,8 @@ function ManageItemPage(props) {
   }
 
   return (
-    <div className="container">
+      <PageContent>
+    <Card>
       <div className="form-group">
         <label htmlFor="fileUpload">Last opp</label>
         <div className="field">
@@ -173,7 +188,8 @@ function ManageItemPage(props) {
         onSubmit={handleSubmit}
       />
       {saving && <BlockScreen>Saving...</BlockScreen>}
-    </div>
+    </Card>
+      </PageContent>
   );
 }
 

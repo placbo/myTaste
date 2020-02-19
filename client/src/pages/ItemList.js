@@ -8,7 +8,7 @@ const Card = styled.div`
   width: 100%;
   max-width: 50rem;
   height: 100px;
-  margin: 0 auto 0.5rem;
+  margin-bottom: 0.5rem;
   border-radius: 8px;
   display: flex;
   :hover {
@@ -16,6 +16,14 @@ const Card = styled.div`
   }
   //overflow: hidden;
 `;
+
+const StyledLink = styled(Link)`
+  width: 100%;
+  max-width: 50rem;
+  margin-left: auto;
+  margin-right: auto;
+`;
+
 
 const CardContent = styled.div`
   flex: 1;
@@ -47,7 +55,7 @@ function ItemList(props) {
     <>
       {props.items.map(item => {
         return (
-          <Link key={item._id} to={"/item/" + item._id}>
+          <StyledLink key={item._id} to={"/item/" + item._id}>
             <Card>
               <ImageCol>
                 {item.image && (
@@ -69,7 +77,7 @@ function ItemList(props) {
                 )}
               </CardContent>
             </Card>
-          </Link>
+          </StyledLink>
         );
       })}
     </>

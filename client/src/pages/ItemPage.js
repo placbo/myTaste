@@ -5,6 +5,11 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 import Rating from "@material-ui/lab/Rating";
 
+const PageContent = styled.div`
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+`;
 const Card = styled.div`
   background-color: ${props => props.theme.box};
   border-radius: 8px;
@@ -75,7 +80,7 @@ const ItemListPage = props => {
   };
 
   return (
-    <>
+    <PageContent>
       <Card>
         <CardHeading>{item.title}</CardHeading>
         {item.image && (
@@ -98,7 +103,7 @@ const ItemListPage = props => {
           </button>
         </CardFooter>
       </Card>
-    </>
+    </PageContent>
   );
 };
 
