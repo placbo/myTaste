@@ -7,7 +7,6 @@ import Rating from "@material-ui/lab/Rating";
 import { store } from "../store";
 
 const PageContent = styled.div`
-  margin: 1rem;
   display: flex;
   flex-direction: column;
 `;
@@ -16,7 +15,7 @@ const Card = styled.div`
   border-radius: 8px;
   display: flex;
   max-width: 50rem;
-  margin: 1rem auto;
+  margin: 0rem auto;
   flex-direction: column;
   align-items: center;
   text-align: center;
@@ -44,6 +43,12 @@ const TagList = styled.div`
 
 const ContentLineWrapper = styled.div`
   margin-bottom: 1rem;
+`;
+const YourRatingWrapper = styled.div`
+  margin-top: 1.5rem;
+  border: 1px solid ${props => props.theme.secondary};
+  border-radius: 4px;
+  padding: 10px;
 `;
 
 const CardFooter = styled.div`
@@ -108,7 +113,7 @@ const ItemListPage = props => {
         {item.diceValue && (
           <Rating name="simple-controlled" readOnly value={+item.diceValue} />
         )}
-        {state.state?.role==="admin" && (
+        {state.state?.role === "admin" && (
           <CardFooter>
             <Link to={"/item/" + item._id + "/edit/"}>
               <button className="btn btn-primary">Edit...</button>
@@ -117,6 +122,18 @@ const ItemListPage = props => {
               Delete
             </button>
           </CardFooter>
+        )}
+        {state.state?.googleId && state.state?.role !== "admin" && (
+          <YourRatingWrapper>
+            <p>Your rating:</p>
+            <Rating
+              name="simple-controlled"
+              value={3}
+              onChange={(event, newValue) => {
+                console.log(newValue);
+              }}
+            />
+          </YourRatingWrapper>
         )}
       </Card>
     </PageContent>
