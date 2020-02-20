@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { getItem, deleteItem } from "../api/api";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import Rating from "@material-ui/lab/Rating";
+import { store } from "../store";
 
 const PageContent = styled.div`
   margin: 1rem;
@@ -60,6 +61,7 @@ const CardFooter = styled.div`
 
 const ItemListPage = props => {
   const CONTENT_BASE_URL = process.env.REACT_APP_MYTASTE_CONTENT_HOST;
+  const state = useContext(store);
 
   const [item, setItem] = useState([]);
 
@@ -104,20 +106,18 @@ const ItemListPage = props => {
           <TagList>{item.tags}</TagList>
         </ContentLineWrapper>
         {item.diceValue && (
-          <Rating
-            name="simple-controlled"
-            readOnly
-            value={+item.diceValue}
-          />
+          <Rating name="simple-controlled" readOnly value={+item.diceValue} />
         )}
-        <CardFooter>
-          <Link to={"/item/" + item._id + "/edit/"}>
-            <button className="btn btn-primary">Edit...</button>
-          </Link>
-          <button className="btn btn-dark" onClick={handleDeleteItem}>
-            Delete
-          </button>
-        </CardFooter>
+        {state.state?.role==="admin" && (
+          <CardFooter>
+            <Link to={"/item/" + item._id + "/edit/"}>
+              <button className="btn btn-primary">Edit...</button>
+            </Link>
+            <button className="btn btn-dark" onClick={handleDeleteItem}>
+              Delete
+            </button>
+          </CardFooter>
+        )}
       </Card>
     </PageContent>
   );
