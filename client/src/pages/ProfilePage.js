@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { getUserProfile } from "../api/api";
-import { toast } from "react-toastify";
+import React, { useContext } from "react";
 import styled from "styled-components";
+import { store } from "../store";
 
 const UserAvatar = styled.img`
   height: 200px;
@@ -19,20 +18,14 @@ const StyledPage = styled.div`
 `;
 
 function ProfilePage() {
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    getUserProfile()
-      .then(result => setUser(result))
-      .catch(error => toast.error(error.message));
-  }, []);
+  const state = useContext(store);
 
   return (
     <StyledPage>
-      {user && (
+      {state.state && (
         <>
-          <UserAvatar src={user.picture} />
-          <h3>{user.name}</h3>
+          <UserAvatar src={state.state?.picture} />
+          <h3>{state.state?.name}</h3>
           <hr />
           <p>
             <a href="/mytasteapi/logout">Log out</a>

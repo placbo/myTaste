@@ -47,6 +47,14 @@ Kjør klient og server via nginx (kjøres ekternt med domene-binding)
     SERVER_HOST=http://www.kasselars.com
 
 
+Prepare DB
+
+DB and collection is automatically created from application
+
+create index for search:
+db.<collection>.createIndex( { name: "text", description: "text" } )
+
+
 Backup 
 -
 

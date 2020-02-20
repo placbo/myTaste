@@ -1,33 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, {useContext, useEffect} from "react";
 import ItemListPage from "./pages/ItemListPage";
-import { Route, Switch, useHistory } from "react-router-dom";
+import {Route, Switch} from "react-router-dom";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProfilePage from "./pages/ProfilePage";
 import ItemPage from "./pages/ItemPage";
 import ManageItemPage from "./pages/ManageItemPage";
-import { toast, ToastContainer } from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
+import styled, {createGlobalStyle} from "styled-components";
 //import queryString from "query-string";
 import LoginPage from "./pages/LoginPage";
 import Header from "./components/Header";
-import { getUserProfile } from "./api/api";
+import {getUserProfile} from "./api/api";
 import Footer from "./components/Footer";
 import SearchPage from "./pages/Search";
-
-const theme = {
-  primary: "#e4e6eb",
-  secondary: "#44475a",
-  background: "#1c1e21",
-  box: "#242526",
-  boxHover: "#3b3c3c",
-  link: "#e4e6eb",
-  separator: "#3d4349",
-  primaryText: "#f2f2f2",
-  secondaryText: "#8be9fd",
-  disabled: "#6272a4",
-  danger: "#ff5555"
-};
+import {store, UPDATE_USER_ACTION} from "./store";
 
 const GlobalStyle = createGlobalStyle`
   HTML, body {
@@ -63,8 +50,8 @@ const StyledContentWrapper = styled.div`
 `;
 
 function App() {
-  const [user, setUser] = useState({});
-  const history = useHistory();
+  const globalState = useContext(store);
+  const { dispatch } = globalState;
 
   useEffect(() => {
     // const query = queryString.parse(window.location.search);
@@ -73,15 +60,17 @@ function App() {
     //   history.push("/");
     // }
     getUserProfile()
-      .then(result => setUser(result))
+      .then(user => {
+        dispatch({ type: UPDATE_USER_ACTION, user });
+      })
       .catch(error => toast.error(error.message));
-  }, [history]);
+  }, [dispatch]);
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <GlobalStyle />
       <ToastContainer autoClose={3000} hideProgressBar />
-      <Header user={user} />
+      <Header user={{}} />
       <StyledContentWrapper>
         <Switch>
           <Route path="/" exact component={ItemListPage} />
@@ -95,7 +84,7 @@ function App() {
         </Switch>
       </StyledContentWrapper>
       <Footer />
-    </ThemeProvider>
+    </>
   );
 }
 

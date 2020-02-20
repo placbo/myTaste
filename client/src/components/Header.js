@@ -1,7 +1,8 @@
-import React from "react";
+import React, {useContext} from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { AiOutlineLogin } from "react-icons/ai";
+import {store} from "../store";
 
 const StyledHeader = styled.div`
   position: fixed;
@@ -49,16 +50,18 @@ const UserAvatar = styled.img`
   border-radius: 50%;
 `;
 
-function Header({ user }) {
-  return (
+function Header() {
+    const state = useContext(store);
+
+    return (
     <StyledHeader>
       <Link to="/">
         <Logo>MyTaste</Logo>
       </Link>
-      {user ? (
+      {state.state ? (
         <>
           <Link to="/profile">
-            <UserAvatar src={user.picture} />
+            <UserAvatar src={state.state?.picture} />
           </Link>
         </>
       ) : (

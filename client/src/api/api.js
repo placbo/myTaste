@@ -35,6 +35,12 @@ export function getItem(id) {
     .catch(handleAjaxError);
 }
 
+export function rateItem(userId, rating) {
+  return Axios.post(PROFILE_URL, { userId, rating }, { headers: headers })
+    .then(handleAjaxResponse)
+    .catch(handleAjaxError);
+}
+
 export function saveItem(item) {
   const id = item._id;
   delete item._id;

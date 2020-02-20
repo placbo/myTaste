@@ -41,8 +41,13 @@ const TagList = styled.div`
   font-weight: bold;
 `;
 
+const ContentLineWrapper = styled.div`
+  margin-bottom: 1rem;
+`;
+
 const CardFooter = styled.div`
   height: 3rem;
+  margin-top: 1rem;
   width: 100%;
   display: flex;
   justify-content: flex-end;
@@ -63,7 +68,6 @@ const ItemListPage = props => {
     if (id) {
       getItem(id)
         .then(_item => {
-          console.log("item", _item);
           setItem(_item);
         })
         .catch(error => toast.error(error.message));
@@ -84,15 +88,27 @@ const ItemListPage = props => {
       <Card>
         <CardHeading>{item.title}</CardHeading>
         {item.image && (
-          <ContentImage
-            src={`${CONTENT_BASE_URL}/thumb/${item.image}`}
-            alt="..."
-          />
+          <ContentLineWrapper>
+            <a href={`${CONTENT_BASE_URL}/${item.image}`}>
+              <ContentImage
+                src={`${CONTENT_BASE_URL}/thumb/${item.image}`}
+                alt="image"
+              />
+            </a>
+          </ContentLineWrapper>
         )}
-        <p className="card-text">{item.comment}</p>
-        <TagList>{item.tags}</TagList>
+        <ContentLineWrapper>
+          <p className="card-text">{item.comment}</p>
+        </ContentLineWrapper>
+        <ContentLineWrapper>
+          <TagList>{item.tags}</TagList>
+        </ContentLineWrapper>
         {item.diceValue && (
-          <Rating name="simple-controlled" readOnly value={item.diceValue} />
+          <Rating
+            name="simple-controlled"
+            readOnly
+            value={+item.diceValue}
+          />
         )}
         <CardFooter>
           <Link to={"/item/" + item._id + "/edit/"}>

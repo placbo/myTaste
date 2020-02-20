@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { AiOutlineHome } from "react-icons/ai";
-import { AiOutlinePlus } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 
 const StyledFooter = styled.div`
@@ -52,7 +51,6 @@ function Footer() {
       </Link>
       <Link to="/new-item">
         <IconWrapper>
-          <AiOutlinePlus />
           <IconLabel>New</IconLabel>
         </IconWrapper>
       </Link>

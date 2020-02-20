@@ -62,7 +62,7 @@ function ItemList(props) {
                   <ContentImage
                     src={`${CONTENT_BASE_URL}/thumb/${item.image}`}
                     className="card-img-top"
-                    alt="..."
+                    alt="image"
                   />
                 )}
               </ImageCol>
@@ -72,7 +72,7 @@ function ItemList(props) {
                   <Rating
                     name="simple-controlled"
                     readOnly
-                    value={item.diceValue}
+                    value={+item.diceValue}
                   />
                 )}
               </CardContent>
