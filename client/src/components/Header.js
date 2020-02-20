@@ -58,7 +58,7 @@ function Header() {
       <Link to="/">
         <Logo>MyTaste</Logo>
       </Link>
-      {state.state ? (
+      {state.state?.googleId ? (
         <>
           <Link to="/profile">
             <UserAvatar src={state.state?.picture} />
