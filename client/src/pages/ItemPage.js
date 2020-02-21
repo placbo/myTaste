@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { getItem, deleteItem } from "../api/api";
+import { getItem, deleteItem, rateItem, getRating } from "../api/api";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
@@ -10,12 +10,13 @@ const PageContent = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
 const Card = styled.div`
   background-color: ${props => props.theme.box};
   border-radius: 8px;
   display: flex;
   max-width: 50rem;
-  margin: 0rem auto;
+  margin: 0 auto;
   flex-direction: column;
   align-items: center;
   text-align: center;
@@ -70,6 +71,7 @@ const ItemListPage = props => {
 
   const [item, setItem] = useState([]);
   const [userRating, setUserRating] = useState(3);
+  const [hasUserRated, setHasUserRated] = useState(false);
 
   useEffect(() => {
     const id = props.match.params.id; // from the path `/:id`
@@ -77,6 +79,11 @@ const ItemListPage = props => {
       getItem(id)
         .then(_item => {
           setItem(_item);
+
+          getRating(state.state?.googleId).then(rating => {
+            if (rating) setHasUserRated(true);
+            setUserRating(rating);
+          });
         })
         .catch(error => toast.error(error.message));
     }
@@ -91,10 +98,14 @@ const ItemListPage = props => {
     }
   };
 
-  const handlaRatingChange = (event,value) => {
+  const handlaRatingChange = (event, value) => {
     setUserRating(value);
-    toast.info("Saving not implemented");
-    //SAVE
+    rateItem(state.state?.googleId, value)
+      .then(_item => {
+        setHasUserRated(true);
+        toast.success("Lagret");
+      })
+      .catch(error => toast.error(error.message));
   };
 
   return (
@@ -132,7 +143,7 @@ const ItemListPage = props => {
         )}
         {state.state?.googleId && state.state?.role !== "admin" && (
           <YourRatingWrapper>
-            <p>Your rating:</p>
+            {hasUserRated ? <p>Your rating:</p> : <p>Rate this item</p>}
             <Rating
               name="simple-controlled"
               value={userRating}

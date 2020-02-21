@@ -7,8 +7,8 @@ import {
 import Axios from "axios";
 
 export const ITEMS_URL = process.env.REACT_APP_MYTASTE_API_HOST + "/items/";
-export const PROFILE_URL =
-  process.env.REACT_APP_MYTASTE_API_HOST + "/userprofile";
+export const PROFILE_URL =  process.env.REACT_APP_MYTASTE_API_HOST + "/userprofile";
+export const RATE_ITEM_URL =  process.env.REACT_APP_MYTASTE_API_HOST + "/rate";
 
 const headers = {
   Accept: "application/json",
@@ -29,17 +29,24 @@ export function getUserProfile() {
     .catch(handleAjaxError);
 }
 
-export function getItem(id) {
-  return Axios.get(ITEMS_URL + id, { headers: headers })
+export function getItem(itemId) {
+  return Axios.get(ITEMS_URL + itemId, { headers: headers })
     .then(handleAjaxResponse)
     .catch(handleAjaxError);
 }
 
 export function rateItem(userId, rating) {
-  return Axios.post(PROFILE_URL, { userId, rating }, { headers: headers })
+  return Axios.post(RATE_ITEM_URL, { userId, rating }, { headers: headers })
     .then(handleAjaxResponse)
     .catch(handleAjaxError);
 }
+
+export function getRating(userId) {
+  return Axios.get(RATE_ITEM_URL + userId, { headers: headers })
+      .then(handleAjaxResponse)
+      .catch(handleAjaxError);
+}
+
 
 export function saveItem(item) {
   const id = item._id;

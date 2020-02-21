@@ -1,6 +1,6 @@
 import Axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import { ITEMS_URL, PROFILE_URL } from "./api";
+import {ITEMS_URL, PROFILE_URL, RATE_ITEM_URL} from "./api";
 import mockData from "./mockData";
 
 const mockUser = {
@@ -36,6 +36,12 @@ export const interceptRequestsOnMock = () => {
 
   //GET PROFILE
   mock.onGet(new RegExp(`${PROFILE_URL}*`)).reply(200, mockUser);
+
+  //USER RATING
+  mock.onPost(new RegExp(`${RATE_ITEM_URL}*`)).reply(200, mockUser);
+  //mock.onGet(new RegExp(`${RATE_ITEM_URL}*`)).reply(200, 6);
+  mock.onGet(new RegExp(`${RATE_ITEM_URL}*`)).reply(404, 6);
+
 
   //FALLBACK
   mock.onAny().reply(config => {
