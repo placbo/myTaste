@@ -69,6 +69,7 @@ const ItemListPage = props => {
   const state = useContext(store);
 
   const [item, setItem] = useState([]);
+  const [userRating, setUserRating] = useState(3);
 
   useEffect(() => {
     const id = props.match.params.id; // from the path `/:id`
@@ -88,6 +89,12 @@ const ItemListPage = props => {
         props.history.push("/");
       });
     }
+  };
+
+  const handlaRatingChange = (event,value) => {
+    setUserRating(value);
+    toast.info("Saving not implemented");
+    //SAVE
   };
 
   return (
@@ -128,10 +135,8 @@ const ItemListPage = props => {
             <p>Your rating:</p>
             <Rating
               name="simple-controlled"
-              value={3}
-              onChange={(event, newValue) => {
-                console.log(newValue);
-              }}
+              value={userRating}
+              onChange={handlaRatingChange}
             />
           </YourRatingWrapper>
         )}
