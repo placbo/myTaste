@@ -243,7 +243,8 @@ app.get("/mytasteapi/userprofile", (req, res) => {
       _id: "123",
       googleId: "123",
       name: "TEST USER",
-      picture: "https://i.picsum.photos/id/640/200/200.jpg"
+      picture: "https://i.picsum.photos/id/640/200/200.jpg",
+      role: "user"
     });
   } else {
     console.log("Fetch user profile: (GET) ");

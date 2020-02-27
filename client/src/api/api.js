@@ -56,7 +56,7 @@ export function saveItem(item) {
   const id = item._id;
   delete item._id;
   //TODO: Axios
-  return fetch(ITEMS_URL + "/" + +(id || ""), {
+  return fetch(ITEMS_URL + "/" + (id || ""), {
     method: id ? "PUT" : "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(item)
