@@ -80,14 +80,17 @@ const ItemListPage = props => {
         .then(_item => {
           setItem(_item);
 
-          getRating(state.state?.googleId).then(rating => {
-            if (rating) setHasUserRated(true);
-            setUserRating(rating);
-          });
+          state.state?.googleId &&
+            getRating(item._id, state.state?.googleId)
+              .then(rating => {
+                if (rating) setHasUserRated(true);
+                setUserRating(+(rating.rating));
+              })
+              .catch(error => console.log(error));
         })
         .catch(error => toast.error(error.message));
     }
-  }, [props.match.params.id]);
+  }, [item._id, props.match.params.id, state.state]);
 
   const handleDeleteItem = () => {
     if (window.confirm("Sure?")) {
@@ -98,9 +101,9 @@ const ItemListPage = props => {
     }
   };
 
-  const handlaRatingChange = (event, value) => {
+  const handleRatingChange = (event, value) => {
     setUserRating(value);
-    rateItem(state.state?.googleId, value)
+    rateItem(item._id, state.state?.googleId, value)
       .then(_item => {
         setHasUserRated(true);
         toast.success("Lagret");
@@ -147,7 +150,7 @@ const ItemListPage = props => {
             <Rating
               name="simple-controlled"
               value={userRating}
-              onChange={handlaRatingChange}
+              onChange={handleRatingChange}
             />
           </YourRatingWrapper>
         )}

@@ -16,6 +16,7 @@ const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 
 const ITEMS_COLLECTION_NAME = process.env.ITEMS_COLLECTION_NAME;
 const USERS_COLLECTION_NAME = process.env.USERS_COLLECTION_NAME;
+const RATINGS_COLLECTION_NAME = process.env.RATINGS_COLLECTION_NAME;
 const IMAGE_LOCATION = process.env.IMAGE_LOCATION;
 const IMAGE_THUMB_LOCATION = process.env.IMAGE_THUMB_LOCATION;
 const _10MB = 10 * 1024 * 1024;
@@ -23,6 +24,8 @@ let db;
 const ObjectID = mongodb.ObjectID;
 
 const app = express();
+
+const MOCK_USER_LOGGEDIN = false;
 
 app.use(cors({ credentials: true, origin: process.env.CLIENT_HOST }));
 
@@ -161,16 +164,34 @@ const storage = multer.diskStorage({
   }
 });
 
-const ensureAuthenticated = (req, res, next) => {
-  console.log("(ensureAuthenticated - show user:", req.user);
-  if (req.isAuthenticated() && req.user.googleId === process.env.ADMIN_ID) {
+const ensureAuthenticatedAdmin = (req, res, next) => {
+  if (MOCK_USER_LOGGEDIN) {
+    console.log("mocking ensureAuthenticatedAdmin");
     return next();
-  } else res.redirect(`${process.env.CLIENT_HOST}/login`);
+  } else {
+    console.log("EnsureAuthenticated Admin");
+    if (req.isAuthenticated() && req.user.googleId === process.env.ADMIN_ID) {
+      return next();
+    } else res.redirect(`${process.env.CLIENT_HOST}/login`);
+  }
 };
+
+const ensureAuthenticatedUser = (req, res, next) => {
+  if (MOCK_USER_LOGGEDIN) {
+    console.log("mocking ensureAuthenticatedUser");
+    return next();
+  } else {
+    console.log("EnsureAuthenticated User- show user:", req.user);
+    if (req.isAuthenticated()) {
+      return next();
+    } else res.redirect(`${process.env.CLIENT_HOST}/login`);
+  }
+};
+
 
 const multipartHandler = multer({ storage: storage }).single("image");
 
-app.post("/mytasteapi/upload", ensureAuthenticated, (req, res) => {
+app.post("/mytasteapi/upload", ensureAuthenticatedAdmin, (req, res) => {
   console.log("Upload called (POST)");
   multipartHandler(req, res, function(err) {
     if (err) {
@@ -217,26 +238,35 @@ const isAdmin = user => {
 };
 
 app.get("/mytasteapi/userprofile", (req, res) => {
-  console.log("Fetch user profile: (GET) ");
-  if (req.user && req.user.googleId) {
-    console.log("User profile id: ", req.user.googleId);
-    db.collection(USERS_COLLECTION_NAME).findOne(
-      {
-        googleId: req.user.googleId
-      },
-      (err, user) => {
-        if (err) {
-          handleError(res, err.message, "Failed to get user");
-        } else {
-          if (isAdmin(user)) user = { ...user, role: "admin" };
-          res.status(200).json(user);
+  if (MOCK_USER_LOGGEDIN) {
+    res.status(200).json({
+      _id: "123",
+      googleId: "123",
+      name: "TEST USER",
+      picture: "https://i.picsum.photos/id/640/200/200.jpg"
+    });
+  } else {
+    console.log("Fetch user profile: (GET) ");
+    if (req.user && req.user.googleId) {
+      console.log("User profile id: ", req.user.googleId);
+      db.collection(USERS_COLLECTION_NAME).findOne(
+        {
+          googleId: req.user.googleId
+        },
+        (err, user) => {
+          if (err) {
+            handleError(res, err.message, "Failed to get user");
+          } else {
+            if (isAdmin(user)) user = { ...user, role: "admin" };
+            res.status(200).json(user);
+          }
         }
-      }
-    );
-  } else res.status(204).json({});
+      );
+    } else res.status(204).json({});
+  }
 });
 
-app.post("/mytasteapi/items", ensureAuthenticated, (req, res) => {
+app.post("/mytasteapi/items", ensureAuthenticatedAdmin, (req, res) => {
   let newSet = req.body;
   console.log("Saving: (POST) ", newSet);
   newSet.createDate = new Date();
@@ -250,7 +280,7 @@ app.post("/mytasteapi/items", ensureAuthenticated, (req, res) => {
 });
 
 app.get("/mytasteapi/items/:id", (req, res) => {
-  console.log("Fetch: (GET) ", req.params.id);
+  console.log("Fetch item (GET) : ", req.params.id);
   if (mongoose.Types.ObjectId.isValid(req.params.id)) {
     db.collection(ITEMS_COLLECTION_NAME).findOne(
       {
@@ -269,7 +299,61 @@ app.get("/mytasteapi/items/:id", (req, res) => {
   }
 });
 
-app.put("/mytasteapi/items/:id", ensureAuthenticated, (req, res) => {
+app.get("/mytasteapi/rating/:itemId/:userId", (req, res) => {
+  console.log(
+    `Fetch rating (GET) userId: ${req.params.userId}, itemId: ${req.params.itemId} `
+  );
+  db.collection(RATINGS_COLLECTION_NAME).findOne(
+    { itemId: req.params.itemId, userId: req.params.userId },
+    (err, result) => {
+      console.log("err", err);
+      console.log("result", result);
+      if (err) {
+        handleError(res, err.message, "Failed to get set");
+      } else {
+        res.status(200).json(result);
+      }
+    }
+  );
+});
+
+app.put("/mytasteapi/rating/", ensureAuthenticatedUser, (req, res) => {
+  let rating = req.body;
+  console.log("Calling Updating rating (PUT) ");
+  db.collection(RATINGS_COLLECTION_NAME)
+    .find({ userId: rating.userId, itemId: rating.itemId })
+    .count((err, result) => {
+      if (err) {
+        handleError(res, err.message, "Failed find rating.");
+      }
+      if (result === 0) {
+        db.collection(RATINGS_COLLECTION_NAME).insertOne(rating, err => {
+          if (err) {
+            handleError(res, err.message, "Failed to create new rating.");
+          } else {
+            console.log("inserted", req.body);
+            res.status(201).json({});
+          }
+        });
+      } else {
+        db.collection(RATINGS_COLLECTION_NAME).findOneAndUpdate(
+          { userId: rating.userId, itemId: rating.itemId },
+          { $set: rating },
+          { returnOriginal: false },
+          err => {
+            if (err) {
+              handleError(res, err.message, "Failed to update rating");
+            } else {
+              console.log("updated");
+              res.status(200).json({});
+            }
+          }
+        );
+      }
+    });
+});
+
+app.put("/mytasteapi/items/:id", ensureAuthenticatedAdmin, (req, res) => {
   let updatedSet = req.body;
   console.log("Updating: (PUT) ", updatedSet);
   db.collection(ITEMS_COLLECTION_NAME).findOneAndUpdate(
@@ -286,7 +370,7 @@ app.put("/mytasteapi/items/:id", ensureAuthenticated, (req, res) => {
   );
 });
 
-app.delete("/mytasteapi/items/:id", ensureAuthenticated, (req, res) => {
+app.delete("/mytasteapi/items/:id", ensureAuthenticatedAdmin, (req, res) => {
   console.log("Delete: (DELETE) ", req.params.id);
   db.collection(ITEMS_COLLECTION_NAME).deleteOne(
     { _id: new ObjectID(req.params.id) },

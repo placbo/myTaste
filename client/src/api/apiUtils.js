@@ -5,13 +5,13 @@ export async function handleResponse(response) {
 }
 
 export async function handleAjaxResponse(response) {
-  if (response.status === 200) {
+  if (response.status === 200 || response.status === 201) {
     return response.data;
   } else if (response.status === 204) {
     return null;
   } else {
     throw new Error(
-      `Network response was not OK. (${response.statusText})${response.statusText}`
+      `Network response was not OK. (${response.status}) ${response.statusText}`
     );
   }
 }

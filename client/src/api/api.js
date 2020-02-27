@@ -6,9 +6,10 @@ import {
 } from "./apiUtils";
 import Axios from "axios";
 
-export const ITEMS_URL = process.env.REACT_APP_MYTASTE_API_HOST + "/items/";
-export const PROFILE_URL =  process.env.REACT_APP_MYTASTE_API_HOST + "/userprofile";
-export const RATE_ITEM_URL =  process.env.REACT_APP_MYTASTE_API_HOST + "/rate";
+export const ITEMS_URL = process.env.REACT_APP_MYTASTE_API_HOST + "/items";
+export const PROFILE_URL =
+  process.env.REACT_APP_MYTASTE_API_HOST + "/userprofile";
+export const RATE_ITEM_URL = process.env.REACT_APP_MYTASTE_API_HOST + "/rating";
 
 const headers = {
   Accept: "application/json",
@@ -30,29 +31,32 @@ export function getUserProfile() {
 }
 
 export function getItem(itemId) {
-  return Axios.get(ITEMS_URL + itemId, { headers: headers })
+  return Axios.get(ITEMS_URL + "/" + itemId, { headers: headers })
     .then(handleAjaxResponse)
     .catch(handleAjaxError);
 }
 
-export function rateItem(userId, rating) {
-  return Axios.post(RATE_ITEM_URL, { userId, rating }, { headers: headers })
+export function rateItem(itemId, userId, rating) {
+  return Axios.put(
+    RATE_ITEM_URL,
+    { itemId, userId, rating },
+    { headers: headers }
+  )
     .then(handleAjaxResponse)
     .catch(handleAjaxError);
 }
 
-export function getRating(userId) {
-  return Axios.get(RATE_ITEM_URL + userId, { headers: headers })
-      .then(handleAjaxResponse)
-      .catch(handleAjaxError);
+export function getRating(itemId, userId) {
+  return Axios.get(`${RATE_ITEM_URL}/${itemId}/${userId}`, { headers: headers })
+    .then(handleAjaxResponse)
+    .catch(handleAjaxError);
 }
-
 
 export function saveItem(item) {
   const id = item._id;
   delete item._id;
   //TODO: Axios
-  return fetch(ITEMS_URL + (id || ""), {
+  return fetch(ITEMS_URL + "/" + +(id || ""), {
     method: id ? "PUT" : "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(item)
@@ -63,7 +67,7 @@ export function saveItem(item) {
 
 export function deleteItem(itemId) {
   //TODO: Axios
-  return fetch(ITEMS_URL + itemId, { method: "DELETE" })
+  return fetch(ITEMS_URL + "/" + itemId, { method: "DELETE" })
     .then(handleResponse)
     .catch(handleError);
 }
