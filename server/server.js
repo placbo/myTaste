@@ -14,9 +14,10 @@ require("dotenv").config();
 const cors = require("cors");
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 
-const ITEMS_COLLECTION_NAME = process.env.ITEMS_COLLECTION_NAME;
-const USERS_COLLECTION_NAME = process.env.USERS_COLLECTION_NAME;
-const RATINGS_COLLECTION_NAME = process.env.RATINGS_COLLECTION_NAME;
+
+const ITEMS_COLLECTION_NAME = "items";
+const USERS_COLLECTION_NAME = "users";
+const RATINGS_COLLECTION_NAME = "ratings";
 const IMAGE_LOCATION = process.env.IMAGE_LOCATION;
 const IMAGE_THUMB_LOCATION = process.env.IMAGE_THUMB_LOCATION;
 const _10MB = 10 * 1024 * 1024;
@@ -28,10 +29,8 @@ const app = express();
 const MOCK_USER_LOGGEDIN = false;
 
 app.use(cors({ credentials: true, origin: process.env.CLIENT_HOST }));
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
