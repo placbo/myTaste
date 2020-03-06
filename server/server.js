@@ -317,6 +317,32 @@ app.get("/mytasteapi/rating/:itemId/:userId", (req, res) => {
   );
 });
 
+app.get("/mytasteapi/rating/:itemId/", (req, res) => {
+  console.log(`XXXFetch avg rating (GET). itemId: ${req.params.itemId} `);
+  db.collection(RATINGS_COLLECTION_NAME)
+    .aggregate([
+      {
+        $match: { itemId: req.params.itemId }
+      },
+      {
+        $group: {
+          _id: "$itemId",
+          count: { $sum: 1 },
+          average: { $avg: "$rating" }
+        }
+      }
+    ])
+    .toArray((err, result) => {
+      console.log("err", err);
+      console.log("result", result);
+      if (err) {
+        handleError(res, err.message, "Failed to get set");
+      } else {
+        res.status(200).json(result);
+      }
+    });
+});
+
 app.put("/mytasteapi/rating/", ensureAuthenticatedUser, (req, res) => {
   let rating = req.body;
   console.log("Calling Updating rating (PUT) ");
