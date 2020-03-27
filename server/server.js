@@ -2,13 +2,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongodb = require("mongodb");
 const multer = require("multer");
-const uuidv4 = require("uuid/v4");
 const path = require("path");
 const imageThumbnail = require("image-thumbnail");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
-const fs = require("fs");
+const { uuid } = require('uuidv4');
 require("log-timestamp");
 require("dotenv").config();
 const cors = require("cors");
@@ -158,7 +157,7 @@ const storage = multer.diskStorage({
     cb(null, IMAGE_LOCATION);
   },
   filename: function(req, file, cb) {
-    const id = uuidv4() + path.extname(file.originalname);
+    const id = uuid() + path.extname(file.originalname);
     cb(null, id);
   }
 });
