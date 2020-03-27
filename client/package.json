@@ -6,18 +6,18 @@
   "homepage": ".",
   "dependencies": {
     "@ant-design/icons": "^2.1.1",
-    "@material-ui/core": "^4.9.3",
+    "@material-ui/core": "^4.9.7",
     "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.43",
+    "@material-ui/lab": "^4.0.0-alpha.46",
     "axios": "^0.19.2",
     "bootstrap": "^4.3.1",
-    "query-string": "^6.11.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
+    "query-string": "^6.11.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "react-icons": "^3.9.0",
     "react-image-file-resizer": "^0.2.1",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "^3.4.0",
+    "react-scripts": "^3.4.1",
     "react-toastify": "^5.5.0",
     "styled-components": "^5.0.1"
   },
@@ -43,7 +43,7 @@
     ]
   },
   "devDependencies": {
-    "axios-mock-adapter": "^1.17.0",
+    "axios-mock-adapter": "^1.18.1",
     "prettier": "^1.19.1"
   }
 }
