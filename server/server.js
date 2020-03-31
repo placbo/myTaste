@@ -218,8 +218,7 @@ app.post("/mytasteapi/upload", ensureAuthenticatedAdmin, (req, res) => {
 });
 
 app.get("/mytasteapi/items", (req, res) => {
-  console.log("Fetch all: (GET) ");
-  console.log(ITEMS_COLLECTION_NAME);
+  console.log("Fetch all: (GET) " + ITEMS_COLLECTION_NAME);
   db.collection(ITEMS_COLLECTION_NAME)
     .find({})
     .toArray((err, docs) => {
@@ -237,6 +236,7 @@ const isAdmin = user => {
 
 app.get("/mytasteapi/userprofile", (req, res) => {
   if (MOCK_USER_LOGGEDIN) {
+    console.log("MOCK Fetch user profile: (GET) ");
     res.status(200).json({
       _id: "123",
       googleId: "123",
@@ -317,7 +317,7 @@ app.get("/mytasteapi/rating/:itemId/:userId", (req, res) => {
 });
 
 app.get("/mytasteapi/rating/:itemId/", (req, res) => {
-  console.log(`XXXFetch avg rating (GET). itemId: ${req.params.itemId} `);
+  console.log(`Fetch avg rating (GET). itemId: ${req.params.itemId} `);
   db.collection(RATINGS_COLLECTION_NAME)
     .aggregate([
       {
@@ -337,7 +337,7 @@ app.get("/mytasteapi/rating/:itemId/", (req, res) => {
       if (err) {
         handleError(res, err.message, "Failed to get set");
       } else {
-        res.status(200).json(result);
+        res.status(200).json(result[0]);
       }
     });
 });

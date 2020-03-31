@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { getItem, deleteItem, rateItem, getRating } from "../api/api";
+import {getItem, deleteItem, rateItem, getRating, getAverageRating} from "../api/api";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
@@ -69,7 +69,8 @@ const ItemListPage = props => {
   const CONTENT_BASE_URL = process.env.REACT_APP_MYTASTE_CONTENT_HOST;
   const state = useContext(store);
 
-  const [item, setItem] = useState([]);
+  const [item, setItem] = useState({});
+  const [rating, setRating] = useState({});
   const [userRating, setUserRating] = useState(3);
   const [hasUserRated, setHasUserRated] = useState(false);
 
@@ -79,8 +80,10 @@ const ItemListPage = props => {
       getItem(id)
         .then(_item => {
           setItem(_item);
-
-          state.state?.googleId &&
+            getAverageRating(id).then( result => {
+                setRating( result);
+            } );
+            state.state?.googleId &&
             getRating(item._id, state.state?.googleId)
               .then(rating => {
                 if (rating) setHasUserRated(true);
@@ -128,11 +131,14 @@ const ItemListPage = props => {
         <ContentLineWrapper>
           <p className="card-text">{item.comment}</p>
         </ContentLineWrapper>
+
         <ContentLineWrapper>
           <TagList>{item.tags}</TagList>
         </ContentLineWrapper>
-        {item.diceValue && (
-          <Rating name="simple-controlled" readOnly value={+item.diceValue} />
+        {rating.average && (
+            <>
+          <Rating name="simple-controlled" readOnly value={+rating.average} />
+          ({rating.count} vote(s))</>
         )}
         {state.state?.role === "admin" && (
           <CardFooter>

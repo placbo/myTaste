@@ -18,7 +18,6 @@ const headers = {
 
 export function getAllItems() {
   return Axios.get(ITEMS_URL, {
-    withCredentials: true,
     headers: headers
   })
     .then(handleAjaxResponse)
@@ -51,6 +50,13 @@ export function getRating(itemId, userId) {
     .then(handleAjaxResponse)
     .catch(handleAjaxError);
 }
+
+export function getAverageRating(itemId) {
+  return Axios.get(`${RATE_ITEM_URL}/${itemId}`, { headers: headers })
+      .then(handleAjaxResponse)
+      .catch(handleAjaxError);
+}
+
 
 export function saveItem(item) {
   const id = item._id;
