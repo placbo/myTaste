@@ -1,6 +1,12 @@
-import React, { useContext } from "react";
+import React, {useContext} from "react";
 import styled from "styled-components";
-import { store } from "../store";
+import {store} from "../store";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import {useHistory} from "react-router";
+import app from "firebase";
+import Button from "@material-ui/core/Button";
+import {AuthContext} from "../Auth";
 
 const UserAvatar = styled.img`
   height: 200px;
@@ -17,24 +23,40 @@ const StyledPage = styled.div`
   height: 400px;
 `;
 
-function ProfilePage() {
-  const state = useContext(store);
+const Divider = styled.div`
+    width: 80%;
+    border-top: 1px solid ${props => props.theme.separator};
+    margin: 2rem 0  2rem 0; 
+     
+`;
 
-  return (
-    <StyledPage>
-      {state.state && (
+function ProfilePage() {
+    const state = useContext(store);
+    const {currentUser} = useContext(AuthContext);
+
+    const history = useHistory();
+    const signOut = () => {
+        app.auth().signOut();
+        history.push("/");
+    }
+
+    return (
         <>
-          <UserAvatar src={state.state?.picture} />
-          <h3>{state.state?.name}</h3>
-          <hr />
-          <p>
-            <a href="/mytasteapi/logout">Log out</a>
-          </p>
+            <Header/>
+            <StyledPage>
+                {state.state && (
+                    <>
+                        <UserAvatar src={currentUser.photoURL}/>
+                        <h3>{currentUser.displayName}</h3>
+                        <Divider/>
+                        <Button variant="contained" onClick={signOut}>Log out</Button>
+                    </>
+                )}
+                {/*<p>App version: {process.env.REACT_APP_VERSION}</p>*/}
+            </StyledPage>
+            <Footer/>
         </>
-      )}
-      <p>App version: {process.env.REACT_APP_VERSION}</p>
-    </StyledPage>
-  );
+    );
 }
 
 export default ProfilePage;

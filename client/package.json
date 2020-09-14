@@ -5,21 +5,27 @@
   "proxy": "http://localhost:3001",
   "homepage": ".",
   "dependencies": {
-    "@ant-design/icons": "^2.1.1",
-    "@material-ui/core": "^4.9.7",
+    "@ant-design/icons": "^4.2.2",
+    "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.46",
-    "axios": "^0.19.2",
-    "bootstrap": "^4.3.1",
-    "query-string": "^6.11.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "@react-firebase/database": "^0.3.11",
+    "array-move": "^3.0.1",
+    "axios": "^0.20.0",
+    "bootstrap": "^4.5.2",
+    "firebase": "^7.19.1",
+    "query-string": "^6.13.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-icons": "^3.9.0",
-    "react-image-file-resizer": "^0.2.1",
-    "react-router-dom": "^5.0.1",
-    "react-scripts": "^3.4.1",
-    "react-toastify": "^5.5.0",
-    "styled-components": "^5.0.1"
+    "react-icons": "^3.11.0",
+    "react-image-file-resizer": "^0.3.8",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^3.4.3",
+    "react-smooth-dnd": "^0.11.1",
+    "react-toastify": "^6.0.8",
+    "styled-components": "^5.2.0",
+    "uuid": "^8.3.0"
   },
   "scripts": {
     "start": "PORT=3000 react-scripts start",
@@ -43,7 +49,8 @@
     ]
   },
   "devDependencies": {
-    "axios-mock-adapter": "^1.18.1",
-    "prettier": "^1.19.1"
+    "axios-mock-adapter": "^1.18.2",
+    "prettier": "^2.1.1",
+    "gh-pages": "^3.1.0"
   }
 }

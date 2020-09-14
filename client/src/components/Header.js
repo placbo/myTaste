@@ -1,8 +1,8 @@
 import React, {useContext} from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { AiOutlineLogin } from "react-icons/ai";
-import {store} from "../store";
+import {Link} from "react-router-dom";
+import {AiOutlineLogin} from "react-icons/ai";
+import {AuthContext} from "../Auth";
 
 const StyledHeader = styled.div`
   position: fixed;
@@ -51,29 +51,28 @@ const UserAvatar = styled.img`
 `;
 
 function Header() {
-    const state = useContext(store);
+
+    const {currentUser} = useContext(AuthContext);
 
     return (
-    <StyledHeader>
-      <Link to="/">
-        <Logo>MyTaste</Logo>
-      </Link>
-      {state.state?.googleId ? (
-        <>
-          <Link to="/profile">
-            <UserAvatar src={state.state?.picture} />
-          </Link>
-        </>
-      ) : (
-        <Link to="/login">
-          <IconWrapper>
-            <AiOutlineLogin />
-            <IconLabel>Log in</IconLabel>
-          </IconWrapper>
-        </Link>
-      )}
-    </StyledHeader>
-  );
+        <StyledHeader>
+            <Link to="/">
+                <Logo>MyTaste</Logo>
+            </Link>
+            {!currentUser ?
+                <Link to="/login">
+                    <IconWrapper>
+                        <AiOutlineLogin/>
+                        <IconLabel>Log in</IconLabel>
+                    </IconWrapper>
+                </Link>
+                :
+                <Link to="/profile">
+                    <UserAvatar src={currentUser.photoURL}/>
+                </Link>
+            }
+        </StyledHeader>
+    );
 }
 
 export default Header;

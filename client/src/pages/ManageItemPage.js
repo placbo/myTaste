@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import ItemForm from "./ItemForm";
-import { getItem, saveItem } from "../api/api";
-import { toast } from "react-toastify";
+import {getItem, saveItem} from "../api/api";
+import {toast} from "react-toastify";
 import Resizer from "react-image-file-resizer";
 import styled from "styled-components";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const PageContent = styled.div`
   margin: 1rem;
@@ -41,6 +43,8 @@ const UPLOAD_IMAGE_URL =
   process.env.REACT_APP_MYTASTE_API_HOST + "/upload/";
 
 function ManageItemPage(props) {
+
+
   const [item, setItem] = useState({
     _id: null,
     title: "",
@@ -155,41 +159,45 @@ function ManageItemPage(props) {
   }
 
   return (
-      <PageContent>
-    <Card>
-      <div className="form-group">
-        <label htmlFor="fileUpload">Last opp</label>
-        <div className="field">
-          <input
-            type="file"
-            id="fileUpload"
-            placeholder="title"
-            onChange={handleFileChange}
-            name="fileUpload"
-            accept="image/*"
-          />
-        </div>
-      </div>
-      {image && file && (
-        <>
-          <div>
-            <img src={image} alt="preview" />
-          </div>
-          Filesize: {getFormatedFileSize(file)} MB
-          <button onClick={uploadfile}>Upload image</button>
-        </>
-      )}
-      {uploading && <BlockScreen>Uploading...</BlockScreen>}
+      <>
+        <Header/>
+        <PageContent>
+          <Card>
+            <div className="form-group">
+              <label htmlFor="fileUpload">Last opp</label>
+              <div className="field">
+                <input
+                    type="file"
+                    id="fileUpload"
+                    placeholder="title"
+                    onChange={handleFileChange}
+                    name="fileUpload"
+                    accept="image/*"
+                />
+              </div>
+            </div>
+            {image && file && (
+                <>
+                  <div>
+                    <img src={image} alt="preview" />
+                  </div>
+                  Filesize: {getFormatedFileSize(file)} MB
+                  <button onClick={uploadfile}>Upload image</button>
+                </>
+            )}
+            {uploading && <BlockScreen>Uploading...</BlockScreen>}
 
-      <ItemForm
-        disabled={uploading || saving}
-        item={item}
-        onChange={handleFormChange}
-        onSubmit={handleSubmit}
-      />
-      {saving && <BlockScreen>Saving...</BlockScreen>}
-    </Card>
-      </PageContent>
+            <ItemForm
+                disabled={uploading || saving}
+                item={item}
+                onChange={handleFormChange}
+                onSubmit={handleSubmit}
+            />
+            {saving && <BlockScreen>Saving...</BlockScreen>}
+          </Card>
+        </PageContent>
+        <Footer/>
+      </>
   );
 }
 

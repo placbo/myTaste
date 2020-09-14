@@ -1,20 +1,16 @@
-import React, {useContext, useEffect} from "react";
-import ItemListPage from "./pages/ItemListPage";
-import {Route, Switch} from "react-router-dom";
-import NotFoundPage from "./pages/NotFoundPage";
+import React from "react";
+import {BrowserRouter as Router, Route} from "react-router-dom";
+import PrivateRoute from "./PrivateRoute";
 import ProfilePage from "./pages/ProfilePage";
+import ItemListPage from "./pages/ItemListPage";
+import LoginPage from "./pages/LoginPage";
 import ItemPage from "./pages/ItemPage";
 import ManageItemPage from "./pages/ManageItemPage";
-import {toast, ToastContainer} from "react-toastify";
+import SearchPage from "./pages/Search";
+import {ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styled, {createGlobalStyle} from "styled-components";
-//import queryString from "query-string";
-import LoginPage from "./pages/LoginPage";
-import Header from "./components/Header";
-import {getUserProfile} from "./api/api";
-import Footer from "./components/Footer";
-import SearchPage from "./pages/Search";
-import {store, UPDATE_USER_ACTION} from "./store";
+import {AuthProvider} from "./Auth";
 
 const GlobalStyle = createGlobalStyle`
   HTML, body {
@@ -49,43 +45,26 @@ const StyledContentWrapper = styled.div`
   margin-bottom: 70px;
 `;
 
-function App() {
-  const globalState = useContext(store);
-  const { dispatch } = globalState;
-
-  useEffect(() => {
-    // const query = queryString.parse(window.location.search);
-    // if (query.token) {
-    //   window.localStorage.setItem("jwt", query.token);
-    //   history.push("/");
-    // }
-    getUserProfile()
-      .then(user => {
-        dispatch({ type: UPDATE_USER_ACTION, user });
-      })
-      .catch(error => toast.error(error.message));
-  }, [dispatch]);
-
-  return (
-    <>
-      <GlobalStyle />
-      <ToastContainer autoClose={3000} hideProgressBar />
-      <Header user={{}} />
-      <StyledContentWrapper>
-        <Switch>
-          <Route path="/" exact component={ItemListPage} />
-          <Route path="/profile" component={ProfilePage} />
-          <Route path="/login" component={LoginPage} />
-          <Route path="/search" component={SearchPage} />
-          <Route path="/item/:id" exact component={ItemPage} />
-          <Route path="/item/:id/edit" exact component={ManageItemPage} />
-          <Route path="/new-item" exact component={ManageItemPage} />
-          <Route component={NotFoundPage} />
-        </Switch>
-      </StyledContentWrapper>
-      <Footer />
-    </>
-  );
+const App = () => {
+    return (
+        <>
+            <GlobalStyle/>
+            <ToastContainer autoClose={3000} hideProgressBar/>
+            <StyledContentWrapper>
+                <AuthProvider>
+                    <Router>
+                        <PrivateRoute exact path="/profile" component={ProfilePage}/>
+                        <Route exact path="/" component={ItemListPage}/>
+                        <Route exact path="/search" component={SearchPage}/>
+                        <Route exact path="/item/:id" component={ItemPage}/>
+                        <Route exact path="/item/:id/edit" component={ManageItemPage}/>
+                        <Route exact path="/new-item" component={ManageItemPage}/>
+                        <Route exact path="/login" component={LoginPage}/>
+                    </Router>
+                </AuthProvider>
+            </StyledContentWrapper>
+        </>
+    );
 }
 
 export default App;

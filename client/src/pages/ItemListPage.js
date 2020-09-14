@@ -2,7 +2,9 @@ import React, {useEffect, useState} from "react";
 import ItemList from "./ItemList";
 import styled from "styled-components";
 import {getAllItems} from "../api/api";
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const PageContent = styled.div`
   margin: 1rem;
@@ -11,7 +13,7 @@ const PageContent = styled.div`
 `;
 
 function ItemListPage() {
-  const [items, setItems] = useState([]);
+    const [items, setItems] = useState([]);
 
   useEffect(() => {
     getAllItems()
@@ -21,9 +23,11 @@ function ItemListPage() {
 
   return (
     <>
-      <PageContent>
-        <ItemList items={items} />
-      </PageContent>
+        <Header/>
+        <PageContent>
+            <ItemList items={items}/>
+        </PageContent>
+        <Footer/>
     </>
   );
 }
