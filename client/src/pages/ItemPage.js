@@ -65,7 +65,7 @@ const CardFooter = styled.div`
   }
 `;
 
-const ItemListPage = props => {
+const ItemListPage = ({match, history}) => {
   const CONTENT_BASE_URL = process.env.REACT_APP_MYTASTE_CONTENT_HOST;
   const state = useContext(store);
 
@@ -75,7 +75,7 @@ const ItemListPage = props => {
   const [hasUserRated, setHasUserRated] = useState(false);
 
   useEffect(() => {
-    const id = props.match.params.id; // from the path `/:id`
+    const id = match.params.id; // from the path `/:id`
     if (id) {
       getItem(id)
         .then(_item => {
@@ -93,13 +93,13 @@ const ItemListPage = props => {
         })
         .catch(error => toast.error(error.message));
     }
-  }, [item._id, props.match.params.id, state.state]);
+  }, [item._id, match.params.id, state.state]);
 
   const handleDeleteItem = () => {
     if (window.confirm("Sure?")) {
       deleteItem(item._id).then(() => {
         toast.success("item deleted");
-        props.history.push("/");
+        history.push("/");
       });
     }
   };
