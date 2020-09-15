@@ -1,35 +1,52 @@
 import React, {useEffect, useState} from "react";
 import ItemList from "./ItemList";
 import styled from "styled-components";
-import {getAllItems} from "../api/api";
-import {toast} from "react-toastify";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import * as firebase from "firebase";
 
 const PageContent = styled.div`
   margin: 1rem;
   display: flex;
   flex-direction: column;
 `;
+const ITEM_COLLECTION_NAME = "items";
 
-function ItemListPage() {
+const ItemListPage = () => {
     const [items, setItems] = useState([]);
 
-  useEffect(() => {
-    getAllItems()
-      .then(result => setItems(result))
-      .catch(error => toast.error(error.message));
-  }, []);
+    //add some data
+    // firebase
+    //     .firestore()
+    //     .collection(ITEM_COLLECTION_NAME)
+    //     .add({title:"per", image:"test.png", comment:"comment"});
 
-  return (
-    <>
-        <Header/>
-        <PageContent>
-            <ItemList items={items}/>
-        </PageContent>
-        <Footer/>
-    </>
-  );
+
+    useEffect(() => {
+        firebase
+            .firestore()
+            .collection(ITEM_COLLECTION_NAME)
+            .get()
+            .then((querySnapshot) => {
+                const data = querySnapshot.docs.map(doc => {
+                    return {
+                        ...doc.data(),
+                        _id: doc.id
+                    };
+                });
+                setItems(data);
+            });
+    }, []);
+
+    return (
+        <>
+            <Header/>
+            <PageContent>
+                <ItemList items={items}/>
+            </PageContent>
+            <Footer/>
+        </>
+    );
 }
 
 export default ItemListPage;

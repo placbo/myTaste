@@ -1,15 +1,15 @@
-import {
-  handleResponse,
-  handleError,
-  handleAjaxResponse,
-  handleAjaxError
-} from "./apiUtils";
+import {handleAjaxError, handleAjaxResponse, handleError, handleResponse} from "./apiUtils";
 import Axios from "axios";
+import * as firebase from "firebase";
 
 export const ITEMS_URL = process.env.REACT_APP_MYTASTE_API_HOST + "/items";
 export const PROFILE_URL =
-  process.env.REACT_APP_MYTASTE_API_HOST + "/userprofile";
+    process.env.REACT_APP_MYTASTE_API_HOST + "/userprofile";
 export const RATE_ITEM_URL = process.env.REACT_APP_MYTASTE_API_HOST + "/rating";
+
+
+const ITEM_COLLECTION_NAME = "items";
+
 
 const headers = {
   Accept: "application/json",
@@ -17,12 +17,29 @@ const headers = {
 };
 
 export function getAllItems() {
-  return Axios.get(ITEMS_URL, {
-    headers: headers
-  })
-    .then(handleAjaxResponse)
-    .catch(handleAjaxError);
+  if (process.env.REACT_APP_USE_MOCK === "true") {
+    return new Promise((resolve, reject) => {
+      let MOCK_DATA = [
+        {_id: "1", title: "Item 1", "image": "", "comment": "fsdfsdfsdf"},
+        {_id: "2", title: "Item 2", "image": "", "comment": "jadda"},
+        {_id: "3", title: "Item 3", "image": "", "comment": "joda"},
+      ];
+      console.log("Mock retrieving list")
+      resolve(MOCK_DATA);
+    });
+  }
+  return firebase
+      .firestore()
+      .collection(ITEM_COLLECTION_NAME)
+      .onSnapshot(snapshot => {
+        debugger;
+      })
+      // .get()
+      // .then((doc) => {
+      //   return doc.data();
+      // });
 }
+
 export function getUserProfile() {
   return Axios.get(PROFILE_URL, { headers: headers })
     .then(handleAjaxResponse)
@@ -52,28 +69,34 @@ export function getRating(itemId, userId) {
 }
 
 export function getAverageRating(itemId) {
-  return Axios.get(`${RATE_ITEM_URL}/${itemId}`, { headers: headers })
+  return Axios.get(`${RATE_ITEM_URL}/${itemId}`, {headers: headers})
       .then(handleAjaxResponse)
       .catch(handleAjaxError);
 }
 
 
 export function saveItem(item) {
-  const id = item._id;
-  delete item._id;
-  //TODO: Axios
-  return fetch(ITEMS_URL + "/" + (id || ""), {
-    method: id ? "PUT" : "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(item)
-  })
-    .then(handleResponse)
-    .catch(handleError);
+  if (process.env.REACT_APP_USE_MOCK === "true") {
+    console.log("Mock saving item")
+    return;
+  }
+  return firebase
+      .firestore()
+      .collection(ITEM_COLLECTION_NAME)
+      .doc(item.id)
+      .set(item)
+      .then(() => {
+        console.log("Document successfully written!");
+      })
+      .catch((error) => {
+        console.error("Error updating/creating document: ", error);
+      });
 }
+
 
 export function deleteItem(itemId) {
   //TODO: Axios
-  return fetch(ITEMS_URL + "/" + itemId, { method: "DELETE" })
-    .then(handleResponse)
-    .catch(handleError);
+  return fetch(ITEMS_URL + "/" + itemId, {method: "DELETE"})
+      .then(handleResponse)
+      .catch(handleError);
 }

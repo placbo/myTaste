@@ -34,14 +34,14 @@ const ImageCol = styled.div`
   width: 150px;
 `;
 
-// const ContentImage = styled.img`
-//   width: auto;
-//   height: auto;
-//   max-height: 100px;
-//   max-width: 100px;
-//   margin: auto;
-//   padding: 10px;
-// `;
+const ContentImage = styled.img`
+  width: auto;
+  height: auto;
+  max-height: 100px;
+  max-width: 100px;
+  margin: auto;
+  padding: 10px;
+`;
 
 const CardHeading = styled.div`
   margin-top: 4px;
@@ -50,7 +50,6 @@ const CardHeading = styled.div`
 `;
 
 function ItemList(props) {
-  // const CONTENT_BASE_URL = process.env.REACT_APP_MYTASTE_CONTENT_HOST;
   return (
     <>
       {props.items.map(item => {
@@ -58,13 +57,13 @@ function ItemList(props) {
           <StyledLink key={item._id} to={"/item/" + item._id}>
             <Card>
               <ImageCol>
-                {/*{item.image && (*/}
-                {/*  <ContentImage*/}
-                {/*    src={`${CONTENT_BASE_URL}/thumb/${item.image}`}*/}
-                {/*    className="card-img-top"*/}
-                {/*    alt="image"*/}
-                {/*  />*/}
-                {/*)}*/}
+                {item.image && (
+                  <ContentImage
+                    src={item.image}
+                    className="card-img-top"
+                    alt="image"
+                  />
+                )}
               </ImageCol>
               <CardContent>
                 <CardHeading>{item.title}</CardHeading>
