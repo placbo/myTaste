@@ -8,7 +8,7 @@ export const PROFILE_URL =
 export const RATE_ITEM_URL = process.env.REACT_APP_MYTASTE_API_HOST + "/rating";
 
 
-const ITEM_COLLECTION_NAME = "items";
+export const ITEM_COLLECTION_NAME = "items";
 
 
 const headers = {

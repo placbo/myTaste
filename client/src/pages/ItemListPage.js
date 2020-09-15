@@ -4,13 +4,14 @@ import styled from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import * as firebase from "firebase";
+import {toast} from "react-toastify";
+import {ITEM_COLLECTION_NAME} from "../api/api";
 
 const PageContent = styled.div`
   margin: 1rem;
   display: flex;
   flex-direction: column;
 `;
-const ITEM_COLLECTION_NAME = "items";
 
 const ItemListPage = () => {
     const [items, setItems] = useState([]);
@@ -35,7 +36,8 @@ const ItemListPage = () => {
                     };
                 });
                 setItems(data);
-            });
+            })
+            .catch(error => toast.error(error.message));
     }, []);
 
     return (

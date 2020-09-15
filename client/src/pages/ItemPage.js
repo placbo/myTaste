@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
-import {getItem, deleteItem, rateItem, getRating, getAverageRating} from "../api/api";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
+import React, {useContext, useEffect, useState} from "react";
 import styled from "styled-components";
-import Rating from "@material-ui/lab/Rating";
-import { store } from "../store";
+import {store} from "../store";
+import * as firebase from "firebase";
+import {ITEM_COLLECTION_NAME} from "../api/api";
+import {toast} from "react-toastify";
 
 const PageContent = styled.div`
   display: flex;
@@ -66,101 +65,107 @@ const CardFooter = styled.div`
 `;
 
 const ItemListPage = ({match, history}) => {
-  const CONTENT_BASE_URL = process.env.REACT_APP_MYTASTE_CONTENT_HOST;
   const state = useContext(store);
 
   const [item, setItem] = useState({});
-  const [rating, setRating] = useState({});
-  const [userRating, setUserRating] = useState(3);
-  const [hasUserRated, setHasUserRated] = useState(false);
+  // const [rating, setRating] = useState({});
+  // const [userRating, setUserRating] = useState(3);
+  // const [hasUserRated, setHasUserRated] = useState(false);
 
   useEffect(() => {
     const id = match.params.id; // from the path `/:id`
     if (id) {
-      getItem(id)
-        .then(_item => {
-          setItem(_item);
-            getAverageRating(id).then( result => {
-                setRating( result);
-            } );
-            state.state?.googleId &&
-            getRating(item._id, state.state?.googleId)
-              .then(rating => {
-                if (rating) setHasUserRated(true);
-                setUserRating(+(rating.rating));
-              })
-              .catch(error => console.log(error));
-        })
-        .catch(error => toast.error(error.message));
+
+      firebase
+          .firestore()
+          .collection(ITEM_COLLECTION_NAME)
+          .doc(id)
+          .get()
+          .then(doc => {
+            setItem(doc.data());
+          })
+          .catch(error => toast.error(error.message));
+
+      //   //     getAverageRating(id).then( result => {
+      //   //         setRating( result);
+      //   //     } );
+      //   //     state.state?.googleId &&
+      //   //     getRating(item._id, state.state?.googleId)
+      //   //       .then(rating => {
+      //   //         if (rating) setHasUserRated(true);
+      //   //         setUserRating(+(rating.rating));
+      //   //       })
+      //   //       .catch(error => console.log(error));
+      //   })
     }
   }, [item._id, match.params.id, state.state]);
 
-  const handleDeleteItem = () => {
-    if (window.confirm("Sure?")) {
-      deleteItem(item._id).then(() => {
-        toast.success("item deleted");
-        history.push("/");
-      });
-    }
-  };
+  // const handleDeleteItem = () => {
+  //   if (window.confirm("Sure?")) {
+  //     deleteItem(item._id).then(() => {
+  //       toast.success("item deleted");
+  //       history.push("/");
+  //     });
+  //   }
+  // };
 
-  const handleRatingChange = (event, value) => {
-    setUserRating(value);
-    rateItem(item._id, state.state?.googleId, value)
-      .then(_item => {
-        setHasUserRated(true);
-        toast.success("Lagret");
-      })
-      .catch(error => toast.error(error.message));
-  };
+  // const handleRatingChange = (event, value) => {
+  //   setUserRating(value);
+  //   rateItem(item._id, state.state?.googleId, value)
+  //     .then(_item => {
+  //       setHasUserRated(true);
+  //       toast.success("Lagret");
+  //     })
+  //     .catch(error => toast.error(error.message));
+  // };
 
   return (
-    <PageContent>
-      <Card>
-        <CardHeading>{item.title}</CardHeading>
-        {item.image && (
+      <PageContent>
+        <Card>
+          <CardHeading>{item.title}</CardHeading>
+          {item.image && (
+              <ContentLineWrapper>
+                <a href={item.image}>
+                  <ContentImage
+                      src={item.image}
+                      alt="image"
+                  />
+                </a>
+              </ContentLineWrapper>
+          )}
           <ContentLineWrapper>
-            <a href={`${CONTENT_BASE_URL}/${item.image}`}>
-              <ContentImage
-                src={`${CONTENT_BASE_URL}/thumb/${item.image}`}
-                alt="image"
-              />
-            </a>
+            <p className="card-text">{item.comment}</p>
           </ContentLineWrapper>
-        )}
-        <ContentLineWrapper>
-          <p className="card-text">{item.comment}</p>
-        </ContentLineWrapper>
 
-        <ContentLineWrapper>
-          <TagList>{item.tags}</TagList>
-        </ContentLineWrapper>
-        {rating.average && (
-            <>
-          <Rating name="simple-controlled" readOnly value={+rating.average} />
-          ({rating.count} vote(s))</>
-        )}
-        {state.state?.role === "admin" && (
-          <CardFooter>
-            <Link to={"/item/" + item._id + "/edit/"}>
-              <button className="btn btn-primary">Edit...</button>
-            </Link>
-            <button className="btn btn-dark" onClick={handleDeleteItem}>
-              Delete
-            </button>
-          </CardFooter>
-        )}
-        {state.state?.googleId && state.state?.role !== "admin" && (
-          <YourRatingWrapper>
-            {hasUserRated ? <p>Your rating:</p> : <p>Rate this item</p>}
-            <Rating
-              name="simple-controlled"
-              value={userRating}
-              onChange={handleRatingChange}
-            />
-          </YourRatingWrapper>
-        )}
-      </Card>
+          <ContentLineWrapper>
+            <TagList>{item.tags}</TagList>
+          </ContentLineWrapper>
+          {/*{rating.average && (*/}
+          {/*    <>*/}
+          {/*  <Rating name="simple-controlled" readOnly value={+rating.average} />*/}
+          {/*  ({rating.count} vote(s))</>*/}
+          {/*)}*/}
+          {/*{state.state?.role === "admin" && (*/}
+          {/*  <CardFooter>*/}
+          {/*    <Link to={"/item/" + item._id + "/edit/"}>*/}
+          {/*      <button className="btn btn-primary">Edit...</button>*/}
+          {/*    </Link>*/}
+          {/*    <button className="btn btn-dark" onClick={handleDeleteItem}>*/}
+          {/*      Delete*/}
+          {/*    </button>*/}
+          {/*  </CardFooter>*/}
+          {/*)}*/}
+          {/*{state.state?.googleId && state.state?.role !== "admin" && (*/}
+          {/*  <YourRatingWrapper>*/}
+          {/*    {hasUserRated ? <p>Your rating:</p> : <p>Rate this item</p>}*/}
+          {/*    <Rating*/}
+          {/*      name="simple-controlled"*/}
+          {/*      value={userRating}*/}
+          {/*      onChange={handleRatingChange}*/}
+          {/*    />*/}
+          {/*  </YourRatingWrapper>*/}
+          {/*)}*/}
+        </Card>
     </PageContent>
   );
 };
