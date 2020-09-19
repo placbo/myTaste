@@ -4,6 +4,11 @@ import {store} from "../store";
 import * as firebase from "firebase";
 import {ITEM_COLLECTION_NAME} from "../api/api";
 import {toast} from "react-toastify";
+import {Link} from "react-router-dom";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import Rating from "@material-ui/lab/Rating";
+
 
 const PageContent = styled.div`
   display: flex;
@@ -44,12 +49,12 @@ const TagList = styled.div`
 const ContentLineWrapper = styled.div`
   margin-bottom: 1rem;
 `;
-const YourRatingWrapper = styled.div`
-  margin-top: 1.5rem;
-  border: 1px solid ${props => props.theme.secondary};
-  border-radius: 4px;
-  padding: 10px;
-`;
+// const YourRatingWrapper = styled.div`
+//   margin-top: 1.5rem;
+//   border: 1px solid ${props => props.theme.secondary};
+//   border-radius: 4px;
+//   padding: 10px;
+// `;
 
 const CardFooter = styled.div`
   height: 3rem;
@@ -76,97 +81,115 @@ const ItemListPage = ({match, history}) => {
     const id = match.params.id; // from the path `/:id`
     if (id) {
 
-      firebase
-          .firestore()
-          .collection(ITEM_COLLECTION_NAME)
-          .doc(id)
-          .get()
-          .then(doc => {
-            setItem(doc.data());
-          })
-          .catch(error => toast.error(error.message));
+        firebase
+            .firestore()
+            .collection(ITEM_COLLECTION_NAME)
+            .doc(id)
+            .get()
+            .then(doc => {
+                setItem({
+                    ...doc.data(),
+                    id: doc.id
+                });
+            })
+            .catch(error => toast.error(error.message));
 
-      //   //     getAverageRating(id).then( result => {
-      //   //         setRating( result);
-      //   //     } );
-      //   //     state.state?.googleId &&
-      //   //     getRating(item._id, state.state?.googleId)
-      //   //       .then(rating => {
-      //   //         if (rating) setHasUserRated(true);
-      //   //         setUserRating(+(rating.rating));
-      //   //       })
-      //   //       .catch(error => console.log(error));
-      //   })
+        //   //     getAverageRating(id).then( result => {
+        //   //         setRating( result);
+        //   //     } );
+        //   //     state.state?.googleId &&
+        //   //     getRating(item.id, state.state?.googleId)
+        //   //       .then(rating => {
+        //   //         if (rating) setHasUserRated(true);
+        //   //         setUserRating(+(rating.rating));
+        //   //       })
+        //   //       .catch(error => console.log(error));
+        //   })
     }
-  }, [item._id, match.params.id, state.state]);
+  }, [item.id, match.params.id, state.state]);
 
-  // const handleDeleteItem = () => {
-  //   if (window.confirm("Sure?")) {
-  //     deleteItem(item._id).then(() => {
-  //       toast.success("item deleted");
-  //       history.push("/");
-  //     });
-  //   }
-  // };
+    const handleDeleteItem = () => {
+        if (window.confirm("Sure?")) {
+            firebase
+                .firestore()
+                .collection(ITEM_COLLECTION_NAME)
+                .doc(item.id)
+                .delete()
+                .then(() => {
+                    toast.success("item deleted");
+                    history.push("/");
+                })
+                .catch(error => toast.error(error.message));
+        }
+    };
 
-  // const handleRatingChange = (event, value) => {
-  //   setUserRating(value);
-  //   rateItem(item._id, state.state?.googleId, value)
-  //     .then(_item => {
-  //       setHasUserRated(true);
-  //       toast.success("Lagret");
-  //     })
-  //     .catch(error => toast.error(error.message));
-  // };
+    // const handleRatingChange = (event, value) => {
+    //   setUserRating(value);
+    //   rateItem(item.id, state.state?.googleId, value)
+    //     .then(_item => {
+    //       setHasUserRated(true);
+    //       toast.success("Lagret");
+    //     })
+    //     .catch(error => toast.error(error.message));
+    // };
 
-  return (
-      <PageContent>
-        <Card>
-          <CardHeading>{item.title}</CardHeading>
-          {item.image && (
-              <ContentLineWrapper>
-                <a href={item.image}>
-                  <ContentImage
-                      src={item.image}
-                      alt="image"
-                  />
-                </a>
-              </ContentLineWrapper>
-          )}
-          <ContentLineWrapper>
-            <p className="card-text">{item.comment}</p>
-          </ContentLineWrapper>
+    return (
+        <>
+            <Header/>
+            <PageContent>
+                <Card>
+                    <CardHeading>{item.title}</CardHeading>
+                    {item.image && (
+                        <ContentLineWrapper>
+                            <a href={item.image}>
+                                <ContentImage
+                                    src={item.image}
+                                    alt="image"
+                                />
+                            </a>
+                        </ContentLineWrapper>
+                    )}
+                    <ContentLineWrapper>
+                        <p className="card-text">{item.comment}</p>
+                    </ContentLineWrapper>
 
-          <ContentLineWrapper>
-            <TagList>{item.tags}</TagList>
-          </ContentLineWrapper>
-          {/*{rating.average && (*/}
-          {/*    <>*/}
-          {/*  <Rating name="simple-controlled" readOnly value={+rating.average} />*/}
-          {/*  ({rating.count} vote(s))</>*/}
-          {/*)}*/}
-          {/*{state.state?.role === "admin" && (*/}
-          {/*  <CardFooter>*/}
-          {/*    <Link to={"/item/" + item._id + "/edit/"}>*/}
-          {/*      <button className="btn btn-primary">Edit...</button>*/}
-          {/*    </Link>*/}
-          {/*    <button className="btn btn-dark" onClick={handleDeleteItem}>*/}
-          {/*      Delete*/}
-          {/*    </button>*/}
-          {/*  </CardFooter>*/}
-          {/*)}*/}
-          {/*{state.state?.googleId && state.state?.role !== "admin" && (*/}
-          {/*  <YourRatingWrapper>*/}
-          {/*    {hasUserRated ? <p>Your rating:</p> : <p>Rate this item</p>}*/}
-          {/*    <Rating*/}
-          {/*      name="simple-controlled"*/}
-          {/*      value={userRating}*/}
-          {/*      onChange={handleRatingChange}*/}
-          {/*    />*/}
-          {/*  </YourRatingWrapper>*/}
-          {/*)}*/}
-        </Card>
-    </PageContent>
+                    <ContentLineWrapper>
+                        <TagList>{item.tags}</TagList>
+                    </ContentLineWrapper>
+                    {/*{rating.average && (*/}
+                    {/*    <>*/}
+                    {/*
+                      <Rating name="simple-controlled" readOnly value={+rating.average} />
+                    */}
+                    {item.rating &&
+                    <Rating name="simple-controlled" readOnly value={item.rating}/>
+                    }
+                    {/*  ({rating.count} vote(s))</>*/}
+                    {/*)}*/}
+                    {/*{state.state?.role === "admin" && (*/}
+                    <CardFooter>
+                        <Link to={`/item/${item.id}/edit/`}>
+                            <button className="btn btn-primary">Edit...</button>
+                        </Link>
+                        <button className="btn btn-dark" onClick={handleDeleteItem}>
+                            Delete
+                        </button>
+                    </CardFooter>
+                    {/*)}*/}
+                    {/*{state.state?.googleId && state.state?.role !== "admin" && (*/}
+                    {/*  <YourRatingWrapper>*/}
+                    {/*    {hasUserRated ? <p>Your rating:</p> : <p>Rate this item</p>}*/}
+                    {/*                        <Rating
+                          name="simple-controlled"
+                          value={userRating}
+                          onChange={handleRatingChange}
+                        />*/}
+                    {/*  </YourRatingWrapper>*/}
+                    {/*)}*/}
+                </Card>
+            </PageContent>
+            <Footer/>
+        </>
   );
 };
 

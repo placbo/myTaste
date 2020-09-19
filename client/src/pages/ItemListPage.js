@@ -32,7 +32,7 @@ const ItemListPage = () => {
                 const data = querySnapshot.docs.map(doc => {
                     return {
                         ...doc.data(),
-                        _id: doc.id
+                        id: doc.id
                     };
                 });
                 setItems(data);

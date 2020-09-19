@@ -54,7 +54,7 @@ function ItemList(props) {
     <>
       {props.items.map(item => {
         return (
-          <StyledLink key={item._id} to={"/item/" + item._id}>
+          <StyledLink key={item.id} to={"/item/" + item.id}>
             <Card>
               <ImageCol>
                 {item.image && (
@@ -67,11 +67,11 @@ function ItemList(props) {
               </ImageCol>
               <CardContent>
                 <CardHeading>{item.title}</CardHeading>
-                {item.diceValue && (
+                {item.rating && (
                   <Rating
                     name="simple-controlled"
                     readOnly
-                    value={+item.diceValue}
+                    value={+item.rating}
                   />
                 )}
               </CardContent>

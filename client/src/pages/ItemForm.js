@@ -43,6 +43,20 @@ const ItemForm = props => {
       </div>
 
       <div className="form-group">
+        <label htmlFor="image">ImageLink</label>
+        <div className="field">
+          <input
+              id="image"
+              onChange={props.onChange}
+              type="text"
+              name="image"
+              className="form-control"
+              value={props.item.image || ""}
+          />
+        </div>
+      </div>
+
+      <div className="form-group">
         <label htmlFor="tags">Tags (comma separated)</label>
         <div className="field">
           <input
@@ -57,7 +71,7 @@ const ItemForm = props => {
       </div>
 
       <div className="form-group">
-        <label htmlFor="diceValue">DiceValue</label>
+        <label htmlFor="rating">Rating</label>
 
         <div className="field">
 
@@ -67,7 +81,7 @@ const ItemForm = props => {
               onClick={(event, newValue) => {
                 props.onChange({
                   target: {
-                    name: "diceValue",
+                    name: "rating",
                     value: null
                   }
                 });
@@ -77,11 +91,11 @@ const ItemForm = props => {
           </IconButton>
           <Rating
               name="simple-controlled"
-              value={+props.item.diceValue}
+              value={+props.item.rating}
               onChange={(event, newValue) => {
                 props.onChange({
                   target: {
-                    name: "diceValue",
+                    name: "rating",
                     value: newValue
                   }
                 });
