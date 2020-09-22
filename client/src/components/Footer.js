@@ -1,8 +1,8 @@
-import React from "react";
+import React, {useContext} from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { AiOutlineHome } from "react-icons/ai";
-import { AiOutlineSearch } from "react-icons/ai";
+import {Link} from "react-router-dom";
+import {AiOutlineHome, AiOutlineSearch,AiOutlinePlusCircle} from "react-icons/ai";
+import {AuthContext} from "../Auth";
 
 const StyledFooter = styled.div`
   position: fixed;
@@ -34,28 +34,34 @@ const IconLabel = styled.div`
   margin-top:6px;
 `;
 
-function Footer() {
-  return (
-    <StyledFooter>
-      <Link to="/">
-        <IconWrapper>
-          <AiOutlineHome />
-          <IconLabel>Home</IconLabel>
-        </IconWrapper>
-      </Link>
-      <Link to="/search">
-        <IconWrapper>
-          <AiOutlineSearch />
-          <IconLabel>Search</IconLabel>
-        </IconWrapper>
-      </Link>
-      <Link to="/new-item">
-        <IconWrapper>
-          <IconLabel>New</IconLabel>
-        </IconWrapper>
-      </Link>
-    </StyledFooter>
-  );
+const Footer = () => {
+
+    const { isAdmin} = useContext(AuthContext);
+
+    return (
+        <StyledFooter>
+            <Link to="/">
+                <IconWrapper>
+                    <AiOutlineHome/>
+                    <IconLabel>Home</IconLabel>
+                </IconWrapper>
+            </Link>
+            <Link to="/search">
+                <IconWrapper>
+                    <AiOutlineSearch/>
+                    <IconLabel>Search</IconLabel>
+                </IconWrapper>
+            </Link>
+            {isAdmin &&
+            <Link to="/new-item">
+                <IconWrapper>
+                    <AiOutlinePlusCircle/>
+                    <IconLabel>New</IconLabel>
+                </IconWrapper>
+            </Link>
+            }
+        </StyledFooter>
+    );
 }
 
 export default Footer;

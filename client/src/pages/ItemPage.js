@@ -8,6 +8,7 @@ import {Link} from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Rating from "@material-ui/lab/Rating";
+import {AuthContext} from "../Auth";
 
 
 const PageContent = styled.div`
@@ -70,42 +71,42 @@ const CardFooter = styled.div`
 `;
 
 const ItemListPage = ({match, history}) => {
-  const state = useContext(store);
+    const state = useContext(store);
+    const {currentUser, isAdmin} = useContext(AuthContext);
+    const [item, setItem] = useState({});
+    // const [rating, setRating] = useState({});
+    // const [userRating, setUserRating] = useState(3);
+    // const [hasUserRated, setHasUserRated] = useState(false);
 
-  const [item, setItem] = useState({});
-  // const [rating, setRating] = useState({});
-  // const [userRating, setUserRating] = useState(3);
-  // const [hasUserRated, setHasUserRated] = useState(false);
+    useEffect(() => {
+        const id = match.params.id; // from the path `/:id`
+        if (id) {
 
-  useEffect(() => {
-    const id = match.params.id; // from the path `/:id`
-    if (id) {
+            firebase
+                .firestore()
+                .collection(ITEM_COLLECTION_NAME)
+                .doc(id)
+                .get()
+                .then(doc => {
+                    setItem({
+                        ...doc.data(),
+                        id: doc.id
+                    });
+                })
+                .catch(error => toast.error(error.message));
 
-        firebase
-            .firestore()
-            .collection(ITEM_COLLECTION_NAME)
-            .doc(id)
-            .get()
-            .then(doc => {
-                setItem({
-                    ...doc.data(),
-                    id: doc.id
-                });
-            })
-            .catch(error => toast.error(error.message));
-
-        //   //     getAverageRating(id).then( result => {
-        //   //         setRating( result);
-        //   //     } );
-        //   //     state.state?.googleId &&
-        //   //     getRating(item.id, state.state?.googleId)
-        //   //       .then(rating => {
-        //   //         if (rating) setHasUserRated(true);
-        //   //         setUserRating(+(rating.rating));
-        //   //       })
-        //   //       .catch(error => console.log(error));
-        //   })
-    }
+            //   //     getAverageRating(id).then( result => {
+            //   //         setRating( result);
+            //   //     } );
+            //   //     state.state?.googleId &&
+            //   //     getRating(item.id, state.state?.googleId)
+            //   //       .then(rating => {
+            //   //         if (rating) setHasUserRated(true);
+            //   //         setUserRating(+(rating.rating));
+            //   //       })
+            //   //       .catch(error => console.log(error));
+            //   })
+        }
   }, [item.id, match.params.id, state.state]);
 
     const handleDeleteItem = () => {
@@ -167,14 +168,16 @@ const ItemListPage = ({match, history}) => {
                     {/*  ({rating.count} vote(s))</>*/}
                     {/*)}*/}
                     {/*{state.state?.role === "admin" && (*/}
-                    <CardFooter>
-                        <Link to={`/item/${item.id}/edit/`}>
-                            <button className="btn btn-primary">Edit...</button>
-                        </Link>
-                        <button className="btn btn-dark" onClick={handleDeleteItem}>
-                            Delete
-                        </button>
-                    </CardFooter>
+                    {isAdmin &&
+                        <CardFooter>
+                            <Link to={`/item/${item.id}/edit/`}>
+                                <button className="btn btn-primary">Edit...</button>
+                            </Link>
+                            <button className="btn btn-dark" onClick={handleDeleteItem}>
+                                Delete
+                            </button>
+                        </CardFooter>
+                    }
                     {/*)}*/}
                     {/*{state.state?.googleId && state.state?.role !== "admin" && (*/}
                     {/*  <YourRatingWrapper>*/}

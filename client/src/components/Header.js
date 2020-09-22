@@ -50,15 +50,16 @@ const UserAvatar = styled.img`
   border-radius: 50%;
 `;
 
-function Header() {
+const Header = () => {
 
-    const {currentUser} = useContext(AuthContext);
+    const {currentUser, isAdmin} = useContext(AuthContext);
 
     return (
         <StyledHeader>
             <Link to="/">
                 <Logo>MyTaste</Logo>
             </Link>
+            <span>{isAdmin && "ADMIN"}</span>
             {!currentUser ?
                 <Link to="/login">
                     <IconWrapper>

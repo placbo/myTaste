@@ -32,12 +32,13 @@ const Divider = styled.div`
 
 function ProfilePage() {
     const state = useContext(store);
+    const history = useHistory();
     const {currentUser} = useContext(AuthContext);
 
-    const history = useHistory();
     const signOut = () => {
-        app.auth().signOut();
-        history.push("/");
+        app.auth().signOut()
+            .then(() => history.push("/"))
+            .catch(() => console.log("Could not log out"));
     }
 
     return (

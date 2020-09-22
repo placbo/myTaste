@@ -5,6 +5,7 @@ export const AuthContext = React.createContext();
 
 export const AuthProvider = ({children}) => {
     const [currentUser, setCurrentUser] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
     const [pending, setPending] = useState(true);
 
     useEffect(() => {
@@ -13,6 +14,7 @@ export const AuthProvider = ({children}) => {
             setPending(false)
         } else {
             app.auth().onAuthStateChanged((user) => {
+                setIsAdmin((user && user.email === "perbjester@gmail.com"));
                 setCurrentUser(user)
                 setPending(false)
             });
@@ -26,7 +28,7 @@ export const AuthProvider = ({children}) => {
     return (
         <AuthContext.Provider
             value={{
-                currentUser
+                currentUser, isAdmin
             }}
         >
             {children}
