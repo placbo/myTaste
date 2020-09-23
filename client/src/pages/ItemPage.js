@@ -21,6 +21,8 @@ const Card = styled.div`
   border-radius: 8px;
   display: flex;
   max-width: 50rem;
+  min-width:20rem;
+  width:80%;
   margin: 0 auto;
   flex-direction: column;
   align-items: center;
@@ -50,12 +52,13 @@ const TagList = styled.div`
 const ContentLineWrapper = styled.div`
   margin-bottom: 1rem;
 `;
-// const YourRatingWrapper = styled.div`
-//   margin-top: 1.5rem;
-//   border: 1px solid ${props => props.theme.secondary};
-//   border-radius: 4px;
-//   padding: 10px;
-// `;
+
+const YourRatingWrapper = styled.div`
+  margin-top: 1.5rem;
+  border: 1px solid ${props => props.theme.secondary};
+  border-radius: 4px;
+  padding: 10px;
+`;
 
 const CardFooter = styled.div`
   height: 3rem;
@@ -74,14 +77,13 @@ const ItemListPage = ({match, history}) => {
     const state = useContext(store);
     const {currentUser, isAdmin} = useContext(AuthContext);
     const [item, setItem] = useState({});
-    // const [rating, setRating] = useState({});
-    // const [userRating, setUserRating] = useState(3);
-    // const [hasUserRated, setHasUserRated] = useState(false);
+    const [averageRating, setAverageRating] = useState({});
+    const [userRating, setUserRating] = useState(3);
+    const [hasUserRated, setHasUserRated] = useState(false);
 
     useEffect(() => {
         const id = match.params.id; // from the path `/:id`
         if (id) {
-
             firebase
                 .firestore()
                 .collection(ITEM_COLLECTION_NAME)
@@ -90,24 +92,28 @@ const ItemListPage = ({match, history}) => {
                 .then(doc => {
                     setItem({
                         ...doc.data(),
-                        id: doc.id
+                        id: doc.id,
                     });
                 })
                 .catch(error => toast.error(error.message));
-
-            //   //     getAverageRating(id).then( result => {
-            //   //         setRating( result);
-            //   //     } );
-            //   //     state.state?.googleId &&
-            //   //     getRating(item.id, state.state?.googleId)
-            //   //       .then(rating => {
-            //   //         if (rating) setHasUserRated(true);
-            //   //         setUserRating(+(rating.rating));
-            //   //       })
-            //   //       .catch(error => console.log(error));
-            //   })
         }
-  }, [item.id, match.params.id, state.state]);
+    }, [item.id, match.params.id, state.state]);
+
+    useEffect(() => {
+        if (item.ratings && Object.values(item.ratings).length > 0) {
+            const ratingsArray = Object.values(item.ratings);
+            const average = ratingsArray.reduce((a, b) => a + b) / ratingsArray.length;
+            setAverageRating({
+                count:  Object.values(item.ratings).length,
+                average
+            })
+
+            if (currentUser && item.ratings[currentUser.email]){
+                setUserRating(item.ratings[currentUser.email]);
+                setHasUserRated(true);
+            }
+        }
+    }, [item.ratings,currentUser]);
 
     const handleDeleteItem = () => {
         if (window.confirm("Sure?")) {
@@ -124,15 +130,29 @@ const ItemListPage = ({match, history}) => {
         }
     };
 
-    // const handleRatingChange = (event, value) => {
-    //   setUserRating(value);
-    //   rateItem(item.id, state.state?.googleId, value)
-    //     .then(_item => {
-    //       setHasUserRated(true);
-    //       toast.success("Lagret");
-    //     })
-    //     .catch(error => toast.error(error.message));
-    // };
+    const handleRatingChange = (event, value) => {
+        console.log("user has set rating", value);
+        if (!item.ratings) {
+            item.ratings = {};
+        }
+        setUserRating(value);
+        item.ratings[currentUser.email] = value;
+        setItem({
+            ...item
+        });
+        firebase
+            .firestore()
+            .collection(ITEM_COLLECTION_NAME)
+            .doc(item.id)
+            .set(item)
+            .then(() => {
+                setHasUserRated(true);
+                toast.success("Lagret");
+            })
+            .catch(() => {
+                toast.error("Could not save to server");
+            });
+    };
 
     return (
         <>
@@ -157,40 +177,37 @@ const ItemListPage = ({match, history}) => {
                     <ContentLineWrapper>
                         <TagList>{item.tags}</TagList>
                     </ContentLineWrapper>
-                    {/*{rating.average && (*/}
-                    {/*    <>*/}
-                    {/*
-                      <Rating name="simple-controlled" readOnly value={+rating.average} />
-                    */}
-                    {item.rating &&
-                    <Rating name="simple-controlled" readOnly value={item.rating}/>
+                    {averageRating.average && (
+                        <>
+                            <Rating name="simple-controlled" readOnly value={averageRating.average}/>
+                            <span>({averageRating.count} vote(s))</span>
+                        </>
+
+                    )}
+                    {currentUser &&
+                    <YourRatingWrapper>
+                        {hasUserRated ? <p>Your rating:</p> : <p>Rate this item</p>}
+                        <Rating
+                            name="simple-controlled"
+                            value={userRating}
+                            onChange={handleRatingChange}
+                        />
+                    </YourRatingWrapper>
                     }
-                    {/*  ({rating.count} vote(s))</>*/}
-                    {/*)}*/}
-                    {/*{state.state?.role === "admin" && (*/}
+
                     {isAdmin &&
-                        <CardFooter>
-                            <Link to={`/item/${item.id}/edit/`}>
-                                <button className="btn btn-primary">Edit...</button>
-                            </Link>
-                            <button className="btn btn-dark" onClick={handleDeleteItem}>
-                                Delete
-                            </button>
-                        </CardFooter>
+                    <CardFooter>
+                        <Link to={`/item/${item.id}/edit/`}>
+                            <button className="btn btn-primary">Edit...</button>
+                        </Link>
+                        <button className="btn btn-dark" onClick={handleDeleteItem}>
+                            Delete
+                        </button>
+                    </CardFooter>
                     }
-                    {/*)}*/}
-                    {/*{state.state?.googleId && state.state?.role !== "admin" && (*/}
-                    {/*  <YourRatingWrapper>*/}
-                    {/*    {hasUserRated ? <p>Your rating:</p> : <p>Rate this item</p>}*/}
-                    {/*                        <Rating
-                          name="simple-controlled"
-                          value={userRating}
-                          onChange={handleRatingChange}
-                        />*/}
-                    {/*  </YourRatingWrapper>*/}
-                    {/*)}*/}
                 </Card>
             </PageContent>
+            {/*<pre style={{color: 'white'}}>{JSON.stringify(averageRating, undefined, 2)}</pre>*/}
             <Footer/>
         </>
   );

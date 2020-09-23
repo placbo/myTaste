@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
-import Rating from "@material-ui/lab/Rating";
+//import Rating from "@material-ui/lab/Rating";
 
 const Card = styled.div`
   background-color: ${props => props.theme.box};
@@ -67,13 +67,13 @@ function ItemList(props) {
               </ImageCol>
               <CardContent>
                 <CardHeading>{item.title}</CardHeading>
-                {item.rating && (
-                  <Rating
-                    name="simple-controlled"
-                    readOnly
-                    value={+item.rating}
-                  />
-                )}
+                {/*{item.rating && (*/}
+                {/*  <Rating*/}
+                {/*    name="simple-controlled"*/}
+                {/*    readOnly*/}
+                {/*    value={+item.rating}*/}
+                {/*  />*/}
+                {/*)}*/}
               </CardContent>
             </Card>
           </StyledLink>
