@@ -84,6 +84,7 @@ const ItemListPage = ({match, history}) => {
     useEffect(() => {
         const id = match.params.id; // from the path `/:id`
         if (id) {
+            //TODO: MOVE TO API-UTILS
             firebase
                 .firestore()
                 .collection(ITEM_COLLECTION_NAME)
@@ -101,13 +102,7 @@ const ItemListPage = ({match, history}) => {
 
     useEffect(() => {
         if (item.ratings && Object.values(item.ratings).length > 0) {
-            const ratingsArray = Object.values(item.ratings);
-            const average = ratingsArray.reduce((a, b) => a + b) / ratingsArray.length;
-            setAverageRating({
-                count:  Object.values(item.ratings).length,
-                average
-            })
-
+            calculateAverage();
             if (currentUser && item.ratings[currentUser.email]){
                 setUserRating(item.ratings[currentUser.email]);
                 setHasUserRated(true);
@@ -115,8 +110,19 @@ const ItemListPage = ({match, history}) => {
         }
     }, [item.ratings,currentUser]);
 
+    const calculateAverage = () => {
+        const ratingsArray = Object.values(item.ratings);
+        const average = ratingsArray.reduce((a, b) => a + b) / ratingsArray.length;
+        setAverageRating({
+            count:  Object.values(item.ratings).length,
+            average
+        })
+    }
+
+
     const handleDeleteItem = () => {
         if (window.confirm("Sure?")) {
+            //TODO: MOVE TO API-UTILS
             firebase
                 .firestore()
                 .collection(ITEM_COLLECTION_NAME)
@@ -130,21 +136,26 @@ const ItemListPage = ({match, history}) => {
         }
     };
 
+    //TODO: MOVE TO API-UTILS
+    const saveItem = (_id, _item) => {
+        return firebase
+            .firestore()
+            .collection(ITEM_COLLECTION_NAME)
+            .doc(_id)
+            .set(_item)
+    }
+
     const handleRatingChange = (event, value) => {
-        console.log("user has set rating", value);
+        setUserRating(value);
         if (!item.ratings) {
             item.ratings = {};
         }
-        setUserRating(value);
-        item.ratings[currentUser.email] = value;
+        item.ratings[currentUser.email] = value;//TODO: shouldn't this trigger recalculation of  average ?
         setItem({
             ...item
         });
-        firebase
-            .firestore()
-            .collection(ITEM_COLLECTION_NAME)
-            .doc(item.id)
-            .set(item)
+        calculateAverage();
+        saveItem(item.id, item)
             .then(() => {
                 setHasUserRated(true);
                 toast.success("Lagret");
