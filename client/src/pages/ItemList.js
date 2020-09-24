@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
-import React from "react";
-import styled from "styled-components";
+import { Link } from 'react-router-dom';
+import React from 'react';
+import styled from 'styled-components';
+import Rating from '@material-ui/lab/Rating';
 //import Rating from "@material-ui/lab/Rating";
 
 const Card = styled.div`
-  background-color: ${props => props.theme.box};
+  background-color: ${(props) => props.theme.box};
   width: 100%;
   max-width: 50rem;
   height: 100px;
@@ -12,7 +13,7 @@ const Card = styled.div`
   border-radius: 8px;
   display: flex;
   :hover {
-    background-color: ${props => props.theme.boxHover};
+    background-color: ${(props) => props.theme.boxHover};
   }
   //overflow: hidden;
 `;
@@ -23,7 +24,6 @@ const StyledLink = styled(Link)`
   margin-left: auto;
   margin-right: auto;
 `;
-
 
 const CardContent = styled.div`
   flex: 1;
@@ -49,31 +49,24 @@ const CardHeading = styled.div`
   height: 4rem;
 `;
 
-function ItemList(props) {
+const ItemList = (props) => {
   return (
     <>
-      {props.items.map(item => {
+      {props.items.map((item) => {
         return (
-          <StyledLink key={item.id} to={"/item/" + item.id}>
+          <StyledLink key={item.id} to={'/item/' + item.id}>
             <Card>
               <ImageCol>
-                {item.image && (
-                  <ContentImage
-                    src={item.image}
-                    className="card-img-top"
-                    alt="image"
-                  />
-                )}
+                {item.image && <ContentImage src={item.image} className="card-img-top" alt="image" />}
               </ImageCol>
               <CardContent>
                 <CardHeading>{item.title}</CardHeading>
-                {/*{item.rating && (*/}
-                {/*  <Rating*/}
-                {/*    name="simple-controlled"*/}
-                {/*    readOnly*/}
-                {/*    value={+item.rating}*/}
-                {/*  />*/}
-                {/*)}*/}
+                {item.averageRating && (
+                  <>
+                    <Rating name="simple-controlled" readOnly value={+item.averageRating} />
+                  </>
+                )}
+                {item.averageRatingCount && <span>{item.averageRatingCount} vote(s)</span>}
               </CardContent>
             </Card>
           </StyledLink>
@@ -81,6 +74,6 @@ function ItemList(props) {
       })}
     </>
   );
-}
+};
 
 export default ItemList;

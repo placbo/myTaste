@@ -1,12 +1,12 @@
-import React, {useContext} from "react";
-import styled from "styled-components";
-import {store} from "../store";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import {useHistory} from "react-router";
-import app from "firebase";
-import Button from "@material-ui/core/Button";
-import {AuthContext} from "../Auth";
+import React, { useContext } from 'react';
+import styled from 'styled-components';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import { useHistory } from 'react-router';
+import app from 'firebase';
+import Button from '@material-ui/core/Button';
+import { AuthContext } from '../Auth';
+import { toast } from 'react-toastify';
 
 const UserAvatar = styled.img`
   height: 200px;
@@ -24,40 +24,38 @@ const StyledPage = styled.div`
 `;
 
 const Divider = styled.div`
-    width: 80%;
-    border-top: 1px solid ${props => props.theme.separator};
-    margin: 2rem 0  2rem 0; 
-     
+  width: 80%;
+  border-top: 1px solid ${(props) => props.theme.separator};
+  margin: 2rem 0 2rem 0;
 `;
 
-function ProfilePage() {
-    const state = useContext(store);
-    const history = useHistory();
-    const {currentUser} = useContext(AuthContext);
+const ProfilePage = () => {
+  const history = useHistory();
+  const { currentUser } = useContext(AuthContext);
 
-    const signOut = () => {
-        app.auth().signOut()
-            .then(() => history.push("/"))
-            .catch(() => console.log("Could not log out"));
-    }
+  const signOut = () => {
+    app
+      .auth()
+      .signOut()
+      .then(() => history.push('/'))
+      .catch(() => toast.error('Could not log out'));
+  };
 
-    return (
-        <>
-            <Header/>
-            <StyledPage>
-                {state.state && (
-                    <>
-                        <UserAvatar src={currentUser.photoURL}/>
-                        <h3>{currentUser.displayName}</h3>
-                        <Divider/>
-                        <Button variant="contained" onClick={signOut}>Log out</Button>
-                    </>
-                )}
-                {/*<p>App version: {process.env.REACT_APP_VERSION}</p>*/}
-            </StyledPage>
-            <Footer/>
-        </>
-    );
-}
+  return (
+    <>
+      <Header />
+      <StyledPage>
+        <UserAvatar src={currentUser.photoURL} />
+        <h3>{currentUser.displayName}</h3>
+        <Divider />
+        <Button variant="contained" onClick={signOut}>
+          Log out
+        </Button>
+        {/*<p>App version: {process.env.REACT_APP_VERSION}</p>*/}
+      </StyledPage>
+      <Footer />
+    </>
+  );
+};
 
 export default ProfilePage;

@@ -1,15 +1,13 @@
-import React, {useContext, useEffect, useState} from "react";
-import styled from "styled-components";
-import {store} from "../store";
-import * as firebase from "firebase";
-import {ITEM_COLLECTION_NAME} from "../api/api";
-import {toast} from "react-toastify";
-import {Link} from "react-router-dom";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import Rating from "@material-ui/lab/Rating";
-import {AuthContext} from "../Auth";
-
+import React, { useContext, useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { deleteItem, getItem, updateItem } from '../api/api';
+import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import Rating from '@material-ui/lab/Rating';
+import { AuthContext } from '../Auth';
+import Chip from '@material-ui/core/Chip';
 
 const PageContent = styled.div`
   display: flex;
@@ -17,12 +15,12 @@ const PageContent = styled.div`
 `;
 
 const Card = styled.div`
-  background-color: ${props => props.theme.box};
+  background-color: ${(props) => props.theme.box};
   border-radius: 8px;
   display: flex;
   max-width: 50rem;
-  min-width:20rem;
-  width:80%;
+  min-width: 20rem;
+  width: 80%;
   margin: 0 auto;
   flex-direction: column;
   align-items: center;
@@ -55,7 +53,7 @@ const ContentLineWrapper = styled.div`
 
 const YourRatingWrapper = styled.div`
   margin-top: 1.5rem;
-  border: 1px solid ${props => props.theme.secondary};
+  border: 1px solid ${(props) => props.theme.secondary};
   border-radius: 4px;
   padding: 10px;
 `;
@@ -73,154 +71,132 @@ const CardFooter = styled.div`
   }
 `;
 
-const ItemListPage = ({match, history}) => {
-    const state = useContext(store);
-    const {currentUser, isAdmin} = useContext(AuthContext);
-    const [item, setItem] = useState({});
-    const [averageRating, setAverageRating] = useState({});
-    const [userRating, setUserRating] = useState(3);
-    const [hasUserRated, setHasUserRated] = useState(false);
+const ItemListPage = ({ match, history }) => {
+  const { currentUser, isAdmin } = useContext(AuthContext);
+  const [item, setItem] = useState({});
+  const [userRating, setUserRating] = useState(0);
+  const [hasRatingForCurrentUser, setHasRatingForCurrentUser] = useState(false);
+  const [hasUserRated, setHasUserRated] = useState(false);
 
-    useEffect(() => {
-        const id = match.params.id; // from the path `/:id`
-        if (id) {
-            //TODO: MOVE TO API-UTILS
-            firebase
-                .firestore()
-                .collection(ITEM_COLLECTION_NAME)
-                .doc(id)
-                .get()
-                .then(doc => {
-                    setItem({
-                        ...doc.data(),
-                        id: doc.id,
-                    });
-                })
-                .catch(error => toast.error(error.message));
-        }
-    }, [item.id, match.params.id, state.state]);
-
-    useEffect(() => {
-        if (item.ratings && Object.values(item.ratings).length > 0) {
-            calculateAverage();
-            if (currentUser && item.ratings[currentUser.email]){
-                setUserRating(item.ratings[currentUser.email]);
-                setHasUserRated(true);
+  useEffect(() => {
+    const id = match.params.id; // from the path `/:id`
+    if (id) {
+      getItem(id)
+        .then((result) => {
+          setItem(result);
+          if (result.ratings && Object.values(result.ratings).length > 0) {
+            if (currentUser && result.ratings[currentUser.email]) {
+              setUserRating(result.ratings[currentUser.email]);
+              setHasRatingForCurrentUser(true);
             }
-        }
-    }, [item.ratings,currentUser]);
-
-    const calculateAverage = () => {
-        const ratingsArray = Object.values(item.ratings);
-        const average = ratingsArray.reduce((a, b) => a + b) / ratingsArray.length;
-        setAverageRating({
-            count:  Object.values(item.ratings).length,
-            average
+          }
         })
+        .catch((error) => toast.error(error.message));
     }
+  }, [match.params.id, currentUser]);
 
-
-    const handleDeleteItem = () => {
-        if (window.confirm("Sure?")) {
-            //TODO: MOVE TO API-UTILS
-            firebase
-                .firestore()
-                .collection(ITEM_COLLECTION_NAME)
-                .doc(item.id)
-                .delete()
-                .then(() => {
-                    toast.success("item deleted");
-                    history.push("/");
-                })
-                .catch(error => toast.error(error.message));
-        }
-    };
-
-    //TODO: MOVE TO API-UTILS
-    const saveItem = (_id, _item) => {
-        return firebase
-            .firestore()
-            .collection(ITEM_COLLECTION_NAME)
-            .doc(_id)
-            .set(_item)
+  const handleDeleteItem = () => {
+    if (window.confirm('Sure?')) {
+      deleteItem(item.id)
+        .then(() => {
+          toast.success('item deleted');
+          history.push('/');
+        })
+        .catch((error) => toast.error(error.message));
     }
+  };
 
-    const handleRatingChange = (event, value) => {
-        setUserRating(value);
-        if (!item.ratings) {
-            item.ratings = {};
-        }
-        item.ratings[currentUser.email] = value;//TODO: shouldn't this trigger recalculation of  average ?
-        setItem({
-            ...item
+  const handleRatingChange = (event, value) => {
+    setUserRating(value);
+    setHasUserRated(true);
+    if (!item.ratings) {
+      item.ratings = {};
+    }
+    item.ratings[currentUser.email] = value;
+    const ratingsArray = Object.values(item.ratings);
+    const average = Math.round((ratingsArray.reduce((a, b) => a + b) / ratingsArray.length) * 2) / 2; //rounds to nearest half
+    const averageRatingCount = Object.values(item.ratings).length;
+    setItem({
+      ...item,
+      averageRating: average,
+      averageRatingCount: averageRatingCount,
+    });
+  };
+
+  useEffect(() => {
+    if (hasUserRated) {
+      updateItem(item)
+        .then(() => {
+          toast.success('Saved');
+        })
+        .catch(() => {
+          toast.error('Could not save to server');
         });
-        calculateAverage();
-        saveItem(item.id, item)
-            .then(() => {
-                setHasUserRated(true);
-                toast.success("Lagret");
-            })
-            .catch(() => {
-                toast.error("Could not save to server");
-            });
-    };
+    }
+  }, [hasUserRated, item]);
 
-    return (
-        <>
-            <Header/>
-            <PageContent>
-                <Card>
-                    <CardHeading>{item.title}</CardHeading>
-                    {item.image && (
-                        <ContentLineWrapper>
-                            <a href={item.image}>
-                                <ContentImage
-                                    src={item.image}
-                                    alt="image"
-                                />
-                            </a>
-                        </ContentLineWrapper>
-                    )}
-                    <ContentLineWrapper>
-                        <p className="card-text">{item.comment}</p>
-                    </ContentLineWrapper>
+  return (
+    <>
+      <Header />
+      <PageContent>
+        <Card>
+          <CardHeading>{item.title}</CardHeading>
+          {item.image && (
+            <ContentLineWrapper>
+              <a href={item.image}>
+                <ContentImage src={item.image} alt="image" />
+              </a>
+            </ContentLineWrapper>
+          )}
+          <ContentLineWrapper>
+            <p className="card-text">{item.comment}</p>
+          </ContentLineWrapper>
 
-                    <ContentLineWrapper>
-                        <TagList>{item.tags}</TagList>
-                    </ContentLineWrapper>
-                    {averageRating.average && (
-                        <>
-                            <Rating name="simple-controlled" readOnly value={averageRating.average}/>
-                            <span>({averageRating.count} vote(s))</span>
-                        </>
+          <ContentLineWrapper>
+            {item.tags && item.tags.length > 0 && (
+              <TagList>
+                {item.tags.map((tag, index) => (
+                  <Chip
+                    key={index}
+                    style={{ color: 'white', margin: '0.5rem' }}
+                    variant="outlined"
+                    color="primary"
+                    size="small"
+                    label={tag}
+                  />
+                ))}
+              </TagList>
+            )}
+          </ContentLineWrapper>
 
-                    )}
-                    {currentUser &&
-                    <YourRatingWrapper>
-                        {hasUserRated ? <p>Your rating:</p> : <p>Rate this item</p>}
-                        <Rating
-                            name="simple-controlled"
-                            value={userRating}
-                            onChange={handleRatingChange}
-                        />
-                    </YourRatingWrapper>
-                    }
+          {item.averageRating && (
+            <>
+              <Rating precision={0.5} name="simple-controlled" readOnly value={item.averageRating} />
+              <span>{item.averageRatingCount} vote(s)</span>
+            </>
+          )}
+          {currentUser && (
+            <YourRatingWrapper>
+              {hasRatingForCurrentUser ? <p>Your rating:</p> : <p>Rate this item</p>}
+              <Rating name="simple-controlled" value={userRating} onChange={handleRatingChange} />
+            </YourRatingWrapper>
+          )}
 
-                    {isAdmin &&
-                    <CardFooter>
-                        <Link to={`/item/${item.id}/edit/`}>
-                            <button className="btn btn-primary">Edit...</button>
-                        </Link>
-                        <button className="btn btn-dark" onClick={handleDeleteItem}>
-                            Delete
-                        </button>
-                    </CardFooter>
-                    }
-                </Card>
-            </PageContent>
-            {/*<pre style={{color: 'white'}}>{JSON.stringify(averageRating, undefined, 2)}</pre>*/}
-            <Footer/>
-        </>
+          {isAdmin && (
+            <CardFooter>
+              <Link to={`/item/${item.id}/edit/`}>
+                <button className="btn btn-primary">Edit...</button>
+              </Link>
+              <button className="btn btn-dark" onClick={handleDeleteItem}>
+                Delete
+              </button>
+            </CardFooter>
+          )}
+        </Card>
+      </PageContent>
+      <pre style={{ color: 'white' }}>{JSON.stringify(item, undefined, 2)}</pre>
+      <Footer />
+    </>
   );
 };
 

@@ -11,14 +11,16 @@ const firebaseConfig = {
     measurementId: "G-X0M0TN3M19"
 };
 
+
 firebase.initializeApp(firebaseConfig);
 
-firebase.analytics();
-
-const provider = new firebase.auth.GoogleAuthProvider();
+if (process.env.REACT_APP_USE_MOCK!=="true") {
+    firebase.analytics();
+}
 
 export const signInWithGoogle = () => {
-    firebase.auth().signInWithPopup(provider);
+    const provider = new firebase.auth.GoogleAuthProvider();
+    return firebase.auth().signInWithPopup(provider); //TODO: changed - does it still work??
 };
 
 

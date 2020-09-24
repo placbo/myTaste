@@ -1,20 +1,20 @@
-import React, {useContext} from "react";
-import styled from "styled-components";
-import {Link} from "react-router-dom";
-import {AiOutlineLogin} from "react-icons/ai";
-import {AuthContext} from "../Auth";
+import React, { useContext } from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import { AiOutlineLogin } from 'react-icons/ai';
+import { AuthContext } from '../Auth';
 
 const StyledHeader = styled.div`
   position: fixed;
   top: 0;
   height: 70px;
-  background-color: ${props => props.theme.separator};
+  background-color: ${(props) => props.theme.separator};
   width: 100%;
   display: flex;
   z-index: 1;
   align-items: center;
   justify-content: space-between;
-  font-family: "Jura", sans-serif;
+  font-family: 'Jura', sans-serif;
 `;
 
 const IconWrapper = styled.div`
@@ -51,29 +51,28 @@ const UserAvatar = styled.img`
 `;
 
 const Header = () => {
+  const { currentUser, isAdmin } = useContext(AuthContext);
 
-    const {currentUser, isAdmin} = useContext(AuthContext);
-
-    return (
-        <StyledHeader>
-            <Link to="/">
-                <Logo>MyTaste</Logo>
-            </Link>
-            <span>{isAdmin && "ADMIN"}</span>
-            {!currentUser ?
-                <Link to="/login">
-                    <IconWrapper>
-                        <AiOutlineLogin/>
-                        <IconLabel>Log in</IconLabel>
-                    </IconWrapper>
-                </Link>
-                :
-                <Link to="/profile">
-                    <UserAvatar src={currentUser.photoURL}/>
-                </Link>
-            }
-        </StyledHeader>
-    );
-}
+  return (
+    <StyledHeader>
+      <Link to="/">
+        <Logo>MyTaste</Logo>
+      </Link>
+      <span>{isAdmin && 'ADMIN'}</span>
+      {!currentUser ? (
+        <Link to="/login">
+          <IconWrapper>
+            <AiOutlineLogin />
+            <IconLabel>Log in</IconLabel>
+          </IconWrapper>
+        </Link>
+      ) : (
+        <Link to="/profile">
+          <UserAvatar src={currentUser.photoURL} />
+        </Link>
+      )}
+    </StyledHeader>
+  );
+};
 
 export default Header;

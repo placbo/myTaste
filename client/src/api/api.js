@@ -1,102 +1,117 @@
-import {handleAjaxError, handleAjaxResponse} from "./apiUtils";
-import Axios from "axios";
-import * as firebase from "firebase";
+import * as firebase from 'firebase';
 
-export const ITEMS_URL = process.env.REACT_APP_MYTASTE_API_HOST + "/items";
-export const PROFILE_URL =
-    process.env.REACT_APP_MYTASTE_API_HOST + "/userprofile";
-export const RATE_ITEM_URL = process.env.REACT_APP_MYTASTE_API_HOST + "/rating";
+export const ITEM_COLLECTION_NAME = 'items';
 
-
-export const ITEM_COLLECTION_NAME = "items";
-
-
-const headers = {
-  Accept: "application/json",
-  "Content-Type": "application/json"
-};
-
-export function getAllItems() {
-  if (process.env.REACT_APP_USE_MOCK === "true") {
-    return new Promise((resolve, reject) => {
-      let MOCK_DATA = [
-        {id: "1", title: "Item 1", "image": "", "comment": "fsdfsdfsdf"},
-        {id: "2", title: "Item 2", "image": "", "comment": "jadda"},
-        {id: "3", title: "Item 3", "image": "", "comment": "joda"},
-      ];
-      console.log("Mock retrieving list")
+export const getItem = (id) => {
+  if (process.env.REACT_APP_USE_MOCK === 'true') {
+    return new Promise((resolve) => {
+      console.log('Mock retrieving item');
+      let MOCK_DATA = {
+        id: '2oS3BIojyckicgzOhXoS',
+        title: 'Ostepop fra Ostepopfabrikken(TM)',
+        comment: 'Knallgod ostepot, litt mye løksmak.',
+        tags: ['Ostepop', 'Posemat', 'Ostepopfabrikken'],
+        image: 'https://brands-b.prod.onewp.net/app/uploads/sites/44/2019/08/cheez-chruncherz-600x600.png',
+        ratings: {
+          'perbjester@gmail.com2': 5,
+          'nr@unit.no': 2,
+        },
+        averageRating: 3.5,
+        averageRatingCount: 2,
+      };
       resolve(MOCK_DATA);
     });
-  }
-  return firebase
+  } else {
+    return firebase
       .firestore()
       .collection(ITEM_COLLECTION_NAME)
-      .onSnapshot(snapshot => {
-        debugger;
-      })
-      // .get()
-      // .then((doc) => {
-      //   return doc.data();
-      // });
-}
+      .doc(id)
+      .get()
+      .then((doc) => {
+        return {
+          ...doc.data(),
+          id: doc.id,
+        };
+      });
+  }
+};
 
-export function getUserProfile() {
-  return Axios.get(PROFILE_URL, { headers: headers })
-    .then(handleAjaxResponse)
-    .catch(handleAjaxError);
-}
+export const getAllItems = () => {
+  if (process.env.REACT_APP_USE_MOCK === 'true') {
+    return new Promise((resolve) => {
+      console.log('Mock retrieving list');
+      let MOCK_DATA = [
+        {
+          id: '1oS3BIojyckicgzOhXoS',
+          title: 'Item 1',
+          comment: 'fsdfsdfsdf',
+          image: 'https://brands-b.prod.onewp.net/app/uploads/sites/44/2019/08/cheez-chruncherz-600x600.png',
+          averageRating: 4,
+          averageRatingCount: 12,
+        },
+        {
+          id: '2oS3BIojyckicgzOhXoS',
+          title: 'Item 2',
+          comment: 'jadda',
+          image: 'https://brands-b.prod.onewp.net/app/uploads/sites/44/2019/08/cheez-chruncherz-600x600.png',
+          averageRating: 1,
+          averageRatingCount: 423,
+        },
+        {
+          id: '3oS3BIojyckicgzOhXoS',
+          title: 'Item 3',
+          comment: 'joda',
+          image: 'https://brands-b.prod.onewp.net/app/uploads/sites/44/2019/08/cheez-chruncherz-600x600.png',
+          averageRating: 5,
+          averageRatingCount: 1,
+        },
+      ];
+      resolve(MOCK_DATA);
+    });
+  } else {
+    return firebase
+      .firestore()
+      .collection(ITEM_COLLECTION_NAME)
+      .get()
+      .then((querySnapshot) => {
+        return querySnapshot.docs.map((doc) => {
+          return {
+            ...doc.data(),
+            id: doc.id,
+          };
+        });
+      });
+  }
+};
 
-// export function getItem(itemId) {
-//   return Axios.get(ITEMS_URL + "/" + itemId, {headers: headers})
-//       .then(handleAjaxResponse)
-//       .catch(handleAjaxError);
-// }
-//
-// export function rateItem(itemId, userId, rating) {
-//   return Axios.put(
-//       RATE_ITEM_URL,
-//       {itemId, userId, rating},
-//       {headers: headers}
-//   )
-//       .then(handleAjaxResponse)
-//       .catch(handleAjaxError);
-// }
+export const updateItem = (item) => {
+  if (process.env.REACT_APP_USE_MOCK === 'true') {
+    return new Promise((resolve) => {
+      console.log('MOCING SAVE (UPDATE) FOR ITEM : ', item);
+      resolve();
+    });
+  } else {
+    return firebase.firestore().collection(ITEM_COLLECTION_NAME).doc(item.id).set(item);
+  }
+};
 
-export function getRating(itemId, userId) {
-  return Axios.get(`${RATE_ITEM_URL}/${itemId}/${userId}`, { headers: headers })
-    .then(handleAjaxResponse)
-    .catch(handleAjaxError);
-}
+export const addItem = (item) => {
+  if (process.env.REACT_APP_USE_MOCK === 'true') {
+    return new Promise((resolve) => {
+      console.log('MOCING SAVE (ADD) FOR ITEM : ', item);
+      resolve();
+    });
+  } else {
+    return firebase.firestore().collection(ITEM_COLLECTION_NAME).doc(item.id).set(item);
+  }
+};
 
-export function getAverageRating(itemId) {
-  return Axios.get(`${RATE_ITEM_URL}/${itemId}`, {headers: headers})
-      .then(handleAjaxResponse)
-      .catch(handleAjaxError);
-}
-
-
-// export function saveItem(item) {
-//   if (process.env.REACT_APP_USE_MOCK === "true") {
-//     console.log("Mock saving item")
-//     return;
-//   }
-//   return firebase
-//       .firestore()
-//       .collection(ITEM_COLLECTION_NAME)
-//       .doc(item.id)
-//       .set(item)
-//       .then(() => {
-//         console.log("Document successfully written!");
-//       })
-//       .catch((error) => {
-//         console.error("Error updating/creating document: ", error);
-//       });
-// }
-
-//
-// export function deleteItem(itemId) {
-//   return null;
-//   // fetch(ITEMS_URL + "/" + itemId, {method: "DELETE"})
-//   //     .then(handleResponse)
-//   //     .catch(handleError);
-// }
+export const deleteItem = (id) => {
+  if (process.env.REACT_APP_USE_MOCK === 'true') {
+    return new Promise((resolve) => {
+      resolve();
+    });
+  } else {
+    return firebase.firestore().collection(ITEM_COLLECTION_NAME).doc(id).delete();
+  }
+};

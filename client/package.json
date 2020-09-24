@@ -13,7 +13,7 @@
     "array-move": "^3.0.1",
     "axios": "^0.20.0",
     "bootstrap": "^4.5.2",
-    "firebase": "^7.19.1",
+    "firebase": "^7.21.0",
     "query-string": "^6.13.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -27,6 +27,11 @@
     "styled-components": "^5.2.0",
     "uuid": "^8.3.0"
   },
+  "devDependencies": {
+    "axios-mock-adapter": "^1.18.2",
+    "gh-pages": "^3.1.0",
+    "prettier": "^2.1.2"
+  },
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
@@ -36,7 +41,13 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": "error"
+    }
   },
   "browserslist": {
     "production": [
@@ -49,10 +60,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "axios-mock-adapter": "^1.18.2",
-    "gh-pages": "^3.1.0",
-    "prettier": "^2.1.2"
   }
 }
