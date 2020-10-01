@@ -50,6 +50,7 @@ const ManageItemPage = (props) => {
     title: '',
     image: null,
     rating: null,
+    tags: [],
     creator: currentUser.email,
   });
 
@@ -63,6 +64,7 @@ const ManageItemPage = (props) => {
     if (id) {
       getItem(id)
         .then((result) => {
+          //todo; Sjekk at todo er en array
           setItem(result);
         })
         .catch((error) => toast.error(error.message));
@@ -70,9 +72,13 @@ const ManageItemPage = (props) => {
   }, [props.match.params.id]);
 
   const handleFormChange = ({ target }) => {
+    let insertValue = target.value;
+    if (target.name === 'tags') {
+      insertValue = target.value.split(',');
+    }
     setItem({
       ...item,
-      [target.name]: target.value,
+      [target.name]: insertValue,
     });
   };
 

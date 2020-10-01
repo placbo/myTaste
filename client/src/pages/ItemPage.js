@@ -8,6 +8,7 @@ import Footer from '../components/Footer';
 import Rating from '@material-ui/lab/Rating';
 import { AuthContext } from '../Auth';
 import Chip from '@material-ui/core/Chip';
+import { GiDeathSkull } from 'react-icons/gi';
 
 const PageContent = styled.div`
   display: flex;
@@ -153,7 +154,7 @@ const ItemListPage = ({ match, history }) => {
           </ContentLineWrapper>
 
           <ContentLineWrapper>
-            {item.tags && item.tags.length > 0 && (
+            {item.tags && Array.isArray(item.tags) && item.tags.length > 0 && (
               <TagList>
                 {item.tags.map((tag, index) => (
                   <Chip
@@ -171,8 +172,10 @@ const ItemListPage = ({ match, history }) => {
 
           {item.averageRating && (
             <>
-              <Rating precision={0.5} name="simple-controlled" readOnly value={item.averageRating} />
-              <span>{item.averageRatingCount} vote(s)</span>
+              <Rating name="simple-controlled" readOnly value={item.averageRating} />
+              <span>
+                {item.averageRatingCount} {item.averageRatingCount === 1 ? 'vote' : 'votes'}
+              </span>
             </>
           )}
           {currentUser && (

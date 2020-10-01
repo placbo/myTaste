@@ -14,6 +14,7 @@
     "axios": "^0.20.0",
     "bootstrap": "^4.5.2",
     "firebase": "^7.21.0",
+    "material-ui-chip-input": "^2.0.0-beta.2",
     "query-string": "^6.13.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

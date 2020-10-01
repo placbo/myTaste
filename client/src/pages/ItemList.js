@@ -49,6 +49,12 @@ const CardHeading = styled.div`
   height: 4rem;
 `;
 
+const RatingLabel = styled.span`
+  margin-left: 1rem;
+  font-style: italic;
+  color: grey;
+`;
+
 const ItemList = (props) => {
   return (
     <>
@@ -66,7 +72,11 @@ const ItemList = (props) => {
                     <Rating name="simple-controlled" readOnly value={+item.averageRating} />
                   </>
                 )}
-                {item.averageRatingCount && <span>{item.averageRatingCount} vote(s)</span>}
+                {item.averageRatingCount && (
+                  <RatingLabel>
+                    {item.averageRatingCount} {item.averageRatingCount === 1 ? 'vote' : 'votes'}
+                  </RatingLabel>
+                )}
               </CardContent>
             </Card>
           </StyledLink>

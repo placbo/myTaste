@@ -10,13 +10,13 @@ export const getItem = (id) => {
         id: '2oS3BIojyckicgzOhXoS',
         title: 'Ostepop fra Ostepopfabrikken(TM)',
         comment: 'Knallgod ostepot, litt mye løksmak.',
-        tags: ['Ostepop', 'Posemat', 'Ostepopfabrikken'],
+        tags: 'fdsfds,fdgfdg,gdfgdf',
         image: 'https://brands-b.prod.onewp.net/app/uploads/sites/44/2019/08/cheez-chruncherz-600x600.png',
         ratings: {
           'perbjester@gmail.com2': 5,
           'nr@unit.no': 2,
         },
-        averageRating: 3.5,
+        averageRating: 0,
         averageRatingCount: 2,
       };
       resolve(MOCK_DATA);
@@ -48,6 +48,26 @@ export const getAllItems = () => {
           image: 'https://brands-b.prod.onewp.net/app/uploads/sites/44/2019/08/cheez-chruncherz-600x600.png',
           averageRating: 4,
           averageRatingCount: 12,
+        },
+        {
+          id: 'fsdfsdfsdfsdfsdfs',
+          title: 'Item 1.5',
+          comment: 'fsdfsdfsdf',
+          tags: ['Junkfood', 'Burger'],
+          image: 'https://brands-b.prod.onewp.net/app/uploads/sites/44/2019/08/cheez-chruncherz-600x600.png',
+        },
+        {
+          id: 'fsdfsdfsdfsdfsdf2s',
+          title: 'Item 1.6',
+          comment:
+            'fsdfsdfdsfsdsdfjfdks sdfkj fsdkjf sdksdkfj sdkljf sdkljf sdklfj sdklj fsdklj fsdklfj sdk fjsdklfj sdklfj sdklj fsdkljfsdkl gsdklb sd kldsjg sdkg fsdf',
+          tags: ['Junkfood', 'Burger'],
+          image: 'https://brands-b.prod.onewp.net/app/uploads/sites/44/2019/08/cheez-chruncherz-600x600.png',
+          ratings: {
+            'perbjester@gmail.com': null,
+          },
+          averageRating: 0,
+          averageRatingCount: 1,
         },
         {
           id: '2oS3BIojyckicgzOhXoS',
@@ -102,7 +122,7 @@ export const addItem = (item) => {
       resolve();
     });
   } else {
-    return firebase.firestore().collection(ITEM_COLLECTION_NAME).doc(item.id).set(item);
+    return firebase.firestore().collection(ITEM_COLLECTION_NAME).add(item);
   }
 };
 
