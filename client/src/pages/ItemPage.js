@@ -1,18 +1,17 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import {deleteItem, getItem, updateItem} from '../api/api';
-import {toast} from 'react-toastify';
-import {Link} from 'react-router-dom';
+import { deleteItem, getItem, updateItem } from '../api/api';
+import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Rating from '@material-ui/lab/Rating';
-import {AuthContext} from '../Auth';
+import { AuthContext } from '../Auth';
 import Chip from '@material-ui/core/Chip';
 import CodeIcon from '@material-ui/icons/Code';
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import Typography from "@material-ui/core/Typography";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
 
 const PageContent = styled.div`
   display: flex;
@@ -181,7 +180,7 @@ const ItemListPage = ({ match, history }) => {
           </ContentLineWrapper>
           <Rating name="simple-controlled" precision={0.5} readOnly value={+item.averageRating} />
           <RatingLabel>
-            {item.averageRatingCount || "0"} {item.averageRatingCount === 1 ? 'vote' : 'votes'}
+            {item.averageRatingCount || '0'} {item.averageRatingCount === 1 ? 'vote' : 'votes'}
           </RatingLabel>
           {currentUser && (
             <YourRatingWrapper>
@@ -204,11 +203,7 @@ const ItemListPage = ({ match, history }) => {
       </PageContent>
 
       <Accordion>
-        <AccordionSummary
-            expandIcon={<CodeIcon />}
-            aria-controls="panel-content"
-        >
-        </AccordionSummary>
+        <AccordionSummary expandIcon={<CodeIcon />} aria-controls="panel-content"></AccordionSummary>
         <AccordionDetails>
           <pre>{JSON.stringify(item, undefined, 2)}</pre>
         </AccordionDetails>

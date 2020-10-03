@@ -69,7 +69,7 @@ const ItemList = (props) => {
                 <CardHeading>{item.title}</CardHeading>
                 <Rating name="simple-controlled" precision={0.5} readOnly value={+item.averageRating} />
                 <RatingLabel>
-                  {item.averageRatingCount || "0"} {item.averageRatingCount === 1 ? 'vote' : 'votes'}
+                  {item.averageRatingCount || '0'} {item.averageRatingCount === 1 ? 'vote' : 'votes'}
                 </RatingLabel>
               </CardContent>
             </Card>

@@ -33,6 +33,19 @@ const GlobalStyle = createGlobalStyle`
     color : ${(props) => props.theme.link};
   }
   
+    .MuiPaper-root {
+        background-color: ${(props) => props.theme.background} !important;
+        color: ${(props) => props.theme.primary} !important;
+    }
+
+    pre {
+        color: ${(props) => props.theme.primary} !important;
+    }
+  
+    .MuiIconButton-root {
+        color: ${(props) => props.theme.primary} !important;
+    }  
+
   a:hover {
     text-decoration: none;
     color : ${(props) => props.theme.primary};

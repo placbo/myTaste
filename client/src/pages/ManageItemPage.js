@@ -17,7 +17,7 @@ const PageContent = styled.div`
 `;
 
 const Card = styled.div`
-  background-color: ${(props) => props.theme.box};
+  background-color: ${(props) => props.theme.primary};
   border-radius: 8px;
   width: 100%;
   max-width: 50rem;
@@ -52,6 +52,7 @@ const ManageItemPage = (props) => {
     rating: null,
     tags: [],
     creator: currentUser.email,
+    date: Date.now(),
   });
 
   const [saving, setSaving] = useState(false);
