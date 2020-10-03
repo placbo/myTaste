@@ -1,14 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import styled from 'styled-components';
-import { deleteItem, getItem, updateItem } from '../api/api';
-import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+import {deleteItem, getItem, updateItem} from '../api/api';
+import {toast} from 'react-toastify';
+import {Link} from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Rating from '@material-ui/lab/Rating';
-import { AuthContext } from '../Auth';
+import {AuthContext} from '../Auth';
 import Chip from '@material-ui/core/Chip';
-import { GiDeathSkull } from 'react-icons/gi';
+import CodeIcon from '@material-ui/icons/Code';
+import Accordion from "@material-ui/core/Accordion";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import Typography from "@material-ui/core/Typography";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
 
 const PageContent = styled.div`
   display: flex;
@@ -57,6 +61,12 @@ const YourRatingWrapper = styled.div`
   border: 1px solid ${(props) => props.theme.secondary};
   border-radius: 4px;
   padding: 10px;
+`;
+
+const RatingLabel = styled.span`
+  margin-left: 1rem;
+  font-style: italic;
+  color: grey;
 `;
 
 const CardFooter = styled.div`
@@ -169,15 +179,10 @@ const ItemListPage = ({ match, history }) => {
               </TagList>
             )}
           </ContentLineWrapper>
-
-          {item.averageRating && (
-            <>
-              <Rating name="simple-controlled" readOnly value={item.averageRating} />
-              <span>
-                {item.averageRatingCount} {item.averageRatingCount === 1 ? 'vote' : 'votes'}
-              </span>
-            </>
-          )}
+          <Rating name="simple-controlled" precision={0.5} readOnly value={+item.averageRating} />
+          <RatingLabel>
+            {item.averageRatingCount || "0"} {item.averageRatingCount === 1 ? 'vote' : 'votes'}
+          </RatingLabel>
           {currentUser && (
             <YourRatingWrapper>
               {hasRatingForCurrentUser ? <p>Your rating:</p> : <p>Rate this item</p>}
@@ -197,7 +202,17 @@ const ItemListPage = ({ match, history }) => {
           )}
         </Card>
       </PageContent>
-      <pre style={{ color: 'white' }}>{JSON.stringify(item, undefined, 2)}</pre>
+
+      <Accordion>
+        <AccordionSummary
+            expandIcon={<CodeIcon />}
+            aria-controls="panel-content"
+        >
+        </AccordionSummary>
+        <AccordionDetails>
+          <pre>{JSON.stringify(item, undefined, 2)}</pre>
+        </AccordionDetails>
+      </Accordion>
       <Footer />
     </>
   );

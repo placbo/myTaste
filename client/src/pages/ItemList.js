@@ -67,16 +67,10 @@ const ItemList = (props) => {
               </ImageCol>
               <CardContent>
                 <CardHeading>{item.title}</CardHeading>
-                {item.averageRating && (
-                  <>
-                    <Rating name="simple-controlled" readOnly value={+item.averageRating} />
-                  </>
-                )}
-                {item.averageRatingCount && (
-                  <RatingLabel>
-                    {item.averageRatingCount} {item.averageRatingCount === 1 ? 'vote' : 'votes'}
-                  </RatingLabel>
-                )}
+                <Rating name="simple-controlled" precision={0.5} readOnly value={+item.averageRating} />
+                <RatingLabel>
+                  {item.averageRatingCount || "0"} {item.averageRatingCount === 1 ? 'vote' : 'votes'}
+                </RatingLabel>
               </CardContent>
             </Card>
           </StyledLink>

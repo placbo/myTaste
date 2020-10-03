@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [pending, setPending] = useState(true);
 
   useEffect(() => {
-    if (process.env.REACT_APP_USE_MOCK === 'true') {
+    if (process.env.REACT_APP_MOCK_API === 'true') {
       setCurrentUser({ email: 'perbjester@gmail.com' });
       setPending(false);
       setIsAdmin(true);

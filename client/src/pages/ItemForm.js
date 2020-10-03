@@ -1,14 +1,6 @@
 import React from 'react';
 import Rating from '@material-ui/lab/Rating';
-import { GiDeathSkull } from 'react-icons/gi';
-import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
-
-const buttonStyle = {
-  color: 'white',
-  top: '-6px',
-  marginRight: '-8px',
-};
 
 const ItemForm = ({ item, onChange, onSubmit, disabled }) => {
   return (
@@ -70,21 +62,8 @@ const ItemForm = ({ item, onChange, onSubmit, disabled }) => {
         <div className="form-group">
           <label htmlFor="rating">Rating</label>
           <div className="field">
-            <IconButton
-              aria-label="zero"
-              style={buttonStyle}
-              onClick={(event, newValue) => {
-                onChange({
-                  target: {
-                    name: 'rating',
-                    value: null,
-                  },
-                });
-              }}>
-              <GiDeathSkull />
-            </IconButton>
             <Rating
-              name="simple-controlled"
+              name="rating"
               value={+item.rating}
               onChange={(event, newValue) => {
                 onChange({
@@ -97,7 +76,7 @@ const ItemForm = ({ item, onChange, onSubmit, disabled }) => {
             />
           </div>
         </div>
-        <input type="submit" disabled={!item.rating} value="Save" className="btn btn-primary" />
+        <input type="submit" value="Save" className="btn btn-primary" />
       </fieldset>
     </form>
   );

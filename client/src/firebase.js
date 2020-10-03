@@ -14,7 +14,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-if (process.env.REACT_APP_USE_MOCK!=="true") {
+if (process.env.REACT_APP_MOCK_API!=="true") {
     firebase.analytics();
 }
 

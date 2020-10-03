@@ -3,7 +3,7 @@ import * as firebase from 'firebase';
 export const ITEM_COLLECTION_NAME = 'items';
 
 export const getItem = (id) => {
-  if (process.env.REACT_APP_USE_MOCK === 'true') {
+  if (process.env.REACT_APP_MOCK_API === 'true') {
     return new Promise((resolve) => {
       console.log('Mock retrieving item');
       let MOCK_DATA = {
@@ -37,7 +37,8 @@ export const getItem = (id) => {
 };
 
 export const getAllItems = () => {
-  if (process.env.REACT_APP_USE_MOCK === 'true') {
+  console.log(process.env.REACT_APP_MOCK_API);
+  if (process.env.REACT_APP_MOCK_API === 'true') {
     return new Promise((resolve) => {
       console.log('Mock retrieving list');
       let MOCK_DATA = [
@@ -66,15 +67,15 @@ export const getAllItems = () => {
           ratings: {
             'perbjester@gmail.com': null,
           },
-          averageRating: 0,
-          averageRatingCount: 1,
+          averageRating: null,
+          averageRatingCount: 0,
         },
         {
           id: '2oS3BIojyckicgzOhXoS',
           title: 'Item 2',
           comment: 'jadda',
           image: 'https://brands-b.prod.onewp.net/app/uploads/sites/44/2019/08/cheez-chruncherz-600x600.png',
-          averageRating: 1,
+          averageRating: null,
           averageRatingCount: 423,
         },
         {
@@ -105,7 +106,7 @@ export const getAllItems = () => {
 };
 
 export const updateItem = (item) => {
-  if (process.env.REACT_APP_USE_MOCK === 'true') {
+  if (process.env.REACT_APP_MOCK_API === 'true') {
     return new Promise((resolve) => {
       console.log('MOCING SAVE (UPDATE) FOR ITEM : ', item);
       resolve();
@@ -116,7 +117,7 @@ export const updateItem = (item) => {
 };
 
 export const addItem = (item) => {
-  if (process.env.REACT_APP_USE_MOCK === 'true') {
+  if (process.env.REACT_APP_MOCK_API === 'true') {
     return new Promise((resolve) => {
       console.log('MOCING SAVE (ADD) FOR ITEM : ', item);
       resolve();
@@ -127,7 +128,7 @@ export const addItem = (item) => {
 };
 
 export const deleteItem = (id) => {
-  if (process.env.REACT_APP_USE_MOCK === 'true') {
+  if (process.env.REACT_APP_MOCK_API === 'true') {
     return new Promise((resolve) => {
       resolve();
     });
