@@ -9,6 +9,9 @@ import Footer from '../components/Footer';
 import * as firebase from 'firebase';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthContext } from '../Auth';
+import moment from 'moment';
+import Divider from '@material-ui/core/Divider';
+import Button from '@material-ui/core/Button';
 
 const PageContent = styled.div`
   margin: 1rem;
@@ -52,7 +55,7 @@ const ManageItemPage = (props) => {
     rating: null,
     tags: [],
     creator: currentUser.email,
-    date: Date.now(),
+    date: moment().format('DD.MM.YYYY'),
   });
 
   const [saving, setSaving] = useState(false);
@@ -216,16 +219,20 @@ const ManageItemPage = (props) => {
       <PageContent>
         <Card>
           <div className="form-group">
-            <label htmlFor="fileUpload">Last opp</label>
             <div className="field">
               <input
+                accept="image/*"
+                id="contained-button-file"
                 type="file"
-                id="fileUpload"
-                placeholder="title"
                 onChange={handleFileChange}
                 name="fileUpload"
-                accept="image/*"
+                style={{ display: 'none' }}
               />
+              <label htmlFor="contained-button-file">
+                <Button variant="contained" color="primary" component="span">
+                  Choose Image
+                </Button>
+              </label>
             </div>
           </div>
           {image && file && (
@@ -234,12 +241,17 @@ const ManageItemPage = (props) => {
                 <img src={image} alt="preview" />
               </div>
               Filesize: {getFormatedFileSize(file)} MB
-              <button onClick={uploadfile}>Upload image</button>
+              <Button onClick={uploadfile}>Upload image</Button>
             </>
           )}
           {uploading && <BlockScreen>Uploading...</BlockScreen>}
 
-          <ItemForm disabled={uploading || saving} item={item} onChange={handleFormChange} onSubmit={handleSubmit} />
+          <Divider />
+
+          {item.image && (
+            <ItemForm disabled={uploading || saving} item={item} onChange={handleFormChange} onSubmit={handleSubmit} />
+          )}
+
           {saving && <BlockScreen>Saving...</BlockScreen>}
         </Card>
       </PageContent>
