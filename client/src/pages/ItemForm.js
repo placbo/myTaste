@@ -1,13 +1,15 @@
-import React from 'react';
-import Rating from '@material-ui/lab/Rating';
+import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
+import Rating from '@material-ui/lab/Rating';
 
-const ItemForm = ({ item, onChange, onSubmit, disabled }) => {
+const ItemForm = ({ item, setItem, onChange, handleSubmit, disabled, currentUser }) => {
+  const [rating, setRating] = useState(null);
+
   return (
-    <form className="itemform" onSubmit={onSubmit}>
+    <form className="itemform" onSubmit={handleSubmit}>
       <fieldset disabled={disabled}>
         <Box mb={3} m={1}>
           <TextField
@@ -75,19 +77,27 @@ const ItemForm = ({ item, onChange, onSubmit, disabled }) => {
             value={item.tags || ''}
           />
         </Box>
+
         <Box mb={3} m={1}>
           <Typography component="legend" style={{ fontSize: '10.5px', color: 'rgba(0, 0, 0, 0.54)' }}>
             Rating
           </Typography>
           <Rating
             name="rating"
-            value={+item.rating}
-            onChange={(event, newValue) => {
-              onChange({
-                target: {
-                  name: 'rating',
-                  value: newValue,
-                },
+            value={+rating}
+            onChange={(event, value) => {
+              setRating(value);
+              if (!item.ratings) {
+                item.ratings = {};
+              }
+              item.ratings[currentUser.email] = value;
+              const ratingsArray = Object.values(item.ratings);
+              const average = Math.round((ratingsArray.reduce((a, b) => a + b) / ratingsArray.length) * 2) / 2; //rounds to nearest half
+              const averageRatingCount = Object.values(item.ratings).length;
+              setItem({
+                ...item,
+                averageRating: average,
+                averageRatingCount: averageRatingCount,
               });
             }}
           />

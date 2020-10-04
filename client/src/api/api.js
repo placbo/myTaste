@@ -37,7 +37,6 @@ export const getItem = (id) => {
 };
 
 export const getAllItems = () => {
-  console.log(process.env.REACT_APP_MOCK_API);
   if (process.env.REACT_APP_MOCK_API === 'true') {
     return new Promise((resolve) => {
       console.log('Mock retrieving list');

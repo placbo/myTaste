@@ -12,6 +12,7 @@ import { AuthContext } from '../Auth';
 import moment from 'moment';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 
 const PageContent = styled.div`
   margin: 1rem;
@@ -218,30 +219,36 @@ const ManageItemPage = (props) => {
       <Header />
       <PageContent>
         <Card>
-          <div className="form-group">
-            <div className="field">
-              <input
-                accept="image/*"
-                id="contained-button-file"
-                type="file"
-                onChange={handleFileChange}
-                name="fileUpload"
-                style={{ display: 'none' }}
-              />
-              <label htmlFor="contained-button-file">
-                <Button variant="contained" color="primary" component="span">
-                  Choose Image
-                </Button>
-              </label>
-            </div>
-          </div>
+          <Box mb={3} m={1}>
+            <input
+              accept="image/*"
+              id="contained-button-file"
+              type="file"
+              onChange={handleFileChange}
+              name="fileUpload"
+              style={{ display: 'none' }}
+            />
+            <label htmlFor="contained-button-file">
+              <Button variant="contained" color="primary" component="span">
+                Choose Image
+              </Button>
+            </label>
+          </Box>
           {image && file && (
             <>
-              <div>
+              <Box mb={3} m={1}>
                 <img src={image} alt="preview" />
-              </div>
-              Filesize: {getFormatedFileSize(file)} MB
-              <Button onClick={uploadfile}>Upload image</Button>
+              </Box>
+              <Box mb={3} m={1}>
+                {/*Filesize: {getFormatedFileSize(file)} MB*/}
+                <Button
+                  variant="outlined
+                "
+                  color="primary"
+                  onClick={uploadfile}>
+                  Upload image
+                </Button>
+              </Box>
             </>
           )}
           {uploading && <BlockScreen>Uploading...</BlockScreen>}
@@ -249,7 +256,14 @@ const ManageItemPage = (props) => {
           <Divider />
 
           {item.image && (
-            <ItemForm disabled={uploading || saving} item={item} onChange={handleFormChange} onSubmit={handleSubmit} />
+            <ItemForm
+              disabled={uploading || saving}
+              item={item}
+              onChange={handleFormChange}
+              currentUser={currentUser}
+              setItem={setItem}
+              handleSubmit={handleSubmit}
+            />
           )}
 
           {saving && <BlockScreen>Saving...</BlockScreen>}
