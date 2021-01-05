@@ -14,7 +14,7 @@
     "@material-ui/styles": "^4.10.0",
     "@react-firebase/database": "^0.3.11",
     "array-move": "^3.0.1",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.2",
     "date-fns": "^2.16.1",
     "firebase": "^7.22.0",
