@@ -11,7 +11,7 @@ Deploy:
     npm run build
     npm run deploy
 
-Deploys to http://mytaste.kasselars.com
+Deploys to  https://placbo.github.io/myTaste/
      
 Environment setup
 -

@@ -1,6 +1,7 @@
 import * as firebase from 'firebase';
 
 export const ITEM_COLLECTION_NAME = 'items';
+console.log(process.env.REACT_APP_MOCK_API);
 
 export const getItem = (id) => {
   if (process.env.REACT_APP_MOCK_API === 'true') {
